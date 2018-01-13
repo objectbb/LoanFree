@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import MapIt from './MapIt'
+import style from "./app.css";
+import uuid from 'uuid';
+
 
 class RouteMaker extends Component {
 
@@ -10,9 +13,8 @@ class RouteMaker extends Component {
             markers: [{
                     index: 0,
                     guid: "62c63de1-52f3-43f2-ba69-a21b8ead0a5f",
-                    name: {
-                        first: "Angelita",
-                        last: "Bird"
+                    place: {
+                        name: "Point Blank 1"
                     },
                     coords: [
                         45.127247, -122.5760278
@@ -21,9 +23,8 @@ class RouteMaker extends Component {
                 {
                     index: 1,
                     guid: "122720d7-4b50-494f-b4a7-44aa0071305a",
-                    name: {
-                        "first": "Phyllis",
-                        "last": "Wood"
+                    place: {
+                        name: "Point Blank 2"
                     },
                     coords: [
                         45.130317, -122.593637
@@ -37,19 +38,31 @@ class RouteMaker extends Component {
 
         this.addMarker = this.addMarker.bind(this);
         this.updatePosition = this.updatePosition.bind(this);
+           this.removeMarker = this.removeMarker.bind(this);
     }
 
-    addMarker(item) {
+    addMarker() {
+        let offset = .002
+        let length = this.state.markers.length;
+
+        let lastcoords = this.state.markers[length - 1].coords;
+        let item = { coords: [lastcoords[0] + offset, lastcoords[1] + offset] };
+        item.place = {name: "Marker #" + length + 1}
+        item.guid = uuid.v1();
+
         this.setState(prevState => ({
-            marker: [...prevState.marker, item]
+            markers: [...prevState.markers, item]
         }))
     }
 
     removeMarker(item) {
+        console.log(item);
+        let newmarkers = this.state.markers.filter((marker) => marker.guid !== item.guid);
+        console.log(newmarkers);
 
-        this.setState(prevState => ({
-            marker: [...prevState.marker, item]
-        }))
+        this.setState({ markers: newmarkers });
+
+
     }
 
     updatePosition(item) {
@@ -65,17 +78,25 @@ class RouteMaker extends Component {
     }
 
     render() {
+   const toolbar = { float: 'right',  borderStyle: 'solid', borderWidth: '5px' };
 
         return (
+
             <div>
                 <MapIt
                   participants={this.state.markers}
+                  removeMarker={this.removeMarker}
                   region={this.state.region}
                    draggable={true}
                    updatePosition={this.updatePosition}
 
                 />
 
+                <div style={toolbar}>
+                <button onClick={this.addMarker} >
+                 <i className="material-icons">add_location</i>
+                  </button>
+                  </div>
           </div>
         )
     }
