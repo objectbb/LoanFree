@@ -1,96 +1,78 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import MapIt from './MapIt'
-import style from "./app.css";
+import { bindActionCreators } from "redux";
 import uuid from 'uuid';
 
+import MapIt from './MapIt'
+import style from "./app.css";
+import * as actions from "../actions"
 
 class RouteMaker extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            markers: [{
-                    index: 0,
-                    guid: "62c63de1-52f3-43f2-ba69-a21b8ead0a5f",
-                    place: {
-                        name: "Point Blank 1"
-                    },
-                    coords: [
-                        45.127247, -122.5760278
-                    ]
-                },
-                {
-                    index: 1,
-                    guid: "122720d7-4b50-494f-b4a7-44aa0071305a",
-                    place: {
-                        name: "Point Blank 2"
-                    },
-                    coords: [
-                        45.130317, -122.593637
-                    ]
-                }
-            ],
-            region: [
-                45.127247, -122.5760278,
-            ]
-        };
 
         this.addMarker = this.addMarker.bind(this);
         this.updatePosition = this.updatePosition.bind(this);
-           this.removeMarker = this.removeMarker.bind(this);
+        this.removeMarker = this.removeMarker.bind(this);
     }
 
     addMarker() {
         let offset = .002
-        let length = this.state.markers.length;
+        let length = this.props.routeMarkers.length;
 
-        let lastcoords = this.state.markers[length - 1].coords;
+        let lastcoords = this.props.routeMarkers.length > 0 ?
+            this.props.routeMarkers[length - 1].coords :
+            this.props.currCoords;
         let item = { coords: [lastcoords[0] + offset, lastcoords[1] + offset] };
-        item.place = {name: "Marker #" + length + 1}
+        item.place = { name: "Marker #" + length + 1 }
         item.guid = uuid.v1();
 
-        this.setState(prevState => ({
-            markers: [...prevState.markers, item]
-        }))
+        this.props.actions.setRouteMarkers([...this.props.routeMarkers, item])
+
     }
 
     removeMarker(item) {
-        console.log(item);
-        let newmarkers = this.state.markers.filter((marker) => marker.guid !== item.guid);
-        console.log(newmarkers);
 
-        this.setState({ markers: newmarkers });
+        let newmarkers = this.props.routeMarkers.filter((marker) => marker.guid !== item.guid);
 
+        this.props.actions.setRouteMarkers(newmarkers)
 
     }
 
     updatePosition(item) {
 
-        console.log(item.coords)
-        let immumarkers = [...this.state.markers];
+        let immumarkers = this.props.routeMarkers.map((item) => item);
 
-        let upmarker = immumarkers.find((marker) => marker.guid === item.guid);
-        upmarker.coords = item.coords;
+        let newmarkers = this.props.routeMarkers.map(
+            (marker) => {
+                if (marker.guid === item.guid)
+                    marker.coords = item.coords;
 
-        console.log(this.state.markers)
+                return marker;
+            }
+        );
+
+        this.props.actions.setRouteMarkers(newmarkers)
 
     }
 
     render() {
-   const toolbar = { float: 'right',  borderStyle: 'solid', borderWidth: '5px' };
+        const toolbar = { float: 'right', borderStyle: 'solid', borderWidth: '5px' };
 
         return (
 
             <div>
-                <MapIt
-                  participants={this.state.markers}
+                {<MapIt
+                  routeMarkers = {this.props.routeMarkers}
+                  participants={this.props.participants}
                   removeMarker={this.removeMarker}
-                  region={this.state.region}
+                  region={this.props.region}
+                  user={this.props.region}
                    draggable={true}
                    updatePosition={this.updatePosition}
 
-                />
+                />}
 
                 <div style={toolbar}>
                 <button onClick={this.addMarker} >
@@ -102,4 +84,20 @@ class RouteMaker extends Component {
     }
 }
 
-export default RouteMaker
+function mapStateToProps(state) {
+    const { location, participants, routemarkers } = state
+
+    return {
+        routeMarkers: routemarkers.items,
+        participants: participants.items,
+        region: location.coords
+    }
+}
+
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        actions: bindActionCreators(actions, dispatch)
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RouteMaker)

@@ -1,43 +1,124 @@
-export const REQUEST_POSTS = "REQUEST_POSTS"
-export const RECEIVE_POSTS = "RECEIVE_POSTS"
-export const SET_CURRENT_REGION = "SET_CURRENT_REGION"
-
-export const RETRIEVE_PEOPLE = "RETRIEVE_PEOPLE"
-export const RETRIEVE_INTERESTS = "RETRIEVE_INTERESTS"
+export const CURR_LOCATION = "CURR_LOCATION"
+export const REQUEST_PARTICIPANTS = "REQUEST_PARTICIPANTS"
+export const RETRIEVE_PARTICIPANTS = "RETRIEVE_PARTICIPANTS"
+export const REQUEST_ROUTE_MARKERS = "REQUEST_ROUTE_MARKERS"
+export const RETRIEVE_ROUTE_MARKERS = "RETRIEVE_ROUTE_MARKERS"
+export const UPDATE_ROUTE_MARKERS = "UPDATE_ROUTE_MARKERS"
+export const AUTHENTICATED_USER = "AUTHENTICATED_USER"
 export const APP_ERROR = "APP_ERROR"
 
-export const requestPosts = payload => ({
-    type: REQUEST_POSTS,
-    payload
+export const currLocation = coords => ({
+    type: CURR_LOCATION,
+    coords
 })
 
-export const receivePosts = (payload) => ({
-    type: RECEIVE_POSTS,
+export const requestParticipants = (payload) => ({
+    type: REQUEST_PARTICIPANTS,
     payload,
     receivedAt: Date.now()
 })
 
-export const appError = payload => ({
+export const retrieveParticipants = (payload) => ({
+    type: RETRIEVE_PARTICIPANTS,
+    payload,
+    receivedAt: Date.now()
+})
+
+export const authenticatedUser = (payload) => ({
+    type: RETRIEVE_PARTICIPANTS,
+    payload,
+    receivedAt: Date.now()
+})
+
+export const requestRouteMarkers = (payload) => ({
+    type: REQUEST_ROUTE_MARKERS,
+    payload,
+    receivedAt: Date.now()
+})
+
+export const retrieveRouteMarkers = (payload) => ({
+    type: RETRIEVE_ROUTE_MARKERS,
+    payload,
+    receivedAt: Date.now()
+})
+
+export const updateRouteMarkers = (payload) => ({
+    type: UPDATE_ROUTE_MARKERS,
+    payload,
+    receivedAt: Date.now()
+})
+
+export const appError = (error) => ({
     type: APP_ERROR,
-    payload
+    error
 })
 
-export const setCurrentRegion = region => ({
-    type: REQUEST_CUSTOMER_PROPERTY_TRACKING,
-    region
-})
+export const loadParticipants = (payload) => dispatch => {
 
-export const retrieveInterests = interests => ({
-    type: RETRIEVE_INTERESTS,
-    interests
-})
+    dispatch(requestParticipants(payload))
+    dispatch(retrieveParticipants([{
+            index: 0,
+            guid: "62c63de1-52f3-43f2-ba69-a21b8ead0a5f",
+            name: {
+                first: "Angelita",
+                last: "Bird"
+            },
+            coords: [
+                41.552722, -81.5174404
+            ]
+        },
+        {
+            index: 1,
+            guid: "122720d7-4b50-494f-b4a7-44aa0071305a",
+            name: {
+                "first": "Phyllis",
+                "last": "Wood"
+            },
+            coords: [
+                41.550722, -81.5244404
+            ]
+        }
+    ]))
+}
 
-export const retrievePeople = people => ({
-    type: RETRIEVE_PEOPLE,
-    people: people
-})
+export const loadRouteMarkers = (payload) => dispatch => {
 
+    dispatch(requestRouteMarkers(payload))
 
-const config = {
-    method: "GET"
+    let items = [{
+            index: 0,
+            guid: "62c63de1-52f3-43f2-ba69-a21b8ead0a5f",
+            place: {
+                name: "Point Blank 1"
+            },
+            coords: [
+                41.558722, -81.5194404
+            ]
+        },
+        {
+            index: 1,
+            guid: "122720d7-4b50-494f-b4a7-44aa0071305a",
+            place: {
+                name: "Point Blank 2"
+            },
+            coords: [
+                41.553722, -81.5274404
+            ]
+        }
+    ];
+
+    dispatch(retrieveRouteMarkers(items))
+}
+
+export const setRouteMarkers = (payload) => dispatch => {
+    dispatch(updateRouteMarkers(payload))
+}
+
+export const setCurrRegion = (coords) => dispatch => {
+    console.log(coords);
+    dispatch(currLocation(coords))
+}
+
+export const registerUser = (payload) => dispatch => {
+    dispatch(authenticatedUser(payload))
 }

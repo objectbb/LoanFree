@@ -7,7 +7,6 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import getMuiTheme from "material-ui/styles/getMuiTheme"
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme"
 
-
 import store from "../reducers/combine"
 import App from './App';
 

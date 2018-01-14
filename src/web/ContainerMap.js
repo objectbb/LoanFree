@@ -1,20 +1,19 @@
 import React, { Component } from "react";
 import RouteMaker from "./RouteMaker"
+import DataFeeder from "./DataFeeder"
 
 class ContainerMap extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            participants: []
-        };
     }
 
 
     render() {
         return (
-            <RouteMaker />
+            <DataFeeder>
+                <RouteMaker />
+            </DataFeeder>
         )
     }
 }

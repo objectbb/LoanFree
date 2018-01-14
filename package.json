@@ -21,6 +21,7 @@
     "classnames": "^2.2.5",
     "css-loader": "^0.28.8",
     "gulp": "^3.9.1",
+    "immutable": "^3.8.2",
     "leaflet": "^1.2.0",
     "lodash": "^4.17.4",
     "material-ui": "^0.20.0",

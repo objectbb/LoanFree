@@ -1,18 +1,17 @@
 import thunkMiddleware from "redux-thunk"
 import { compose, createStore, applyMiddleware } from "redux"
 import { combineReducers } from "redux"
-import { region } from "./region"
-import { request } from "./request"
-import { people } from "./people"
-import { interests } from "./interests"
+import { participants } from "./participants"
+import { authenticated  } from "./authenticated"
+import { location  } from "./location"
+import { routemarkers  } from "./routemarkers"
 import { error } from "./error"
 
-
 const rootReducer = combineReducers({
-    region,
-    request,
-    people,
-    interests,
+    participants,
+    authenticated,
+    routemarkers,
+    location,
     error
 })
 
