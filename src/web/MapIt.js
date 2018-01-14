@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import classnames from "classnames";
 import { connect } from "react-redux";
+import geolib from "geolib";
 
 import { Map, Marker, TileLayer, Popup } from 'react-leaflet';
 import { divIcon, point } from "leaflet";
@@ -12,6 +13,15 @@ class MapIt extends Component {
         super(props);
         this.updatePosition = this.updatePosition.bind(this);
         this.removeMarker = this.removeMarker.bind(this);
+        this.closeIndicator = this.closeIndicator.bind(this);
+    }
+
+    closeIndicator(coords) {
+
+        return this.props.routeMarkers.some((marker) => {
+            let distance = geolib.getDistance({ latitude: coords[0], longitude: coords[1] }, { latitude: marker.coords[0], longitude: marker.coords[1] })
+            return distance < 30
+        });
     }
 
     updatePosition() {
@@ -32,10 +42,7 @@ class MapIt extends Component {
     render() {
         const cover = { position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, zIndex: -1 };
 
-
         return (
-
-
             <Map center={this.props.region} zoom={14} style={cover}>
             <TileLayer
               url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
@@ -46,9 +53,10 @@ class MapIt extends Component {
               this.props.participants &&
                 this.props.participants.map((item, index) => {
 
-                const mapMarker = {borderRadius: '15px', border: '1px solid #FFF',height: '30px'};
+                let cI = this.closeIndicator(item.coords);
 
-                const icon = divIcon({ className: mapMarker, html: `<div>${item.name.first[0]}${item.name.last}</div>`});
+                const icon = divIcon({ className: 'marker ' + (!cI ? 'bus' : 'bus pulse'), html: `<div>${item.name.first[0]}${item.name.last}</div>`})
+
                 return (
                   <Marker key={index}
                    icon={icon}
@@ -72,7 +80,6 @@ class MapIt extends Component {
               })
             }
             {
-
                 this.props.user &&
                 <Marker key={1}
                     position={this.props.user}
@@ -85,9 +92,7 @@ class MapIt extends Component {
               this.props.routeMarkers &&
                 this.props.routeMarkers.map((item, index) => {
 
-                const mapMarker = {borderRadius: '15px', border: '1px solid #FFF',height: '30px'};
-
-                const icon = divIcon({ className: mapMarker, html: `<div>${item.place.name}</div>`});
+                const icon = divIcon({ className: 'marker rail290', html: `<div>${item.place.name}</div>`});
                 return (
                   <Marker key={index}
                    icon={icon}

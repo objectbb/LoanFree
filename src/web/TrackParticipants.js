@@ -6,16 +6,14 @@ class TrackParticipants extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            participants: []
-        };
+
     }
 
     render() {
 
         return (
             <div>
-              <MapIt participants={this.state.participants} />
+              <MapIt participants={this.props.participants} />
           </div>
         )
     }
@@ -25,7 +23,7 @@ function mapStateToProps(state) {
     const { participants } = state
 
     return {
-        participants
+        participants: participants.items
     }
 }
 

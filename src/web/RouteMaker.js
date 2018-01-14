@@ -23,7 +23,8 @@ class RouteMaker extends Component {
 
         let lastcoords = this.props.routeMarkers.length > 0 ?
             this.props.routeMarkers[length - 1].coords :
-            this.props.currCoords;
+            this.props.region;
+
         let item = { coords: [lastcoords[0] + offset, lastcoords[1] + offset] };
         item.place = { name: "Marker #" + length + 1 }
         item.guid = uuid.v1();
