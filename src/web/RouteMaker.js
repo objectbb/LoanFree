@@ -43,8 +43,6 @@ class RouteMaker extends Component {
 
     updatePosition(item) {
 
-        let immumarkers = this.props.routeMarkers.map((item) => item);
-
         let newmarkers = this.props.routeMarkers.map(
             (marker) => {
                 if (marker.guid === item.guid)

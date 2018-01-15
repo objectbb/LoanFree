@@ -20,16 +20,16 @@ class MapIt extends Component {
 
         return this.props.routeMarkers.some((marker) => {
             let distance = geolib.getDistance({ latitude: coords[0], longitude: coords[1] }, { latitude: marker.coords[0], longitude: marker.coords[1] })
-            return distance < 30
+            return distance < marker.range
         });
     }
 
-    updatePosition() {
+    updatePosition(e) {
 
-        let item = this.refs.marker.leafletElement.options.name;
-        let latlng = this.refs.marker.leafletElement.getLatLng();
+      console.log(e)
 
-        item.coords = [latlng.lat, latlng.lng]
+        let item = e.target.options.name;
+        item.coords = [e.target._latlng.lat, e.target._latlng.lng]
 
         this.props.updatePosition(item);
     }
@@ -100,7 +100,7 @@ class MapIt extends Component {
                     position={item.coords}
                     draggable={this.props.draggable}
                       onDragend={this.updatePosition}
-                       ref="marker">
+                       ref={"marker"}>
                       <Popup minWidth={90}>
                         <span>
                           {item.place.name}

@@ -64,18 +64,18 @@ export const loadParticipants = (payload) => dispatch => {
                 last: "Bird"
             },
             coords: [
-                41.552722, -81.5174404
+                41.8281, -87.6698
             ]
         },
         {
             index: 1,
-            guid: "122720d7-4b50-494f-b4a7-44aa0071305a",
+            guid: "122720d7-4b55-494f-b4a7-44aa0071305a",
             name: {
                 "first": "Phyllis",
                 "last": "Wood"
             },
             coords: [
-                41.550722, -81.5244404
+                41.8291, -87.6698
             ]
         }
     ]))
@@ -87,13 +87,14 @@ export const loadRouteMarkers = (payload) => dispatch => {
 
     let items = [{
             index: 0,
-            guid: "62c63de1-52f3-43f2-ba69-a21b8ead0a5f",
+            guid: "62r63de1-52f3-43f2-ba69-a21b8ead0a5f",
             place: {
                 name: "Point Blank 1"
             },
             coords: [
-                41.558722, -81.5194404
-            ]
+                  41.8241, -87.6698
+            ],
+            range: 50
         },
         {
             index: 1,
@@ -102,8 +103,9 @@ export const loadRouteMarkers = (payload) => dispatch => {
                 name: "Point Blank 2"
             },
             coords: [
-                41.553722, -81.5274404
-            ]
+                 41.8241, -87.6698
+            ],
+            range: 50
         }
     ];
 
