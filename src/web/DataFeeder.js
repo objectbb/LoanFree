@@ -21,7 +21,7 @@ class DataFeeder extends Component {
         this.props.actions.loadRouteMarkers({ name: 'Brian' })
 
         navigator.geolocation.watchPosition(position => {
-            this.props.actions.setCurrRegion([position.coords.latitude, position.coords.longitude])
+            this.props.actions.setCurrLocation([position.coords.latitude, position.coords.longitude])
         }, function error(msg) {
 
             alert('Please enable your GPS position future.');

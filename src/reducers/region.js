@@ -1,13 +1,13 @@
-import { CURR_LOCATION } from "../actions";
+import { SET_CURRENT_REGION } from "../actions";
 
-export const location = (
+export const region = (
     state = {
-        coords: []
+        coords: [41.8781, -87.6298]
     },
     action
 ) => {
     switch (action.type) {
-    case CURR_LOCATION:
+    case SET_CURRENT_REGION:
         return { coords: action.coords };
     default:
         return state;

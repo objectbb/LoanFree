@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux";
 import uuid from 'uuid';
 
 import MapIt from './MapIt'
+import AddressGeocode from './AddressGeocode'
 import style from "./app.css";
 import * as actions from "../actions"
 
@@ -21,13 +22,12 @@ class RouteMaker extends Component {
         let offset = .002
         let length = this.props.routeMarkers.length;
 
-        let lastcoords = this.props.routeMarkers.length > 0 ?
-            this.props.routeMarkers[length - 1].coords :
-            this.props.region;
+        let lastcoords = this.props.region;
 
         let item = { coords: [lastcoords[0] + offset, lastcoords[1] + offset] };
         item.place = { name: "Marker #" + length + 1 }
         item.guid = uuid.v1();
+        item.range = 50;
 
         this.props.actions.setRouteMarkers([...this.props.routeMarkers, item])
 
@@ -67,10 +67,9 @@ class RouteMaker extends Component {
                   participants={this.props.participants}
                   removeMarker={this.removeMarker}
                   region={this.props.region}
-                  user={this.props.region}
+                  currLocation={this.props.location}
                    draggable={true}
                    updatePosition={this.updatePosition}
-
                 />}
 
                 <div style={toolbar}>
@@ -78,18 +77,21 @@ class RouteMaker extends Component {
                  <i className="material-icons">add_location</i>
                   </button>
                   </div>
+
+                <AddressGeocode geocode={ this.props.actions.setCurrentRegionAddress}/>
           </div>
         )
     }
 }
 
 function mapStateToProps(state) {
-    const { location, participants, routemarkers } = state
+    const { location, region, participants, routemarkers } = state
 
     return {
         routeMarkers: routemarkers.items,
         participants: participants.items,
-        region: location.coords
+        region: region.coords,
+        location: location.coords
     }
 }
 

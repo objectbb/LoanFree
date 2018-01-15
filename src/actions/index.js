@@ -1,3 +1,6 @@
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
+import axios from "axios";
+
 export const CURR_LOCATION = "CURR_LOCATION"
 export const REQUEST_PARTICIPANTS = "REQUEST_PARTICIPANTS"
 export const RETRIEVE_PARTICIPANTS = "RETRIEVE_PARTICIPANTS"
@@ -5,12 +8,14 @@ export const REQUEST_ROUTE_MARKERS = "REQUEST_ROUTE_MARKERS"
 export const RETRIEVE_ROUTE_MARKERS = "RETRIEVE_ROUTE_MARKERS"
 export const UPDATE_ROUTE_MARKERS = "UPDATE_ROUTE_MARKERS"
 export const AUTHENTICATED_USER = "AUTHENTICATED_USER"
+export const SET_CURRENT_REGION = "SET_CURRENT_REGION"
 export const APP_ERROR = "APP_ERROR"
 
 export const currLocation = coords => ({
     type: CURR_LOCATION,
     coords
 })
+
 
 export const requestParticipants = (payload) => ({
     type: REQUEST_PARTICIPANTS,
@@ -92,9 +97,9 @@ export const loadRouteMarkers = (payload) => dispatch => {
                 name: "Point Blank 1"
             },
             coords: [
-                  41.8241, -87.6698
+                41.8241, -87.6698
             ],
-            range: 50
+            range: 70
         },
         {
             index: 1,
@@ -103,21 +108,51 @@ export const loadRouteMarkers = (payload) => dispatch => {
                 name: "Point Blank 2"
             },
             coords: [
-                 41.8241, -87.6698
+                41.8241, -87.6698
             ],
             range: 50
         }
     ];
 
     dispatch(retrieveRouteMarkers(items))
+
 }
+
+
+export const setCurrentRegionAddress = (address) => {
+
+    return async dispatch => {
+        function onSuccess(geocoderesults) {
+
+            console.log(geocoderesults)
+
+            const loc = geocoderesults.data.results[0].geometry.location
+
+            dispatch({ type: SET_CURRENT_REGION, coords: [loc.lat, loc.lng] });
+            return geocoderesults;
+        }
+
+        function onError(error) {
+            console.log(error);
+            dispatch({ type: APP_ERROR, error: error });
+            return error;
+        }
+        try {
+            const success = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}`);
+            return onSuccess(success);
+        } catch (error) {
+            return onError(error);
+        }
+    }
+}
+
 
 export const setRouteMarkers = (payload) => dispatch => {
     dispatch(updateRouteMarkers(payload))
 }
 
-export const setCurrRegion = (coords) => dispatch => {
-    console.log(coords);
+export const setCurrLocation = (coords) => dispatch => {
+    console.log(coords)
     dispatch(currLocation(coords))
 }
 

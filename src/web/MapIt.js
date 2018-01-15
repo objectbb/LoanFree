@@ -26,8 +26,6 @@ class MapIt extends Component {
 
     updatePosition(e) {
 
-      console.log(e)
-
         let item = e.target.options.name;
         item.coords = [e.target._latlng.lat, e.target._latlng.lng]
 
@@ -55,7 +53,7 @@ class MapIt extends Component {
 
                 let cI = this.closeIndicator(item.coords);
 
-                const icon = divIcon({ className: 'marker ' + (!cI ? 'bus' : 'bus pulse'), html: `<div>${item.name.first[0]}${item.name.last}</div>`})
+                const icon = divIcon({ className: 'marker ' + (!cI ? 'bus' : 'bus mark'), html: `<div>${item.name.first[0]}${item.name.last}</div>`})
 
                 return (
                   <Marker key={index}
@@ -82,7 +80,7 @@ class MapIt extends Component {
             {
                 this.props.user &&
                 <Marker key={1}
-                    position={this.props.user}
+                    position={this.props.location}
                        ref="marker">
                   >
                 </Marker>
@@ -92,7 +90,11 @@ class MapIt extends Component {
               this.props.routeMarkers &&
                 this.props.routeMarkers.map((item, index) => {
 
-                const icon = divIcon({ className: 'marker rail290', html: `<div>${item.place.name}</div>`});
+
+                let circlerange = "border: 1px solid #000;border-radius: 50%;height:" + item.range + "px;width:" + item.range + "px;";
+                let center = "display:table-cell;vertical-align:middle;height:" + item.range + "px;width:" + item.range + "px;text-align:right;";
+
+                const icon = divIcon({ html: `<div style="${circlerange}"><span style="${center}"> <div class="marker rail290">${item.place.name}</div></span></div>`});
                 return (
                   <Marker key={index}
                    icon={icon}
