@@ -1,4 +1,6 @@
 import thunkMiddleware from "redux-thunk"
+import createSagaMiddleware from 'redux-saga'
+import { createLogger } from 'redux-logger'
 import { compose, createStore, applyMiddleware } from "redux"
 import { combineReducers } from "redux"
 import { participants } from "./participants"
@@ -7,6 +9,11 @@ import { location } from "./location"
 import { routemarkers } from "./routemarkers"
 import { region } from "./region"
 import { error } from "./error"
+
+import geocodeAddress from '../sagas/geocodeAddress'
+
+const sagaMiddleware = createSagaMiddleware()
+const loggerMiddleware = createLogger()
 
 const rootReducer = combineReducers({
     participants,
@@ -21,9 +28,12 @@ let store = createStore(
     rootReducer,
     compose(
         applyMiddleware(
-            thunkMiddleware // lets us dispatch() functions
+            sagaMiddleware,
+            thunkMiddleware,
+            loggerMiddleware
         )
     )
 )
 
+sagaMiddleware.run(geocodeAddress)
 export default store

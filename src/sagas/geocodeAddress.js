@@ -6,11 +6,11 @@ function* setCurrentRegionAddress(action) {
         const geocoderesults =
             yield axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${action.address}`);
 
-        const loc = geocoderesults.results[0].geometry.location
+        const loc = geocoderesults.data.results[0].geometry.location
 
-        yield put({ type: SET_CURRENT_LOCATION, coords: [loc.lat, loc.lng] });
+        yield put({ type: 'SET_CURRENT_REGION', coords: [loc.lat, loc.lng] });
     } catch (err) {
-        yield put({ type: APP_ERROR, error: err });
+        yield put({ type: 'APP_ERROR', error: err });
     }
 }
 

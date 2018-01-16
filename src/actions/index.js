@@ -16,7 +16,6 @@ export const currLocation = coords => ({
     coords
 })
 
-
 export const requestParticipants = (payload) => ({
     type: REQUEST_PARTICIPANTS,
     payload,
@@ -117,35 +116,6 @@ export const loadRouteMarkers = (payload) => dispatch => {
     dispatch(retrieveRouteMarkers(items))
 
 }
-
-
-export const setCurrentRegionAddress = (address) => {
-
-    return async dispatch => {
-        function onSuccess(geocoderesults) {
-
-            console.log(geocoderesults)
-
-            const loc = geocoderesults.data.results[0].geometry.location
-
-            dispatch({ type: SET_CURRENT_REGION, coords: [loc.lat, loc.lng] });
-            return geocoderesults;
-        }
-
-        function onError(error) {
-            console.log(error);
-            dispatch({ type: APP_ERROR, error: error });
-            return error;
-        }
-        try {
-            const success = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}`);
-            return onSuccess(success);
-        } catch (error) {
-            return onError(error);
-        }
-    }
-}
-
 
 export const setRouteMarkers = (payload) => dispatch => {
     dispatch(updateRouteMarkers(payload))

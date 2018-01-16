@@ -16,6 +16,7 @@ class RouteMaker extends Component {
         this.addMarker = this.addMarker.bind(this);
         this.updatePosition = this.updatePosition.bind(this);
         this.removeMarker = this.removeMarker.bind(this);
+        this.setCurrentRegionAddress = this.setCurrentRegionAddress.bind(this);
     }
 
     addMarker() {
@@ -56,6 +57,10 @@ class RouteMaker extends Component {
 
     }
 
+    setCurrentRegionAddress(address){
+        this.props.actions.setCurrentRegionAddress(address)
+    }
+
     render() {
         const toolbar = { float: 'right', borderStyle: 'solid', borderWidth: '5px' };
 
@@ -78,7 +83,7 @@ class RouteMaker extends Component {
                   </button>
                   </div>
 
-                <AddressGeocode geocode={ this.props.actions.setCurrentRegionAddress}/>
+                <AddressGeocode geocode={ this.setCurrentRegionAddress}/>
           </div>
         )
     }
@@ -87,6 +92,7 @@ class RouteMaker extends Component {
 function mapStateToProps(state) {
     const { location, region, participants, routemarkers } = state
 
+console.log("mapStateToProps", location)
     return {
         routeMarkers: routemarkers.items,
         participants: participants.items,

@@ -4,12 +4,41 @@
     display: inline-block;
     width: auto!important;
     height: auto!important;
-    width: 160px!important;
+    width: 120px!important;
     text-align: center;
     height: 30px!important;
     line-height: 30px;
     color: #FFF;
     font-weight: bold;
+    margin: 0 -50px;
+}
+.routemarker {
+    border: 1px solid #FFF;
+    display: inline-block;
+    width: auto!important;
+    height: auto!important;
+    width: 120px!important;
+    text-align: center;
+    height: 30px!important;
+    line-height: 30px;
+    color: #FFF;
+    font-weight: bold;
+    margin: 0 -50px;
+}
+
+.youmarker {
+    border-radius: 50%;
+    border: 1px solid #ABB7B7;
+    background-color: #EEE;
+    display: inline-block;
+    width: auto!important;
+    height: auto!important;
+    width: 30px!important;
+    text-align: center;
+    height: 30px!important;
+    line-height: 30px;
+    color: #000;
+    font-weight: 900;
     margin: 0 -50px;
 }
 

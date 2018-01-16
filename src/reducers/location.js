@@ -2,7 +2,7 @@ import { CURR_LOCATION } from "../actions";
 
 export const location = (
     state = {
-        coords: []
+        coords: null
     },
     action
 ) => {

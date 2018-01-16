@@ -7,6 +7,7 @@ import { Map, Marker, TileLayer, Popup } from 'react-leaflet';
 import { divIcon, point } from "leaflet";
 import AppCss from "./app.css";
 
+
 class MapIt extends Component {
 
     constructor(props) {
@@ -41,7 +42,7 @@ class MapIt extends Component {
         const cover = { position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, zIndex: -1 };
 
         return (
-            <Map center={this.props.region} zoom={14} style={cover}>
+            <Map center={this.props.region} zoom={17} style={cover}>
             <TileLayer
               url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -75,13 +76,18 @@ class MapIt extends Component {
                 </Marker>
 
                 )
-              })
+              }
+              )
             }
             {
-                this.props.user &&
+                this.props.currLocation &&
                 <Marker key={1}
-                    position={this.props.location}
+                    position={this.props.currLocation}
+                    icon={divIcon({ className: 'youmarker ', html: `<div>YOU</div>`})}
                        ref="marker">
+                       <Popup minWidth={90}>
+                          <div>{this.props.currLocation}</div>
+                      </Popup>
                   >
                 </Marker>
 
@@ -94,7 +100,7 @@ class MapIt extends Component {
                 let circlerange = "border: 1px solid #000;border-radius: 50%;height:" + item.range + "px;width:" + item.range + "px;";
                 let center = "display:table-cell;vertical-align:middle;height:" + item.range + "px;width:" + item.range + "px;text-align:right;";
 
-                const icon = divIcon({ html: `<div style="${circlerange}"><span style="${center}"> <div class="marker rail290">${item.place.name}</div></span></div>`});
+                const icon = divIcon({ html: `<div style="${circlerange}"><span style="${center}"> <div class="routemarker rail290">${item.place.name}</div></span></div>`});
                 return (
                   <Marker key={index}
                    icon={icon}
@@ -102,7 +108,7 @@ class MapIt extends Component {
                     position={item.coords}
                     draggable={this.props.draggable}
                       onDragend={this.updatePosition}
-                       ref={"marker"}>
+                       ref="marker">
                       <Popup minWidth={90}>
                         <span>
                           {item.place.name}
