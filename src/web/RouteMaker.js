@@ -92,6 +92,8 @@ class RouteMaker extends Component {
 function mapStateToProps(state) {
     const { location, region, participants, routemarkers } = state
 
+console.log(location)
+
 console.log("mapStateToProps", location)
     return {
         routeMarkers: routemarkers.items,

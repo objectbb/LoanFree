@@ -10,7 +10,8 @@ import { routemarkers } from "./routemarkers"
 import { region } from "./region"
 import { error } from "./error"
 
-import geocodeAddress from '../sagas/geocodeAddress'
+import rootSaga from '../sagas'
+//import currLocationSaga from '../sagas/currlocation'
 
 const sagaMiddleware = createSagaMiddleware()
 const loggerMiddleware = createLogger()
@@ -35,5 +36,7 @@ let store = createStore(
     )
 )
 
-sagaMiddleware.run(geocodeAddress)
+sagaMiddleware.run(rootSaga)
+//sagaMiddleware.run(currLocationSaga)
+
 export default store

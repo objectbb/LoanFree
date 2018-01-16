@@ -3,7 +3,7 @@ import classnames from "classnames";
 import { connect } from "react-redux";
 import geolib from "geolib";
 
-import { Map, Marker, TileLayer, Popup } from 'react-leaflet';
+import { Map, Marker, TileLayer, Popup,Tooltip } from 'react-leaflet';
 import { divIcon, point } from "leaflet";
 import AppCss from "./app.css";
 
@@ -54,7 +54,7 @@ class MapIt extends Component {
 
                 let cI = this.closeIndicator(item.coords);
 
-                const icon = divIcon({ className: 'marker ' + (!cI ? 'bus' : 'bus mark'), html: `<div>${item.name.first[0]}${item.name.last}</div>`})
+                const icon = divIcon({ className: 'marker ' + (!cI ? 'bus' : 'bus mark'), html: `<div>${item.name.first[0]}${item.name.last[0]}</div>`})
 
                 return (
                   <Marker key={index}
@@ -103,25 +103,27 @@ class MapIt extends Component {
                 const icon = divIcon({ html: `<div style="${circlerange}"><span style="${center}"> <div class="routemarker rail290">${item.place.name}</div></span></div>`});
                 return (
                   <Marker key={index}
-                   icon={icon}
+
                     name={item}
                     position={item.coords}
                     draggable={this.props.draggable}
                       onDragend={this.updatePosition}
                        ref="marker">
-                      <Popup minWidth={90}>
-                        <span>
-                          {item.place.name}
-                          <div>
-                          <button>
-                              <i className="material-icons">edit_location</i>
-                          </button>
-                          <button onClick={(e) => this.removeMarker(item,e)}>
-                              <i className="material-icons">delete</i>
-                          </button>
-                          </div>
-                        </span>
-                      </Popup>
+                        <Tooltip permanent minWidth={90}>
+                          <span>
+                            <div><b>{item.place.name}</b> range: {item.range}m</div>
+                            <div>{item.coords} </div>
+                            <div>
+                                <button>
+                                    <i className="material-icons">edit_location</i>
+                                </button>
+                                <button onClick={(e) => this.removeMarker(item,e)}>
+                                    <i className="material-icons">delete</i>
+                                </button>
+                              </div>
+                          </span>
+                        </Tooltip>
+
                   >
                 </Marker>
 

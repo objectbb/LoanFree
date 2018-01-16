@@ -14,6 +14,8 @@ function* setCurrentRegionAddress(action) {
     }
 }
 
-export default function* geocodeAddress() {
-    yield takeLatest('REQUEST_GEOCODE', setCurrentRegionAddress);
+function *rootSaga() {
+ yield takeLatest('REQUEST_GEOCODE', setCurrentRegionAddress);
 }
+
+export default rootSaga;

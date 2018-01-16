@@ -68,7 +68,7 @@ export const loadParticipants = (payload) => dispatch => {
                 last: "Bird"
             },
             coords: [
-                41.8281, -87.6698
+                41.9082577 , -87.6886518
             ]
         },
         {
@@ -79,7 +79,7 @@ export const loadParticipants = (payload) => dispatch => {
                 "last": "Wood"
             },
             coords: [
-                41.8291, -87.6698
+                41.9083677, -87.6888418
             ]
         }
     ]))
@@ -96,7 +96,7 @@ export const loadRouteMarkers = (payload) => dispatch => {
                 name: "Point Blank 1"
             },
             coords: [
-                41.8241, -87.6698
+                41.9082277, -87.6886718
             ],
             range: 70
         },
@@ -107,7 +107,7 @@ export const loadRouteMarkers = (payload) => dispatch => {
                 name: "Point Blank 2"
             },
             coords: [
-                41.8241, -87.6698
+                41.9089477, -87.6880218
             ],
             range: 50
         }
@@ -117,13 +117,45 @@ export const loadRouteMarkers = (payload) => dispatch => {
 
 }
 
+export const setCurrentRegionAddress = (address) => dispatch =>  {
+
+  dispatch({type: 'REQUEST_GEOCODE', address})
+/*
+    return async dispatch => {
+        function onSuccess(geocoderesults) {
+
+            console.log(geocoderesults)
+
+            const loc = geocoderesults.data.results[0].geometry.location
+
+            dispatch({ type: SET_CURRENT_REGION, coords: [loc.lat, loc.lng] });
+            return geocoderesults;
+        }
+
+        function onError(error) {
+            console.log(error);
+            dispatch({ type: APP_ERROR, error: error });
+            return error;
+        }
+        try {
+            const success = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}`);
+            return onSuccess(success);
+        } catch (error) {
+            return onError(error);
+        }
+    }
+    */
+}
+
 export const setRouteMarkers = (payload) => dispatch => {
     dispatch(updateRouteMarkers(payload))
 }
 
 export const setCurrLocation = (coords) => dispatch => {
-    console.log(coords)
+    //console.log(coords)
     dispatch(currLocation(coords))
+
+    // dispatch({type: 'CURR_LOCATION'})
 }
 
 export const registerUser = (payload) => dispatch => {
