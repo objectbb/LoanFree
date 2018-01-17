@@ -1,5 +1,6 @@
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
-import axios from "axios";
+//import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
+//import axios from "axios";
+import io from 'socket.io-client';
 
 export const CURR_LOCATION = "CURR_LOCATION"
 export const REQUEST_PARTICIPANTS = "REQUEST_PARTICIPANTS"
@@ -57,32 +58,16 @@ export const appError = (error) => ({
     error
 })
 
+
 export const loadParticipants = (payload) => dispatch => {
 
     dispatch(requestParticipants(payload))
-    dispatch(retrieveParticipants([{
-            index: 0,
-            guid: "62c63de1-52f3-43f2-ba69-a21b8ead0a5f",
-            name: {
-                first: "Angelita",
-                last: "Bird"
-            },
-            coords: [
-                41.9082577 , -87.6886518
-            ]
-        },
-        {
-            index: 1,
-            guid: "122720d7-4b55-494f-b4a7-44aa0071305a",
-            name: {
-                "first": "Phyllis",
-                "last": "Wood"
-            },
-            coords: [
-                41.9083677, -87.6888418
-            ]
-        }
-    ]))
+
+    const socket = io('pacific-meadow-71522.herokuapp.com',{transports: ['websocket', 'polling']});
+
+    socket.emit('participant_broadcast',
+                            payload,
+                                    (data) => dispatch(retrieveParticipants((data))));
 }
 
 export const loadRouteMarkers = (payload) => dispatch => {

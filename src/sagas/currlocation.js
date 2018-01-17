@@ -4,9 +4,6 @@ import axios from "axios";
 function  currLocation() {
 
         navigator.geolocation.watchPosition(position => {
-           // this.props.actions.setCurrLocation([position.coords.latitude, position.coords.longitude])
-
-console.log(position)
              put({ type: 'CURR_LOCATION', coords: [position.coords.latitude, position.coords.longitude]});
         }, function error(msg) {
 
