@@ -3,30 +3,45 @@ import createSagaMiddleware from 'redux-saga'
 import { createLogger } from 'redux-logger'
 import { compose, createStore, applyMiddleware } from "redux"
 import { combineReducers } from "redux"
-import { participants } from "./participants"
-import { authenticated } from "./authenticated"
+import { account } from "./account"
 import { location } from "./location"
 import { routemarkers } from "./routemarkers"
 import { region } from "./region"
 import { error } from "./error"
+import { event } from "./event"
+import { participant } from "./participant"
+
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
 import rootSaga from '../sagas'
-//import currLocationSaga from '../sagas/currlocation'
+import accountSaga from '../sagas/account'
+import eventSaga from '../sagas/event'
+import participantSaga from '../sagas/participant'
 
 const sagaMiddleware = createSagaMiddleware()
 const loggerMiddleware = createLogger()
 
 const rootReducer = combineReducers({
-    participants,
-    authenticated,
+    participant,
+    account,
     routemarkers,
     location,
     region,
-    error
+    error,
+    event,
+    participant
 })
 
+const persistConfig = {
+    key: 'root',
+    storage: storage,
+}
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
 let store = createStore(
-    rootReducer,
+    persistedReducer,
     compose(
         applyMiddleware(
             sagaMiddleware,
@@ -37,6 +52,12 @@ let store = createStore(
 )
 
 sagaMiddleware.run(rootSaga)
-//sagaMiddleware.run(currLocationSaga)
+sagaMiddleware.run(accountSaga)
+sagaMiddleware.run(eventSaga)
+sagaMiddleware.run(participantSaga)
 
-export default store
+export default () => {
+    //  let store = createStore(persistedReducer)
+    let persistor = persistStore(store)
+    return { store, persistor }
+}

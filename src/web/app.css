@@ -1,3 +1,14 @@
+.login-container {
+    width: 375px;
+    display: inline-block;
+    height: 500px;
+}
+
+.login-form {
+    width: 375px;
+    margin: auto;
+}
+
 .marker {
     border-radius: 15px;
     border: 1px solid #FFF;
@@ -12,6 +23,7 @@
     font-weight: bold;
     margin: 0 -50px;
 }
+
 .routemarker {
     border: 1px solid #FFF;
     display: inline-block;
@@ -47,7 +59,6 @@
     line-height: 25px;
     margin: 2px;
     padding: 5px;
-    position: absolute;
     font-size: 20px;
     bottom: 0;
     left: 0;

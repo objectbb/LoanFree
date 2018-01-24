@@ -3,7 +3,7 @@ import classnames from "classnames";
 import { connect } from "react-redux";
 import geolib from "geolib";
 
-import { Map, Marker, TileLayer, Popup,Tooltip } from 'react-leaflet';
+import { Map, Marker, TileLayer, Popup, Tooltip } from 'react-leaflet';
 import { divIcon, point } from "leaflet";
 import AppCss from "./app.css";
 
@@ -54,7 +54,7 @@ class MapIt extends Component {
 
                 let cI = this.closeIndicator(item.coords);
 
-                const icon = divIcon({ className: 'marker ' + (!cI ? 'bus' : 'bus mark'), html: `<div>${item.name.first[0]}${item.name.last[0]}</div>`})
+                const icon = divIcon({ className: 'marker ' + (!cI ? 'bus' : 'bus mark'), html: `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})
 
                 return (
                   <Marker key={index}
@@ -65,7 +65,7 @@ class MapIt extends Component {
                       <Popup minWidth={90}>
                         <span>
                         <div>
-                        {item.name.first} {item.name.last}
+                        {item.account.firstname} {item.account.lastname}
                         </div>
                         <div>
                           {item.coords}

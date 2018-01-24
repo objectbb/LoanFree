@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import style from "./app.css";
-
+import TextInput from "./components/TextInput"
 
 class AddressGeocode extends Component {
 
@@ -26,8 +26,16 @@ class AddressGeocode extends Component {
     render() {
 
         return (
-            <form onSubmit={this.handleSubmit}>
-                <input type="text" className="address_geocode" name="address" value={this.state.address} onChange={this.handleChange} onBlur={this.handleSubmit} placeholder="Address" />
+            <form  onSubmit={this.handleSubmit}>
+                <TextInput
+                className="address_geocode"
+                text="Enter Start Address"
+                type="text"
+                uniquename="address"
+                content={this.state.address}
+                onChange={this.handleChange}
+                onBlur={this.handleSubmit}
+                placeholder="Address" />
             </form>
         );
     }

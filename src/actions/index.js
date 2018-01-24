@@ -1,5 +1,4 @@
-//import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
-//import axios from "axios";
+import * as config from "../config/config"
 import io from 'socket.io-client';
 
 export const CURR_LOCATION = "CURR_LOCATION"
@@ -11,6 +10,29 @@ export const UPDATE_ROUTE_MARKERS = "UPDATE_ROUTE_MARKERS"
 export const AUTHENTICATED_USER = "AUTHENTICATED_USER"
 export const SET_CURRENT_REGION = "SET_CURRENT_REGION"
 export const APP_ERROR = "APP_ERROR"
+export const ACCOUNT_AUTHENTICATE_SUCCEEDED = "ACCOUNT_AUTHENTICATE_SUCCEEDED"
+export const ACCOUNT_FETCH_REQUESTED = "ACCOUNT_FETCH_REQUESTED"
+export const ACCOUNT_UPSERT_REQUESTED = "ACCOUNT_UPSERT_REQUESTED"
+export const ACCOUNT_AUTHENTICATE_REQUESTED = "ACCOUNT_AUTHENTICATE_REQUESTED"
+export const ACCOUNT_FETCH_SUCCEEDED = "ACCOUNT_FETCH_SUCCEEDED"
+export const ACCOUNT_UPSERT_SUCCEEDED = "ACCOUNT_UPSERT_SUCCEEDED"
+export const ACCOUNT_AUTHENTICATE_FAILED = "ACCOUNT_AUTHENTICATE_FAILED"
+export const ACCOUNT_UPSERT_FAILED = "ACCOUNT_UPSERT_FAILED"
+export const ACCOUNT_FETCH_FAILED = "ACCOUNT_FETCH_FAILED"
+export const EVENT_UPSERT_REQUESTED = "EVENT_UPSERT_REQUESTED"
+export const EVENT_FETCH_REQUESTED = "EVENT_FETCH_REQUESTED"
+export const EVENT_FETCH_SUCCEEDED = "EVENT_FETCH_SUCCEEDED"
+export const EVENT_FETCH_FAILED = "EVENT_FETCH_FAILED"
+export const EVENT_UPSERT_SUCCEEDED = "EVENT_UPSERT_SUCCEEDED"
+export const EVENT_UPSERT_FAILED = "EVENT_UPSERT_FAILED"
+
+export const PARTICIPANT_UPSERT_REQUESTED = "PARTICIPANT_UPSERT_REQUESTED"
+export const PARTICIPANT_FETCH_REQUESTED = "PARTICIPANT_FETCH_REQUESTED"
+export const PARTICIPANT_FETCH_SUCCEEDED = "PARTICIPANT_FETCH_SUCCEEDED"
+export const PARTICIPANT_FETCH_FAILED = "PARTICIPANT_FETCH_FAILED"
+export const PARTICIPANT_UPSERT_SUCCEEDED = "PARTICIPANT_UPSERT_SUCCEEDED"
+export const PARTICIPANT_UPSERT_FAILED = "PARTICIPANT_UPSERT_FAILED"
+
 
 export const currLocation = coords => ({
     type: CURR_LOCATION,
@@ -24,7 +46,7 @@ export const requestParticipants = (payload) => ({
 })
 
 export const retrieveParticipants = (payload) => ({
-    type: RETRIEVE_PARTICIPANTS,
+    type: PARTICIPANT_FETCH_REQUESTED,
     payload,
     receivedAt: Date.now()
 })
@@ -58,16 +80,15 @@ export const appError = (error) => ({
     error
 })
 
-
 export const loadParticipants = (payload) => dispatch => {
 
     dispatch(requestParticipants(payload))
+    //pacific-meadow-71522.herokuapp.com
+    const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
-    const socket = io('pacific-meadow-71522.herokuapp.com',{transports: ['websocket', 'polling']});
-
-    socket.emit('participant_broadcast',
-                            payload,
-                                    (data) => dispatch(retrieveParticipants((data))));
+    socket.on('connect', function () {
+        socket.emit('participant_broadcast', payload, (data) => dispatch(retrieveParticipants((data))));
+    });
 }
 
 export const loadRouteMarkers = (payload) => dispatch => {
@@ -102,34 +123,9 @@ export const loadRouteMarkers = (payload) => dispatch => {
 
 }
 
-export const setCurrentRegionAddress = (address) => dispatch =>  {
+export const setCurrentRegionAddress = (address) => dispatch => {
 
-  dispatch({type: 'REQUEST_GEOCODE', address})
-/*
-    return async dispatch => {
-        function onSuccess(geocoderesults) {
-
-            console.log(geocoderesults)
-
-            const loc = geocoderesults.data.results[0].geometry.location
-
-            dispatch({ type: SET_CURRENT_REGION, coords: [loc.lat, loc.lng] });
-            return geocoderesults;
-        }
-
-        function onError(error) {
-            console.log(error);
-            dispatch({ type: APP_ERROR, error: error });
-            return error;
-        }
-        try {
-            const success = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}`);
-            return onSuccess(success);
-        } catch (error) {
-            return onError(error);
-        }
-    }
-    */
+    dispatch({ type: 'SET_START_ADDRESS', address })
 }
 
 export const setRouteMarkers = (payload) => dispatch => {
@@ -137,10 +133,8 @@ export const setRouteMarkers = (payload) => dispatch => {
 }
 
 export const setCurrLocation = (coords) => dispatch => {
-    //console.log(coords)
-    dispatch(currLocation(coords))
 
-    // dispatch({type: 'CURR_LOCATION'})
+    dispatch(currLocation(coords))
 }
 
 export const registerUser = (payload) => dispatch => {
