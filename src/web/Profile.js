@@ -3,15 +3,15 @@ import { PropTypes } from "prop-types"
 import { connect } from "react-redux"
 import TextInput from "./components/TextInput"
 import "./app.css"
-import FontIcon from "material-ui/FontIcon"
 
-import RaisedButton from "material-ui/RaisedButton"
+
+import Button from "material-ui/Button"
 import Paper from "material-ui/Paper"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 import Checkbox from "material-ui/Checkbox"
-import SelectField from "material-ui/SelectField"
+import Select from "material-ui/Select"
 import MenuItem from "material-ui/MenuItem"
-import CircularProgress from "material-ui/CircularProgress"
+import CircularProgress from "material-ui/Progress"
 
 class Profile extends Component {
     constructor(props) {
@@ -141,8 +141,8 @@ class Profile extends Component {
               />
               <br />
 
-          <SelectField
-            uniqueName="authorization"
+          <Select
+            name="authorization"
             floatingLabelText="Authorization"
             fullWidth={true}
             value={authorization}
@@ -164,14 +164,15 @@ class Profile extends Component {
             {message}
           </p>}
         <br />
-                 <RaisedButton
+                 <Button
+                 raised
                   label="OK"
                   disabled={!isEnabled}
                   fullWidth={true}
                   onClick={event => this.handleSubmit(event)}
               >
                   {isFetching && <CircularProgress size={18} />}
-                </RaisedButton>
+                </Button>
             </CardText>
           </Card>
         <br />

@@ -1,10 +1,10 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { PropTypes } from "prop-types"
-import RaisedButton from "material-ui/RaisedButton"
+import Button from "material-ui/Button"
 import "./app.css"
 import TextInput from "./components/TextInput"
-import CircularProgress from "material-ui/CircularProgress"
+import CircularProgress from "material-ui/Progress"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 
 class Login extends Component {
@@ -73,14 +73,15 @@ class Login extends Component {
                   errorMessage="Email is invalid"
                   emptyMessage="Email is required"
                 />
-                <RaisedButton
+                <Button
+                  raised
                   label="Login"
                   disabled={!isEnabled}
                   fullWidth={true}
                   onClick={event => this.handleSubmit(event)}
                 >
                   {isFetching && <CircularProgress size={30} />}
-                </RaisedButton>
+                </Button>
                 {error &&
                   <p style={{ color: "red" }}>
                     {(error === "No data") && "Email not found...Please register or contact your local administrator."}

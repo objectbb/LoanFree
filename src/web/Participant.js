@@ -1,10 +1,10 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { PropTypes } from "prop-types"
-import RaisedButton from "material-ui/RaisedButton"
+import Button from "material-ui/Button"
 import "./app.css"
 import TextInput from "./components/TextInput"
-import CircularProgress from "material-ui/CircularProgress"
+import CircularProgress from "material-ui/Progress"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 
 class Participant extends Component {
@@ -116,14 +116,15 @@ class Participant extends Component {
                   emptyMessage="Last Name is required"
                 />
                 <br />
-                <RaisedButton
+                <Button
+                  raised
                   label="Add"
                   disabled={!isEnabled}
                   fullWidth={true}
                   onClick={event => this.handleSubmit(event)}
                 >
                   {isFetching && <CircularProgress size={18} />}
-                </RaisedButton>
+                </Button>
 
                 {error &&
                   <p style={{ color: "red" }}>

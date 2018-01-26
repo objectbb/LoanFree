@@ -3,16 +3,16 @@ import { PropTypes } from "prop-types"
 import { connect } from "react-redux"
 import TextInput from "./components/TextInput"
 import "./app.css"
-import FontIcon from "material-ui/FontIcon"
 
-import RaisedButton from "material-ui/RaisedButton"
-import CircularProgress from "material-ui/CircularProgress"
+import Button from "material-ui/Button"
+import CircularProgress from "material-ui/Progress"
 import Paper from "material-ui/Paper"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 import Checkbox from "material-ui/Checkbox"
-import SelectField from "material-ui/SelectField"
+import Select from "material-ui/Select"
 import MenuItem from "material-ui/MenuItem"
-import DatePicker from 'material-ui/DatePicker';
+import { withStyles } from 'material-ui/styles'
+import TextField from 'material-ui/TextField'
 
 class Event extends Component {
     constructor(props) {
@@ -185,12 +185,17 @@ class Event extends Component {
               />
               <br />
 
-              <DatePicker
-                name="startdate"
-                value={startdate}
-                onChange={this.handleDateChange}
-                hintText="Start Date"
-                container="inline" />
+
+                 <TextField
+                     name="startdate"
+                    label="Start Date"
+                    onChange={this.handleDateChange}
+                    type="datetime-local"
+                        value={startdate}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
 
             <TextInput
                 uniquename="description"
@@ -233,17 +238,16 @@ class Event extends Component {
               />
               <br />
 
-          <SelectField
-            uniquename="state"
+          <Select
+            name="state"
             floatingLabelText="State"
             fullWidth={true}
-            onBlur={this.handleGeocode}
             onBlur={this.handleGeocode}
             value={state}
             onChange={this.handleSelectChange}
           >
             {states}
-          </SelectField>
+          </Select>
 
                   <br />
 
@@ -264,13 +268,14 @@ class Event extends Component {
             {error}
           </p>}
         <br />
-                 <RaisedButton
+                 <Button
+                  raised
                   label="OK"
                   fullWidth={true}
                   onClick={event => this.handleSubmit(event)}
               >
                   {isFetching && <CircularProgress size={18} />}
-                </RaisedButton>
+                </Button>
             </CardText>
           </Card>
         <br />
