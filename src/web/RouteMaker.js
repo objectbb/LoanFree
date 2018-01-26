@@ -20,7 +20,7 @@ class RouteMaker extends Component {
 
     addMarker() {
         let offset = .002
-        let length = this.props.routeMarkers.length;
+        let length = this.props.event.item.markers.length;
 
         let lastcoords = this.props.region;
 
@@ -29,21 +29,32 @@ class RouteMaker extends Component {
         item.guid = uuid.v1();
         item.range = 50;
 
-        this.props.actions.setRouteMarkers([...this.props.routeMarkers, item])
+        const event = { ...this.props.event.item }
+        event.markers = [...this.props.event.item.markers, item]
+
+        console.log("RouteMaker --> removeMarker --> event", event)
+
+        this.props.actions.setRouteMarkers(event)
 
     }
 
     removeMarker(item) {
 
-        let newmarkers = this.props.routeMarkers.filter((marker) => marker.guid !== item.guid);
+        let newmarkers = this.props.event.item.markers.filter((marker) => marker.guid !== item.guid);
 
-        this.props.actions.setRouteMarkers(newmarkers)
+        const event = { ...this.props.event.item }
+        event.markers = newmarkers;
+
+        console.log("RouteMaker --> removeMarker --> event", event)
+
+        this.props.actions.setRouteMarkers(event)
 
     }
 
     updatePosition(item) {
+        const { markers } = this.props.event.item
 
-        let newmarkers = this.props.routeMarkers.map(
+        let newmarkers = markers.map(
             (marker) => {
                 if (marker.guid === item.guid)
                     marker.coords = item.coords;
@@ -52,7 +63,12 @@ class RouteMaker extends Component {
             }
         );
 
-        this.props.actions.setRouteMarkers(newmarkers)
+        const event = { ...this.props.event.item }
+        event.markers = newmarkers;
+
+        console.log("RouteMaker --> updatePosition --> event", event)
+
+        this.props.actions.setRouteMarkers(event)
 
     }
 
@@ -60,11 +76,12 @@ class RouteMaker extends Component {
     render() {
         const toolbar = { float: 'right', borderStyle: 'solid', borderWidth: '5px' };
 
+
         return (
 
             <div>
                 {<MapIt
-                  routeMarkers = {this.props.routeMarkers}
+                  routeMarkers = {this.props.event.item.markers}
                   participant={this.props.participant}
                   removeMarker={this.removeMarker}
                   region={this.props.region}
@@ -86,11 +103,14 @@ class RouteMaker extends Component {
 }
 
 function mapStateToProps(state) {
-    const { location, region, participant, routemarkers } = state
+    const { location, region, participant, event } = state
+
+    console.log("RouteMaker --> mapStateToProps --> event", event)
+    console.log("RouteMaker --> mapStateToProps --> participant", participant)
 
     return {
-        routeMarkers: routemarkers.items,
-        participant: participant.items,
+        event,
+        participant: participant.item,
         region: region.coords,
         location: location.coords
     }

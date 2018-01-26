@@ -9,20 +9,26 @@ import { routemarkers } from "./routemarkers"
 import { region } from "./region"
 import { error } from "./error"
 import { event } from "./event"
+import { events } from "./events"
 import { participant } from "./participant"
+import { eventparticipants } from "./eventparticipants"
 
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import * as localForage from "localforage";
 
 import rootSaga from '../sagas'
 import accountSaga from '../sagas/account'
 import eventSaga from '../sagas/event'
+import eventsSaga from '../sagas/events'
 import participantSaga from '../sagas/participant'
+import eventParticipantsSaga from '../sagas/eventparticipants'
 
 const sagaMiddleware = createSagaMiddleware()
 const loggerMiddleware = createLogger()
 
 const rootReducer = combineReducers({
+    eventparticipants,
     participant,
     account,
     routemarkers,
@@ -30,12 +36,13 @@ const rootReducer = combineReducers({
     region,
     error,
     event,
-    participant
+    events
 })
 
 const persistConfig = {
-    key: 'root',
-    storage: storage,
+    key: 'root3',
+    storage: localForage,
+    whitelist: ['account']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -55,9 +62,10 @@ sagaMiddleware.run(rootSaga)
 sagaMiddleware.run(accountSaga)
 sagaMiddleware.run(eventSaga)
 sagaMiddleware.run(participantSaga)
+sagaMiddleware.run(eventParticipantsSaga)
+sagaMiddleware.run(eventsSaga)
 
 export default () => {
-    //  let store = createStore(persistedReducer)
     let persistor = persistStore(store)
     return { store, persistor }
 }

@@ -33,6 +33,17 @@ export const PARTICIPANT_FETCH_FAILED = "PARTICIPANT_FETCH_FAILED"
 export const PARTICIPANT_UPSERT_SUCCEEDED = "PARTICIPANT_UPSERT_SUCCEEDED"
 export const PARTICIPANT_UPSERT_FAILED = "PARTICIPANT_UPSERT_FAILED"
 
+export const EVENT_PARTICIPANTS_UPSERT_REQUESTED = "EVENT_PARTICIPANTS_UPSERT_REQUESTED"
+export const EVENT_PARTICIPANTS_FETCH_REQUESTED = "EVENT_PARTICIPANTS_FETCH_REQUESTED"
+export const EVENT_PARTICIPANTS_FETCH_SUCCEEDED = "EVENT_PARTICIPANTS_FETCH_SUCCEEDED"
+export const EVENT_PARTICIPANTS_FETCH_FAILED = "EVENT_PARTICIPANTS_FETCH_FAILED"
+export const EVENT_PARTICIPANTS_UPSERT_SUCCEEDED = "EVENT_PARTICIPANTS_UPSERT_SUCCEEDED"
+export const EVENT_PARTICIPANTS_UPSERT_FAILED = "EVENT_PARTICIPANTS_UPSERT_FAILED"
+
+export const EVENTS_FETCH_REQUESTED = "EVENTS_FETCH_REQUESTED"
+export const EVENTS_FETCH_SUCCEEDED = "EVENTS_FETCH_SUCCEEDED"
+export const EVENTS_FETCH_FAILED = "EVENTS_FETCH_FAILED"
+
 
 export const currLocation = coords => ({
     type: CURR_LOCATION,
@@ -83,7 +94,7 @@ export const appError = (error) => ({
 export const loadParticipants = (payload) => dispatch => {
 
     dispatch(requestParticipants(payload))
-    //pacific-meadow-71522.herokuapp.com
+
     const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
     socket.on('connect', function () {
@@ -128,9 +139,11 @@ export const setCurrentRegionAddress = (address) => dispatch => {
     dispatch({ type: 'SET_START_ADDRESS', address })
 }
 
+
 export const setRouteMarkers = (payload) => dispatch => {
-    dispatch(updateRouteMarkers(payload))
+    dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: payload });
 }
+
 
 export const setCurrLocation = (coords) => dispatch => {
 

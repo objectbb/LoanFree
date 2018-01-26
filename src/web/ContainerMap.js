@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux";
+
+import AppBar from 'material-ui/AppBar';
+import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
+
 import RouteMaker from "./RouteMaker"
 import DataFeeder from "./DataFeeder"
 import Login from "./Login"
@@ -8,6 +12,9 @@ import Profile from "./Profile"
 import Event from "./Event"
 import Participant from "./Participant"
 import AddressGeocode from './AddressGeocode'
+import EventsContainer from './EventsContainer'
+import ParticipantsContainer from './ParticipantsContainer'
+import Layout from './Layout'
 
 import * as actions from "../actions"
 
@@ -22,20 +29,49 @@ class ContainerMap extends Component {
         this.props.actions.setCurrentRegionAddress(address)
     }
 
-
-
     render() {
+        console.log("ContainerMap --> render --> account", this.props.account)
+
+        const { account } = this.props
+
+        console.log("ContainerMap --> render --> account", account.item.authorization)
         return (
             <div>
-         <Login />
-            <Profile />
-            <Event />
-            <Participant />
 
-            <DataFeeder>
-                <RouteMaker />
-            </DataFeeder>
-            <AddressGeocode geocode={ this.setCurrentRegionAddress}/>
+
+
+
+         {!account.authenticated && <Login />}
+
+        {account.authenticated  &&
+           <div>
+               <AppBar
+                 title={<EventsContainer />}
+               />
+
+               <Layout>
+                <Profile />
+
+
+                <Event />
+
+                 <ParticipantsContainer />
+                <Participant />
+                </Layout>
+
+                {account.item.authorization == "ROUTEMAKER"  &&
+                    <div>
+                        <DataFeeder>
+                            <RouteMaker />
+                        </DataFeeder>
+                    </div>
+                }
+
+                <BottomNavigation>
+                    <AddressGeocode geocode={ this.setCurrentRegionAddress}/>
+                </BottomNavigation>
+            </div>
+        }
             </div>
         )
     }
@@ -43,6 +79,8 @@ class ContainerMap extends Component {
 
 function mapStateToProps(state) {
     const { account } = state
+
+    console.log("ContainerMap --> mapStateToProps --> account", account)
 
     return {
         account: account
