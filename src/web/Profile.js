@@ -4,7 +4,6 @@ import { connect } from "react-redux"
 import TextInput from "./components/TextInput"
 import "./app.css"
 
-
 import Button from "material-ui/Button"
 import Paper from "material-ui/Paper"
 import { Card, CardHeader, CardText } from "material-ui/Card"
@@ -156,7 +155,7 @@ class Profile extends Component {
               value={"ROUTEMANAGER"}
               primaryText="ROUTE MANAGER"
             />
-          </SelectField>
+          </Select>
 
                   <br />
         {message &&
