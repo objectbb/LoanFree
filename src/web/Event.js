@@ -18,7 +18,7 @@ class Event extends Component {
     constructor(props) {
         super(props)
 
-        this.state = { ...this.props.event.item };
+        this.state = { ...props.event.item };
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -27,27 +27,21 @@ class Event extends Component {
         this.isEnabled = this.isEnabled.bind(this)
     }
 
-    shouldComponentUpdate() {
-        console.log("Event-> shouldComponentUpdate -> Account", this.props.account.item)
-        return true
-    }
-    componentWillUpdate() {
+    componentWillReceiveProps() {
+        const { event } = this.props;
+        console.log("Event --> componentWillReceiveProps --> event", event)
 
-        console.log("Event-> componentWillUpdate -> Account", this.props.account.item)
+        this.setState({
+            ...this.props.event.item
+        });
     }
 
     handleSubmit(e) {
         e.preventDefault()
+        const { coords } = this.props.event.item
 
-        const { dispatch } = this.props;
-
-        this.setState({
-            _accountId: this.props.account.item.id
-        })
-
-        console.log("Event-> handleSubmit -> Account", this.props.account.item)
-
-        dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: this.state });
+        const { dispatch, account } = this.props;
+        dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: { ...this.state, coords, _accountId: account.item.id } });
     }
 
     handleSelectChange = (e, index, state) => {
@@ -69,11 +63,9 @@ class Event extends Component {
         const value = target.type === "checkbox" ? target.checked : target.value
         const name = target.name
 
-        console.log(this.props)
-
         this.setState({
             [name]: value
-        }, () => console.log(e))
+        })
     }
 
     validateEmail(value) {
@@ -93,9 +85,7 @@ class Event extends Component {
             type: 'REQUEST_GEOCODE',
             payload: { ...this.state, nextAction: 'EVENT_UPSERT_SUCCEEDED' }
         })
-
     }
-
 
     isEnabled() {
 
@@ -119,7 +109,8 @@ class Event extends Component {
             (displayname && displayname.trim().length > 1) &&
             (address && address.trim().length > 5) &&
             (city && city.trim().length > 1) &&
-            (state && state.trim().length > 1)
+            (state && state.trim().length > 1) &&
+            (zipcode && zipcode.trim().length > 4)
         )
     }
 
@@ -290,8 +281,8 @@ function mapStateToProps(state) {
 
     const { event, account } = state
 
-    console.log("Event --> mapStateToProps--->event", event)
-    console.log("Event --> mapStateToProps--->account", account)
+    console.log("Event --> mapStateToProps --> event", event)
+    console.log("Event --> mapStateToProps --> account", account)
 
     return {
         event,

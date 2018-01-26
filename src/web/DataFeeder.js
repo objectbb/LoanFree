@@ -17,8 +17,12 @@ class DataFeeder extends Component {
 
     componentDidMount() {
 
-        this.props.actions.loadParticipants({ name: 'Brian' })
-        this.props.actions.loadRouteMarkers({ name: 'Brian' })
+        const { event } = this.state
+
+        if (!event) return
+
+        this.props.actions.loadParticipants({ _eventId: event.item._id })
+        this.props.actions.loadRouteMarkers(event.item.markers)
 
         navigator.geolocation.watchPosition(position => {
             this.props.actions.setCurrLocation([position.coords.latitude, position.coords.longitude])
@@ -35,10 +39,20 @@ class DataFeeder extends Component {
     }
 }
 
+function mapStateToProps(state) {
+
+    const { event } = state
+
+    console.log("DataFeeder --> mapStateToProps --> event", event)
+
+    return {
+        event
+    }
+}
 const mapDispatchToProps = (dispatch, props) => {
     return {
         actions: bindActionCreators(actions, dispatch)
     }
 }
 
-export default connect(null, mapDispatchToProps)(DataFeeder)
+export default connect(mapStateToProps, mapDispatchToProps)(DataFeeder)

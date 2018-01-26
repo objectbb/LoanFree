@@ -7,17 +7,17 @@ import TextInput from "./components/TextInput"
 import CircularProgress from "material-ui/Progress"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 
+
 class Participant extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            account: { email: '', firstname: '', lastname: '' },
-            participant: {
-                _eventId: this.props.event.item.id,
-                _accountId: '',
-                _teamdId: '',
-                coords: this.props.event.coords
+            newAccount: {
+                email: '',
+                firstname: '',
+                lastname: '',
+                authorization: 'PARTICIPANT'
             }
         };
 
@@ -30,15 +30,16 @@ class Participant extends Component {
     handleSubmit(e) {
         e.preventDefault()
 
-        this.setState(prevState => ({
-            participant: {
-                _eventId: this.props.event.item.id,
-                _accountId: '',
-                _teamdId: '',
-                coords: this.props.event.item.coords
-            }
-        }))
-        this.props.dispatch({ type: 'PARTICIPANT_UPSERT_REQUESTED', payload: this.state })
+        const participant = {
+            _eventId: this.props.event.item._id,
+            _accountId: '',
+            _teamdId: '',
+            coords: this.props.event.item.coords
+        }
+
+        console.log("Participant --> handleSubmit --> participant ", participant)
+
+        this.props.dispatch({ type: 'PARTICIPANT_UPSERT_REQUESTED', payload: { ...this.state, participant } })
     }
 
     handleChange(e) {
@@ -48,16 +49,23 @@ class Participant extends Component {
         const value = target.type === "checkbox" ? target.checked : target.value
         const name = target.name
 
-        this.setState({
-            [name]: value
-        })
+        this.setState(prevState => ({
+            newAccount: { ...prevState.newAccount,
+                [name]: value
+            }
+        }))
+
     }
 
     isEnabled() {
-        const { username } = this.state
+        const { email, firstname, lastname } = this.state.newAccount
         return (
-            username &&
-            username.trim().length > 5
+            email &&
+            email.trim().length > 5 &&
+            firstname &&
+            firstname.trim().length > 1 &&
+            lastname &&
+            lastname.trim().length > 1
         )
     }
 
@@ -69,17 +77,17 @@ class Participant extends Component {
 
     render() {
         const { error, isFetching } = this.props.participant
-        const { email, firstname, lastname } = this.state.account
-        //  const { name } = this.props.event.item
+        const { email, firstname, lastname } = this.state.newAccount
+        const { name } = this.props.event.item
 
         let isEnabled = this.isEnabled()
 
         return (
 
             <Card>
-            <CardHeader>Participants</CardHeader>
+            <CardHeader>Participant</CardHeader>
             <CardText>
-            //    For Event {name}
+               {name}
                 <br />
                 <TextInput
                   uniquename="email"
@@ -111,7 +119,7 @@ class Participant extends Component {
                   required={true}
                   minCharacters={2}
                   onChange={this.handleChange}
-                  content={this.state.username}
+                  content={lastname}
                   errorMessage="Last Name is invalid"
                   emptyMessage="Last Name is required"
                 />

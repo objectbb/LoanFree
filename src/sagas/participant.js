@@ -18,27 +18,37 @@ function* fetchParticipant(action) {
 }
 
 function* fetchUpsert(action) {
+
     try {
 
+        const { newAccount, participant } = action.payload
 
-        const item = yield call(api.call, '/account_upsert', action.payload);
+        const item = yield call(api.call, '/account_upsert', newAccount);
 
-        if (item.data.errors)
-            yield put({ type: "PARTICIPANT_FETCH_FAILED", payload: item.data.errors });
-        else if (!item.data)
-            yield put({ type: "PARTICIPANT_FETCH_FAILED", message: "No data" });
+        if (item.data.errors) {
+            yield put({ type: "PARTICIPANT_UPSERT_FAILED", payload: item.data.errors });
+            return;
+        } else if (!item.data) {
+            yield put({ type: "PARTICIPANT_UPSERT_FAILED", message: "No Data" });
+            return;
+        }
 
         var account = item.data;
+        console.log("EventPart -->fetchUpsert-->account", account)
 
+        participant._accountId = account._id;
 
-        //const item = yield call(api.call, '/participant_upsert', action.payload);
+        console.log("EventPart -->fetchUpsert-->participant", participant);
+
+        item = yield call(api.call, '/participant_upsert', participant);
 
         if (item.data.errors)
             yield put({ type: "PARTICIPANT_UPSERT_FAILED", payload: item.data.errors });
         else if (!item.data)
             yield put({ type: "PARTICIPANT_UPSERT_FAILED", message: "No data" });
         else if (item.data)
-            yield put({ type: "PARTICIPANT_UPSERT_SUCCEEDED", payload: item.data });
+            yield put({ type: "PARTICIPANT_UPSERT_SUCCEEDED", payload: participant });
+
     } catch (e) {
         yield put({ type: "PARTICIPANT_UPSERT_FAILED", message: e.message });
     }

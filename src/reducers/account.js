@@ -10,7 +10,7 @@ export const account = (
     case ACCOUNT_AUTHENTICATE_REQUESTED:
         return {
             ...state,
-            item: action.payload,
+            payload: action.payload,
             authenticated: false,
             isFetching: true
         };

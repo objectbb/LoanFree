@@ -16,7 +16,7 @@ class Profile extends Component {
     constructor(props) {
         super(props)
 
-        this.state = this.props.account.item
+        this.state = { ...props.account.item }
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -25,10 +25,12 @@ class Profile extends Component {
     }
 
 
-    componentDidMount() {
+    componentWillReceiveProps() {
+
         this.setState({
             ...this.props.account.item
         });
+
     }
 
     handleSubmit(e) {
@@ -185,8 +187,10 @@ class Profile extends Component {
 function mapStateToProps(state) {
     const { account } = state
 
+    console.log("Profile --> mapStateToProps --> account ", account)
+
     return {
-        account: account
+        account
     }
 }
 
