@@ -6,9 +6,8 @@ function* fetchEvents(action) {
 
         const events = yield call(api.call, '/event_get', action.payload);
 
-        console.log(events)
         if (events.data.errors)
-            yield put({ type: "EVENTS_FETCH_FAILED", payload: events.data.errors });
+            yield put({ type: "EVENTS_FETCH_FAILED", message: JSON.stringify(events.data.errors) });
         else if (!events.data)
             yield put({ type: "EVENTS_FETCH_FAILED", message: "No data" });
         else if (events.data && events.data.length > 0)

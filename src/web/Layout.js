@@ -14,23 +14,25 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import ChevronRightIcon from 'material-ui-icons/ChevronRight';
-import { mailFolderListItems, otherMailFolderListItems } from './tileData';
 
-const drawerWidth = 240;
+const drawerWidth = '300';
 
 const styles = theme => ({
     root: {
         width: '100%',
-        height: 430,
-        marginTop: theme.spacing.unit * 3,
-        zIndex: 1,
-        overflow: 'hidden',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        zIndex: -1
     },
     appFrame: {
         position: 'relative',
         display: 'flex',
         width: '100%',
         height: '100%',
+        zIndex: -1
     },
     appBar: {
         position: 'absolute',
@@ -40,7 +42,7 @@ const styles = theme => ({
         }),
     },
     appBarShift: {
-        width: `calc(100% - ${drawerWidth}px)`,
+        maxWidth: `calc(100% - ${drawerWidth})`,
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
@@ -60,9 +62,12 @@ const styles = theme => ({
         display: 'none',
     },
     drawerPaper: {
-        position: 'relative',
+        position: 'absolute',
         height: '100%',
-        width: drawerWidth,
+        width: '50%',
+    },
+    flex: {
+        flex: 1,
     },
     drawerHeader: {
         display: 'flex',
@@ -70,6 +75,10 @@ const styles = theme => ({
         justifyContent: 'flex-end',
         padding: '0 8px',
         ...theme.mixins.toolbar,
+        width: '100%'
+    },
+    drawerInner: {
+        width: '100%'
     },
     content: {
         width: '100%',
@@ -162,17 +171,6 @@ class PersistentDrawer extends React.Component {
 
         return (
             <div className={classes.root}>
-        <TextField
-          id="persistent-anchor"
-          select
-          label="Anchor"
-          value={anchor}
-          onChange={this.handleChangeAnchor}
-          margin="normal"
-        >
-          <MenuItem value="left">left</MenuItem>
-          <MenuItem value="right">right</MenuItem>
-        </TextField>
         <div className={classes.appFrame}>
           <AppBar
             className={classNames(classes.appBar, {
@@ -189,19 +187,16 @@ class PersistentDrawer extends React.Component {
               >
                 <MenuIcon />
               </IconButton>
-              <Typography type="title" color="inherit" noWrap>
-                Persistent drawer
-              </Typography>
+
+              <Typography type="title" color="inherit" className={classes.flex}>
+             {this.props.header}
+          </Typography>
+             {this.props.logout}
             </Toolbar>
           </AppBar>
           {before}
-          <main
-            className={classNames(classes.content, classes[`content-${anchor}`], {
-              [classes.contentShift]: open,
-              [classes[`contentShift-${anchor}`]]: open,
-            })}
-          >
-            <Typography>{'You think water moves fast? You should see ice.'}</Typography>
+          <main>
+                {this.props.body}
           </main>
           {after}
         </div>

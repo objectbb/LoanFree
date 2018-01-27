@@ -4,7 +4,7 @@ import { PropTypes } from "prop-types"
 import Button from "material-ui/Button"
 import "./app.css"
 import TextInput from "./components/TextInput"
-import CircularProgress from "material-ui/Progress"
+import { CircularProgress } from "material-ui/Progress"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 
 class Login extends Component {
@@ -55,13 +55,12 @@ class Login extends Component {
     render() {
         const { error, isFetching } = this.props.account
 
+        console.log("Login --> render ---> error", error)
+
         let isEnabled = this.isEnabled()
 
         return (
-
-            <Card>
-            <CardHeader>Login</CardHeader>
-            <CardText>
+            <div>
                 <TextInput
                   uniquename="username"
                   text="Email Address"
@@ -75,19 +74,17 @@ class Login extends Component {
                 />
                 <Button
                   raised
-                  label="Login"
                   disabled={!isEnabled}
                   fullWidth={true}
                   onClick={event => this.handleSubmit(event)}
                 >
-                  {isFetching && <CircularProgress size={30} />}
+                  {isFetching && <CircularProgress  size={30} />} Login
                 </Button>
-                {error &&
+                { error &&
                   <p style={{ color: "red" }}>
                     {(error === "No data") && "Email not found...Please register or contact your local administrator."}
-                  </p>}
-            </CardText>
-          </Card>
+                  </p> }
+          </div>
         )
     }
 }

@@ -9,7 +9,7 @@ import Paper from "material-ui/Paper"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 import Checkbox from "material-ui/Checkbox"
 import Select from "material-ui/Select"
-import MenuItem from "material-ui/MenuItem"
+import MenuItem from "material-ui/Menu"
 import CircularProgress from "material-ui/Progress"
 
 class Profile extends Component {
@@ -38,14 +38,7 @@ class Profile extends Component {
 
         const { dispatch } = this.props
 
-        dispatch({ type: 'ACCOUNT_UPSERT_REQUESTED', payload: this.state })
-    }
-
-    handleSelectChange = (e, index, authorization) => {
-        e.preventDefault()
-        this.setState({
-            authorization: authorization
-        })
+        dispatch({ type: 'PROFILE_UPSERT_REQUESTED', payload: this.state })
     }
 
     handleChange(e) {
@@ -97,11 +90,7 @@ class Profile extends Component {
         let isEnabled = this.isEnabled()
 
         return (
-            <div className="container">
-
-          <Card>
-            <CardHeader>Profile</CardHeader>
-            <CardText>
+            <div className="card">
 
               <TextInput
                 uniquename="email"
@@ -143,20 +132,14 @@ class Profile extends Component {
               <br />
 
           <Select
+          native
             name="authorization"
-            floatingLabelText="Authorization"
-            fullWidth={true}
             value={authorization}
-            onChange={this.handleSelectChange}
+             fullWidth={true}
+            onChange={this.handleChange}
           >
-            <MenuItem
-              value={"ROUTEMAKER"}
-              primaryText="ROUTE MAKER"
-            />
-            <MenuItem
-              value={"ROUTEMANAGER"}
-              primaryText="ROUTE MANAGER"
-            />
+            <option value="ROUTEMAKER">ROUTE MAKER</option>
+            <option value="ROUTEMANAGER">ROUTE MANAGER</option>
           </Select>
 
                   <br />
@@ -165,19 +148,15 @@ class Profile extends Component {
             {message}
           </p>}
         <br />
+
                  <Button
                  raised
-                  label="OK"
                   disabled={!isEnabled}
-                  fullWidth={true}
-                  onClick={event => this.handleSubmit(event)}
-              >
-                  {isFetching && <CircularProgress size={18} />}
+                   fullWidth={true}
+                  onClick={item => this.handleSubmit(item)}
+                >
+                  {isFetching && <CircularProgress size={25} />} OK
                 </Button>
-            </CardText>
-          </Card>
-        <br />
-
 
       </div>
         )

@@ -9,6 +9,17 @@
     margin: auto;
 }
 
+.card {
+    width: 100%;
+    background-color: #FDE3A7;
+    padding: 3px;
+    border-radius: 3px;
+}
+
+.cards-layout {
+    width: 100%;
+}
+
 .marker {
     border-radius: 15px;
     border: 1px solid #FFF;
@@ -60,8 +71,6 @@
     margin: 2px;
     padding: 5px;
     font-size: 20px;
-    bottom: 0;
-    left: 0;
 }
 
 .mark:after {

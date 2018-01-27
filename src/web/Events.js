@@ -1,12 +1,12 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import "./app.css"
-import FontIcon from "material-ui/FontIcon"
 
-import CircularProgress from "material-ui/CircularProgress"
+import CircularProgress from "material-ui/Progress"
 import Paper from "material-ui/Paper"
 import { Card, CardHeader, CardText } from "material-ui/Card"
-import AutoComplete from 'material-ui/AutoComplete';
+
+import IntegrationAutosuggest from './IntegrationAutosuggest'
 
 class Events extends Component {
     constructor(props) {
@@ -48,16 +48,8 @@ class Events extends Component {
 
         return (
             <div>
-                <AutoComplete
-                    floatingLabelText="Choose Your Event (${events.length})"
-                    filter={AutoComplete.fuzzyFilter}
-                     openOnFocus={true}
-                  dataSource={menuitems}
-                  floatingLabelText={"Choose Your Event  [" + menuitems.length + "]"}
-                  onNewRequest={this.handleUpdateInput}
-                  fullWidth={true}
-                />
-      </div>
+                <IntegrationAutosuggest data={menuitems} handleUpdateInput={this.handleUpdateInput} placeholder={"Search for YOUR Event"}/>
+            </div>
         )
     }
 }

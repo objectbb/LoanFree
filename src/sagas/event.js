@@ -6,7 +6,7 @@ function* fetchEvent(action) {
         const account = yield call(api.call, '/event_get', action.payload);
 
         if (account.data.errors)
-            yield put({ type: "EVENT_FETCH_FAILED", payload: account.data.errors });
+            yield put({ type: "EVENT_FETCH_FAILED", message: JSON.stringify(item.data.errors) });
         else if (!account.data)
             yield put({ type: "EVENT_FETCH_FAILED", message: "No data" });
         else if (account.data && account.data.length > 0)
@@ -22,7 +22,7 @@ function* fetchUpsert(action) {
         const account = yield call(api.call, '/event_upsert', action.payload);
 
         if (account.data.errors)
-            yield put({ type: "EVENT_UPSERT_FAILED", payload: account.data.errors });
+            yield put({ type: "EVENT_UPSERT_FAILED", message: JSON.stringify(account.data.errors) });
         else if (!account.data)
             yield put({ type: "EVENT_UPSERT_FAILED", message: "No data" });
         else if (account.data)

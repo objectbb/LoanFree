@@ -76,6 +76,7 @@ class RouteMaker extends Component {
     render() {
         const toolbar = { float: 'right', borderStyle: 'solid', borderWidth: '5px' };
 
+        if (!this.props.event.item) return (<div></div>)
 
         return (
 

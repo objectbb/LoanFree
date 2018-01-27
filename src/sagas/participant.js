@@ -6,7 +6,7 @@ function* fetchParticipant(action) {
         const item = yield call(api.call, '/participant_get', action.payload);
 
         if (item.data.errors)
-            yield put({ type: "PARTICIPANT_FETCH_FAILED", payload: item.data.errors });
+            yield put({ type: "PARTICIPANT_FETCH_FAILED", message: JSON.stringify(item.data.errors) });
         else if (!item.data)
             yield put({ type: "PARTICIPANT_FETCH_FAILED", message: "No data" });
         else if (item.data && item.data.length > 0)
@@ -42,8 +42,10 @@ function* fetchUpsert(action) {
 
         item = yield call(api.call, '/participant_upsert', participant);
 
+        console.log("EventPart -->fetchUpsert-->data.error", item.data.errors)
+
         if (item.data.errors)
-            yield put({ type: "PARTICIPANT_UPSERT_FAILED", payload: item.data.errors });
+            yield put({ type: "PARTICIPANT_UPSERT_FAILED", message: JSON.stringify(item.data.errors) });
         else if (!item.data)
             yield put({ type: "PARTICIPANT_UPSERT_FAILED", message: "No data" });
         else if (item.data)

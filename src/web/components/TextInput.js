@@ -8,7 +8,7 @@ class TextInput extends Component {
         super(props)
         this.state = {
             isEmpty: true,
-            value: "",
+            value: this.props.content,
             valid: false,
             errorMessage: "",
             errorVisible: false
@@ -105,22 +105,29 @@ class TextInput extends Component {
           <InputError
             visible={this.state.errorVisible}
             errorMessage={this.state.errorMessage} />
+
+          hintText={this.props.text}
+          floatingLabelText={this.props.floatingLabelText}
+          floatingLabelFixed={true}
+          errorText={this.state.errorMessage}
+          multiLine={this.props.multiLine}
+
           */}
 
 
         <TextField
           name={this.props.uniquename}
-          value={this.props.content}
+          value={this.state.value}
           onChange={this.handleChange}
           onBlur={this.handleBlur}
-          hintText={this.props.text}
-          floatingLabelText={this.props.floatingLabelText}
-          floatingLabelFixed={true}
-          errorText={this.state.errorMessage}
+          label={this.props.text}
+          placeholder={this.props.text}
           fullWidth={true}
-          multiLine={this.props.multiLine}
           rows={this.props.rows}
         />
+        <InputError
+            visible={this.state.errorVisible}
+            errorMessage={this.state.errorMessage} />
       </div>
         )
     }

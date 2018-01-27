@@ -1,4 +1,4 @@
-import { ACCOUNT_AUTHENTICATE_REQUESTED, ACCOUNT_UPSERT_REQUESTED, ACCOUNT_FETCH_REQUESTED, ACCOUNT_AUTHENTICATE_FAILED, ACCOUNT_AUTHENTICATE_SUCCEEDED, ACCOUNT_FETCH_SUCCEEDED, ACCOUNT_FETCH_FAILED, ACCOUNT_UPSERT_SUCCEEDED, ACCOUNT_UPSERT_FAILED } from "../actions";
+import { ACCOUNT_LOGOFF, ACCOUNT_AUTHENTICATE_REQUESTED, ACCOUNT_UPSERT_REQUESTED, ACCOUNT_FETCH_REQUESTED, ACCOUNT_AUTHENTICATE_FAILED, ACCOUNT_AUTHENTICATE_SUCCEEDED, ACCOUNT_FETCH_SUCCEEDED, ACCOUNT_FETCH_FAILED, ACCOUNT_UPSERT_SUCCEEDED, ACCOUNT_UPSERT_FAILED } from "../actions";
 
 export const account = (
     state = { item: {}, authenticated: false, isFetching: false, error: "" },
@@ -12,7 +12,8 @@ export const account = (
             ...state,
             payload: action.payload,
             authenticated: false,
-            isFetching: true
+            isFetching: true,
+            error: ""
         };
     case ACCOUNT_FETCH_SUCCEEDED:
     case ACCOUNT_UPSERT_SUCCEEDED:
@@ -24,7 +25,8 @@ export const account = (
             isFetching: false,
             error: ""
         };
-
+    case ACCOUNT_LOGOFF:
+        return { ...state, authenticated: false };
     case ACCOUNT_AUTHENTICATE_FAILED:
         return {
             ...state,

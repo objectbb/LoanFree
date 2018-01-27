@@ -6,7 +6,7 @@ function* fetchUser(action) {
         const item = yield call(api.call, '/account_get', action.payload);
 
         if (item.data.errors)
-            yield put({ type: "ACCOUNT_FETCH_FAILED", payload: item.data.errors });
+            yield put({ type: "ACCOUNT_FETCH_FAILED", message: JSON.stringify(item.data.errors) });
         else if (!item.data)
             yield put({ type: "ACCOUNT_FETCH_FAILED", message: "No data" });
         else if (item.data && item.data.length > 0)
@@ -22,7 +22,7 @@ function* fetchUpsert(action) {
         const item = yield call(api.call, '/account_upsert', action.payload);
 
         if (item.data.errors)
-            yield put({ type: "ACCOUNT_UPSERT_FAILED", payload: item.data.errors });
+            yield put({ type: "ACCOUNT_UPSERT_FAILED", message: JSON.stringify(item.data.errors) });
         else if (!item.data)
             yield put({ type: "ACCOUNT_UPSERT_FAILED", message: "No data" });
         else if (item.data)

@@ -1,12 +1,11 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import "./app.css"
-import FontIcon from "material-ui/FontIcon"
 
-import CircularProgress from "material-ui/CircularProgress"
+import CircularProgress from "material-ui/Progress"
 import Paper from "material-ui/Paper"
 import { Card, CardHeader, CardText } from "material-ui/Card"
-import AutoComplete from 'material-ui/AutoComplete';
+import IntegrationAutosuggest from './IntegrationAutosuggest'
 
 class Participants extends Component {
     constructor(props) {
@@ -47,11 +46,7 @@ class Participants extends Component {
 
         return (
             <div>
-
-                  <Card>
-
-                    <CardText>
-
+                        {/*}
                         <AutoComplete
                             floatingLabelText="Search Participants"
                             filter={AutoComplete.fuzzyFilter}
@@ -61,9 +56,9 @@ class Participants extends Component {
                           onNewRequest={this.handleUpdateInput}
                           fullWidth={true}
                         />
-
-                    </CardText>
-                  </Card>
+ <IntegrationAutosuggest />
+                    */}
+<IntegrationAutosuggest data={menuitems} placeholder={"Search for participant"}/>
               </div>
         )
 

@@ -4,7 +4,7 @@ import { PropTypes } from "prop-types"
 import Button from "material-ui/Button"
 import "./app.css"
 import TextInput from "./components/TextInput"
-import CircularProgress from "material-ui/Progress"
+import { CircularProgress } from "material-ui/Progress"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 
 
@@ -83,10 +83,7 @@ class Participant extends Component {
         let isEnabled = this.isEnabled()
 
         return (
-
-            <Card>
-            <CardHeader>Participant</CardHeader>
-            <CardText>
+            <div className="card">
                {name}
                 <br />
                 <TextInput
@@ -126,20 +123,19 @@ class Participant extends Component {
                 <br />
                 <Button
                   raised
-                  label="Add"
                   disabled={!isEnabled}
                   fullWidth={true}
                   onClick={event => this.handleSubmit(event)}
                 >
-                  {isFetching && <CircularProgress size={18} />}
+                  {isFetching && <CircularProgress size={25} />} Add
                 </Button>
 
                 {error &&
                   <p style={{ color: "red" }}>
                     {error}
                   </p>}
-            </CardText>
-          </Card>
+
+                  </div>
         )
     }
 }

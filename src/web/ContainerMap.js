@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux";
 
 import AppBar from 'material-ui/AppBar';
-import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
+import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
 
 import RouteMaker from "./RouteMaker"
 import DataFeeder from "./DataFeeder"
@@ -15,6 +15,10 @@ import AddressGeocode from './AddressGeocode'
 import EventsContainer from './EventsContainer'
 import ParticipantsContainer from './ParticipantsContainer'
 import Layout from './Layout'
+import CollapsibleCard from './CollapsibleCard'
+import Logout from './Logout'
+
+import "./app.css"
 
 import * as actions from "../actions"
 
@@ -30,51 +34,51 @@ class ContainerMap extends Component {
     }
 
     render() {
-        console.log("ContainerMap --> render --> account", this.props.account)
+            console.log("ContainerMap --> render --> account", this.props.account)
 
-        const { account } = this.props
+            const { account } = this.props
 
-        console.log("ContainerMap --> render --> account", account.item.authorization)
-        return (
-            <div>
-
-
-
+            console.log("ContainerMap --> render --> account", account.item.authorization)
+            return (
+                    <div>
 
          {!account.authenticated && <Login />}
 
         {account.authenticated  &&
            <div>
-               <AppBar
-                 title={<EventsContainer />}
-               />
+                    <Layout
+                    header={<EventsContainer />}
+                      logout={<Logout />}
+                        body={account.item.authorization == "ROUTEMAKER"  &&
+                                <div>
+                                    <DataFeeder>
+                                        <RouteMaker />
+                                    </DataFeeder>
+                                </div>
+                            }
+                    >
+                    <AddressGeocode geocode={this.setCurrentRegionAddress} />
+                            <div className="cards-layout">
+                            <CollapsibleCard title="Profile">
+                                <Profile />
+                             </CollapsibleCard>
+                             <CollapsibleCard title="Event">
+                                <Event />
+                             </CollapsibleCard>
 
-               <Layout>
-                <Profile />
+                            <CollapsibleCard title="Participants">
+                                <ParticipantsContainer />
+                                <Participant />
+                            </CollapsibleCard>
+                            </div>
+                      </Layout>
 
 
-                <Event />
-
-                 <ParticipantsContainer />
-                <Participant />
-                </Layout>
-
-                {account.item.authorization == "ROUTEMAKER"  &&
-                    <div>
-                        <DataFeeder>
-                            <RouteMaker />
-                        </DataFeeder>
-                    </div>
-                }
-
-                <BottomNavigation>
-                    <AddressGeocode geocode={ this.setCurrentRegionAddress}/>
-                </BottomNavigation>
             </div>
-        }
-            </div>
-        )
-    }
+            }
+            < /div>
+    )
+}
 }
 
 function mapStateToProps(state) {

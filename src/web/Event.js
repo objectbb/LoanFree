@@ -5,12 +5,12 @@ import TextInput from "./components/TextInput"
 import "./app.css"
 
 import Button from "material-ui/Button"
-import CircularProgress from "material-ui/Progress"
-import Paper from "material-ui/Paper"
+import { CircularProgress } from "material-ui/Progress"
+import { Paper } from "material-ui/Paper"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 import Checkbox from "material-ui/Checkbox"
 import Select from "material-ui/Select"
-import MenuItem from "material-ui/MenuItem"
+import MenuItem from "material-ui/Menu"
 import { withStyles } from 'material-ui/styles'
 import TextField from 'material-ui/TextField'
 
@@ -44,14 +44,10 @@ class Event extends Component {
         dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: { ...this.state, coords, _accountId: account.item.id } });
     }
 
-    handleSelectChange = (e, index, state) => {
-        e.preventDefault()
-        this.setState({
-            state: state
-        })
-    }
-
     handleDateChange = (e, date) => {
+
+        console.log("Events --> handleDateChange --> ", e, date)
+
         this.setState({
             startdate: date,
         });
@@ -140,16 +136,11 @@ class Event extends Component {
             'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK',
             'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
         ].
-        map((state, i) => <MenuItem value={state} key={i} primaryText={state} value={state}/>)
+        map((state, i) => <option value={state} key={i}>{state}</option>)
 
 
         return (
-            <div className="container">
-
-          <Card>
-            <CardHeader>Event</CardHeader>
-            <CardText>
-
+            <div className="card">
 
               <TextInput
                 uniquename="name"
@@ -180,7 +171,8 @@ class Event extends Component {
                  <TextField
                      name="startdate"
                     label="Start Date"
-                    onChange={this.handleDateChange}
+                     fullWidth={true}
+                    onChange={this.handleChange}
                     type="datetime-local"
                         value={startdate}
                     InputLabelProps={{
@@ -230,12 +222,12 @@ class Event extends Component {
               <br />
 
           <Select
+          native
             name="state"
-            floatingLabelText="State"
-            fullWidth={true}
             onBlur={this.handleGeocode}
+             fullWidth={true}
             value={state}
-            onChange={this.handleSelectChange}
+            onChange={this.handleChange}
           >
             {states}
           </Select>
@@ -260,16 +252,13 @@ class Event extends Component {
           </p>}
         <br />
                  <Button
-                  raised
-                  label="OK"
-                  fullWidth={true}
-                  onClick={event => this.handleSubmit(event)}
-              >
-                  {isFetching && <CircularProgress size={18} />}
+                 raised
+                  disabled={!isEnabled}
+                   fullWidth={true}
+                  onClick={item => this.handleSubmit(item)}
+                >
+                  {isFetching && <CircularProgress size={25} />} OK
                 </Button>
-            </CardText>
-          </Card>
-        <br />
 
 
       </div>
