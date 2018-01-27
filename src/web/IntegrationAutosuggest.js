@@ -138,7 +138,7 @@ class IntegrationAutosuggest extends React.Component {
     };
 
     handleChange = (event, { newValue }) => {
-        console.log("IntegrationAutosuggest ---> handleChange --> event", event)
+        console.log("IntegrationAutosuggest ---> handleChange --> newValue", event, newValue)
         this.setState({
             value: newValue,
         });
@@ -165,7 +165,7 @@ class IntegrationAutosuggest extends React.Component {
         onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
         onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
         renderSuggestionsContainer={renderSuggestionsContainer}
-        getSuggestionValue={getSuggestionValue}
+        getSuggestionValue={(item) => getSuggestionValue(item, this.props.handleUpdateInput(item))}
         renderSuggestion={renderSuggestion}
         inputProps={{
           autoFocus: true,

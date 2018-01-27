@@ -46,19 +46,7 @@ class Participants extends Component {
 
         return (
             <div>
-                        {/*}
-                        <AutoComplete
-                            floatingLabelText="Search Participants"
-                            filter={AutoComplete.fuzzyFilter}
-                             openOnFocus={true}
-                          dataSource={menuitems}
-                          floatingLabelText={"Search Participants [" + menuitems.length + "]"}
-                          onNewRequest={this.handleUpdateInput}
-                          fullWidth={true}
-                        />
- <IntegrationAutosuggest />
-                    */}
-<IntegrationAutosuggest data={menuitems} placeholder={"Search for participant"}/>
+                <IntegrationAutosuggest data={menuitems} placeholder={"Search for participant"} handleUpdateInput={this.handleUpdateInput}/>
               </div>
         )
 

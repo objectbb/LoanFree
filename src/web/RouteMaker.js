@@ -78,6 +78,8 @@ class RouteMaker extends Component {
 
         if (!this.props.event.item) return (<div></div>)
 
+        console.log("RouteMaker --> render --> event", event.item)
+
         return (
 
             <div>
