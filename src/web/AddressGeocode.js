@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import style from "./app.css";
+import style from "./styles/app.css";
 import TextInput from "./components/TextInput"
 
 class AddressGeocode extends Component {

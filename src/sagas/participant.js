@@ -1,9 +1,17 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import * as api from "../api/restful"
 
+export const get = (action) => {
+    return call(api.call, '/participant_get', action.payload)
+}
+
+export const upsert = (action) => {
+    return call(api.call, '/participant_upsert', action.payload);
+}
+
 function* fetchParticipant(action) {
     try {
-        const item = yield call(api.call, '/participant_get', action.payload);
+        const item = yield get(action)
 
         if (item.data.errors)
             yield put({ type: "PARTICIPANT_FETCH_FAILED", message: JSON.stringify(item.data.errors) });
@@ -21,28 +29,7 @@ function* fetchUpsert(action) {
 
     try {
 
-        const { newAccount, participant } = action.payload
-
-        const item = yield call(api.call, '/account_upsert', newAccount);
-
-        if (item.data.errors) {
-            yield put({ type: "PARTICIPANT_UPSERT_FAILED", payload: item.data.errors });
-            return;
-        } else if (!item.data) {
-            yield put({ type: "PARTICIPANT_UPSERT_FAILED", message: "No Data" });
-            return;
-        }
-
-        var account = item.data;
-        console.log("EventPart -->fetchUpsert-->account", account)
-
-        participant._accountId = account._id;
-
-        console.log("EventPart -->fetchUpsert-->participant", participant);
-
-        item = yield call(api.call, '/participant_upsert', participant);
-
-        console.log("EventPart -->fetchUpsert-->data.error", item.data.errors)
+        item = yield upsert(action)
 
         if (item.data.errors)
             yield put({ type: "PARTICIPANT_UPSERT_FAILED", message: JSON.stringify(item.data.errors) });
@@ -55,6 +42,7 @@ function* fetchUpsert(action) {
         yield put({ type: "PARTICIPANT_UPSERT_FAILED", message: e.message });
     }
 }
+
 
 function* participantSaga() {
     yield takeLatest("PARTICIPANT_FETCH_REQUESTED", fetchParticipant);

@@ -39,7 +39,11 @@ const styles = theme => ({
 });
 
 class CollapsibleCard extends React.Component {
-    state = { expanded: false };
+
+    constructor() {
+        super();
+        this.state = { expanded: false };
+    }
 
     handleExpandClick = () => {
         this.setState({ expanded: !this.state.expanded });

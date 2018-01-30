@@ -1,9 +1,11 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import * as api from "../api/restful"
+import * as account from "./account"
 
 function* fetchUser(action) {
     try {
-        const item = yield call(api.call, '/account_get', action.payload);
+        //const item = yield call(api.call, '/account_get', action.payload);
+        const item = yield account.get(action)
 
         if (item.data.errors)
             yield put({ type: "PROFILE_FETCH_FAILED", payload: item.data.errors });
@@ -19,7 +21,9 @@ function* fetchUser(action) {
 
 function* fetchUpsert(action) {
     try {
-        const item = yield call(api.call, '/account_upsert', action.payload);
+        //const item = yield call(api.call, '/account_upsert', action.payload);
+
+        const item = yield account.upsert(action)
 
         if (item.data.errors)
             yield put({ type: "PROFILE_UPSERT_FAILED", message: JSON.stringify(item.data.errors) });

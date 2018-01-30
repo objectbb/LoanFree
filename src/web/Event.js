@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { PropTypes } from "prop-types"
 import { connect } from "react-redux"
 import TextInput from "./components/TextInput"
-import "./app.css"
+import "./styles/app.css"
 
 import Button from "material-ui/Button"
 import { CircularProgress } from "material-ui/Progress"
@@ -22,9 +22,13 @@ class Event extends Component {
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
-        this.handleDateChange = this.handleDateChange.bind(this)
         this.handleGeocode = this.handleGeocode.bind(this)
         this.isEnabled = this.isEnabled.bind(this)
+    }
+
+    componentDidMount() {
+        const { event } = this.props;
+        console.log("Event --> componentDidMount --> event", event)
     }
 
     componentWillReceiveProps() {
@@ -40,18 +44,24 @@ class Event extends Component {
         e.preventDefault()
         const { coords } = this.props.event.item
 
-        const { dispatch, account } = this.props;
+        const { dispatch, account, participant } = this.props;
+
+        console.log("Events --> handleSubmit --> event", this.state)
+
         dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: { ...this.state, coords, _accountId: account.item.id } });
+
+/*
+        const participant = {
+            _id: participant.item._id,
+            _eventId: event.item._id,
+            _accountId: account.item._id,
+            _teamdId: '',
+            coords: event.item.coords
+        }
+
+        dispatch({ type: 'PARTICIPANT_UPSERT_REQUESTED', payload: { ...participant } })
+*/
     }
-
-    handleDateChange = (e, date) => {
-
-        console.log("Events --> handleDateChange --> ", e, date)
-
-        this.setState({
-            startdate: date,
-        });
-    };
 
     handleChange(e) {
         e.preventDefault()
@@ -137,7 +147,6 @@ class Event extends Component {
             'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
         ].
         map((state, i) => <option value={state} key={i}>{state}</option>)
-
 
         return (
             <div className="card">
@@ -268,14 +277,16 @@ class Event extends Component {
 
 function mapStateToProps(state) {
 
-    const { event, account } = state
+    const { event, account, participant } = state
 
     console.log("Event --> mapStateToProps --> event", event)
     console.log("Event --> mapStateToProps --> account", account)
+    console.log("Event --> mapStateToProps --> participant", participant)
 
     return {
         event,
-        account
+        account,
+        participant
     }
 }
 

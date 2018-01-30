@@ -1,10 +1,10 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { PropTypes } from "prop-types"
-import Typography from 'material-ui/Typography';
+import Typography from 'material-ui/Typography'
 
 import Button from "material-ui/Button"
-import "./app.css"
+import "./styles/app.css"
 
 
 class Logout extends Component {

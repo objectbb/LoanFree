@@ -1,18 +1,31 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux'
-import ContainerMap from "./ContainerMap.js"
+import RouteMakerContainer from "./RouteMakerContainer"
+import ParticipantContainer from "./ParticipantContainer"
+import Login from "./Login"
 
 class App extends Component {
 
     componentWillMount() {
-        const { dispatch } = this.props
+        const { dispatch, account, event } = this.props
+
+        if (account.authenticated) {
+            dispatch({
+                type: 'EVENTS_FETCH_REQUESTED',
+                payload: { _accountId: account._id }
+            })
+        }
     }
 
     render() {
+        const { account } = this.props
         return (
             <div>
-              <ContainerMap />
+            {!account.authenticated && <Login />}
+             {account.authenticated &&  account.item.authorization === "ROUTEMAKER"  && <RouteMakerContainer />}
+            {account.authenticated &&  account.item.authorization === "PARTICIPANT"  && <ParticipantContainer />}
+
             </div>
         );
     }
@@ -22,4 +35,16 @@ App.propTypes = {
     dispatch: PropTypes.func.isRequired
 }
 
-export default connect(null)(App)
+function mapStateToProps(state) {
+    const { account } = state
+
+    console.log("App --> mapStateToProps --> account", account)
+
+    return {
+        account,
+        event
+
+    }
+}
+
+export default connect(mapStateToProps)(App)

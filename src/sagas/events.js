@@ -1,10 +1,11 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import * as api from "../api/restful"
+import * as event from "./event"
 
 function* fetchEvents(action) {
     try {
 
-        const events = yield call(api.call, '/event_get', action.payload);
+        const events = yield event.get(action)
 
         if (events.data.errors)
             yield put({ type: "EVENTS_FETCH_FAILED", message: JSON.stringify(events.data.errors) });

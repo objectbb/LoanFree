@@ -1,9 +1,17 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import * as api from "../api/restful"
 
+export const get = (action) => {
+    return call(api.call, '/event_get', action.payload)
+}
+
+export const upsert = (action) => {
+    return call(api.call, '/event_upsert', action.payload)
+}
+
 function* fetchEvent(action) {
     try {
-        const account = yield call(api.call, '/event_get', action.payload);
+        const event = yield get(action)
 
         if (account.data.errors)
             yield put({ type: "EVENT_FETCH_FAILED", message: JSON.stringify(item.data.errors) });
@@ -19,14 +27,16 @@ function* fetchEvent(action) {
 
 function* fetchUpsert(action) {
     try {
-        const account = yield call(api.call, '/event_upsert', action.payload);
+        //const account = yield call(api.call, '/event_upsert', action.payload);
+
+        const event = yield upsert(action)
 
         if (account.data.errors)
-            yield put({ type: "EVENT_UPSERT_FAILED", message: JSON.stringify(account.data.errors) });
+            yield put({ type: "EVENT_UPSERT_FAILED", message: JSON.stringify(event.data.errors) });
         else if (!account.data)
             yield put({ type: "EVENT_UPSERT_FAILED", message: "No data" });
         else if (account.data)
-            yield put({ type: "EVENT_UPSERT_SUCCEEDED", payload: account.data });
+            yield put({ type: "EVENT_UPSERT_SUCCEEDED", payload: event.data });
     } catch (e) {
         yield put({ type: "EVENT_UPSERT_FAILED", message: e.message });
     }

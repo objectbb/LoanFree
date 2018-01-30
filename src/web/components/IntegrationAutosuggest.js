@@ -63,12 +63,10 @@ function renderSuggestionsContainer(options) {
 }
 
 function getSuggestionValue(suggestion) {
-    console.log("IntegrationAutosuggest ---> getSuggestionValue --> suggestion", suggestion)
     return suggestion.text;
 }
 
 function getSuggestions(value, suggestions) {
-    console.log("IntegrationAutosuggest ---> getSuggestions --> value", value)
 
     const inputValue = value.trim().toLowerCase();
     const inputLength = inputValue.length;
@@ -92,8 +90,9 @@ function getSuggestions(value, suggestions) {
 const styles = theme => ({
     container: {
         flexGrow: 1,
-        position: 'relative',
         maxHeight: 200,
+        width: '100%'
+
     },
     suggestionsContainerOpen: {
         position: 'absolute',
@@ -101,30 +100,34 @@ const styles = theme => ({
         marginBottom: theme.spacing.unit * 3,
         left: 0,
         right: 0,
+        width: '100%'
     },
     suggestion: {
         display: 'block',
+        width: '100%'
     },
     suggestionsList: {
         margin: 0,
         padding: 0,
         listStyleType: 'none',
+        width: '100%'
     },
     textField: {
-        width: '100%',
+        width: '100%'
     },
 });
 
 class IntegrationAutosuggest extends React.Component {
 
-    state = {
-        value: '',
-        suggestions: [],
-    };
+    constructor() {
+        super();
+        this.state = {
+            value: '',
+            suggestions: [],
+        };
+    }
 
     handleSuggestionsFetchRequested = ({ value }) => {
-
-        console.log("IntegrationAutosuggest ---> handleSuggestionsFetchRequested --> value", value)
 
         this.setState({
             suggestions: getSuggestions(value, this.props.data),
@@ -138,17 +141,11 @@ class IntegrationAutosuggest extends React.Component {
     };
 
     handleChange = (event, { newValue }) => {
-        console.log("IntegrationAutosuggest ---> handleChange --> newValue", event, newValue)
         this.setState({
             value: newValue,
         });
     };
 
-    doboth = (item) => {
-        console.log("doboth", item)
-        getSuggestionValue(item)
-        return this.props.handleUpdateInput(item)
-    }
     render() {
         const { classes } = this.props;
 

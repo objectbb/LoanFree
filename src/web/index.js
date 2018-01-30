@@ -19,7 +19,24 @@ let rootElement = document.getElementById("root")
 
 injectTapEventPlugin()
 
-const theme = createMuiTheme();
+//const theme = createMuiTheme();
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            light: '#CFD8DC',
+            main: '#607D8B',
+            dark: '#455A64',
+            contrastText: '#fff',
+        },
+        secondary: {
+            light: '#757575',
+            main: '#212121',
+            dark: '#ba000d',
+            contrastText: '#795548',
+        },
+    },
+});
 
 render(
     <Provider store={store}>

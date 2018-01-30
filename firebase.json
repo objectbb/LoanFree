@@ -1,0 +1,19 @@
+{
+  "hosting": {
+    "public": "./web/public",
+    "ignore": [
+      "**/bower_components/**/*",
+      "**/data/**/*",
+      "**/css/**/*",
+      "**/deploy/**/*",
+      "**/node_modules/**/*",
+      "**/sass-cache/**/*",
+      "**/divshot-cache/**/*",
+      "**/heetsched/**/*",
+      ".gitignore",
+      "package.json",
+      "**/heetapi/**/*",
+      "**/node/**/*"
+    ]
+  }
+}

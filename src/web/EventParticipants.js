@@ -1,36 +1,27 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import "./app.css"
+import "./styles/app.css"
 
 import CircularProgress from "material-ui/Progress"
 import Paper from "material-ui/Paper"
 import { Card, CardHeader, CardText } from "material-ui/Card"
-import IntegrationAutosuggest from './IntegrationAutosuggest'
+import IntegrationAutosuggest from './components/IntegrationAutosuggest'
 
-class Participants extends Component {
+class EventParticipants extends Component {
     constructor(props) {
         super(props)
         this.handleUpdateInput = this.handleUpdateInput.bind(this)
     }
 
-    componentDidMount() {
-        console.log("Participants ---> componentDidMount --> event", this.props.event)
-        const { dispatch } = this.props
-        this.props.dispatch({
-            type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED',
-            payload: { _eventId: this.props.event._id }
-        })
-    }
-
     handleUpdateInput(item) {
-        console.log("Participants --> handleUpdateInput ", item.value)
-        this.props.dispatch({ type: 'PARTICIPANT_FETCH_SUCCEEDED', payload: item.value })
+        console.log("EventParticipants --> handleUpdateInput ", item.value)
+        this.props.dispatch({ type: 'EVENT_PARTICIPANT_FETCH_SUCCEEDED', payload: item.value })
     };
 
 
     render() {
 
-        console.log("Participants --> render ", this.props.eventparticipants)
+        console.log("EventParticipants --> render ", this.props.eventparticipants)
         const { eventparticipants } = this.props
 
         if (!eventparticipants.item) return (<div/>)
@@ -41,8 +32,6 @@ class Participants extends Component {
                 value: item
             }))
             : []
-
-        console.log(menuitems)
 
         return (
             <div>
@@ -55,15 +44,13 @@ class Participants extends Component {
 
 function mapStateToProps(state) {
 
-    const { eventparticipants, event, participant } = state
+    const { eventparticipants } = state
 
-    console.log("Participants --> mapStateToProps --> eventparticipants", eventparticipants)
+    console.log("EventParticipants --> mapStateToProps --> eventparticipants", eventparticipants)
 
     return {
-        eventparticipants,
-        participant,
-        event
+        eventparticipants
     }
 }
 
-export default connect(mapStateToProps)(Participants)
+export default connect(mapStateToProps)(EventParticipants)

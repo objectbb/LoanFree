@@ -2,10 +2,10 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { PropTypes } from "prop-types"
 import Button from "material-ui/Button"
-import "./app.css"
 import TextInput from "./components/TextInput"
 import { CircularProgress } from "material-ui/Progress"
 import { Card, CardHeader, CardText } from "material-ui/Card"
+import "./styles/app.css"
 
 class Login extends Component {
     constructor(props) {

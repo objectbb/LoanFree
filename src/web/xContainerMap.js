@@ -3,22 +3,21 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux";
 
 import AppBar from 'material-ui/AppBar';
-import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
 
 import RouteMaker from "./RouteMaker"
 import DataFeeder from "./DataFeeder"
-import Login from "./Login"
+
 import Profile from "./Profile"
 import Event from "./Event"
 import Participant from "./Participant"
-import AddressGeocode from './AddressGeocode'
+
 import EventsContainer from './EventsContainer'
 import ParticipantsContainer from './ParticipantsContainer'
-import Layout from './Layout'
-import CollapsibleCard from './CollapsibleCard'
+import Layout from './components/Layout'
+import CollapsibleCard from './components/CollapsibleCard'
 import Logout from './Logout'
 
-import "./app.css"
+import "./styles/app.css"
 
 import * as actions from "../actions"
 
@@ -26,12 +25,17 @@ class ContainerMap extends Component {
 
     constructor(props) {
         super(props);
-        this.setCurrentRegionAddress = this.setCurrentRegionAddress.bind(this);
     }
 
-    setCurrentRegionAddress(address) {
-        this.props.actions.setCurrentRegionAddress(address)
+
+    componentDidMount() {
+
+        const { event, account } = this.props
+
+        console.log("ContainerMap --> componentDidMount --> event", this.props.event)
+
     }
+
 
     render() {
             console.log("ContainerMap --> render --> account", this.props.account)
@@ -41,23 +45,20 @@ class ContainerMap extends Component {
             console.log("ContainerMap --> render --> account", account.item.authorization)
             return (
                     <div>
-
-         {!account.authenticated && <Login />}
-
-        {account.authenticated  &&
-           <div>
                     <Layout
-                    header={<EventsContainer />}
+                    header={<span><EventsContainer /> </span>}
                       logout={<Logout />}
                         body={account.item.authorization == "ROUTEMAKER"  &&
                                 <div>
                                     <DataFeeder>
                                         <RouteMaker />
                                     </DataFeeder>
+
                                 </div>
                             }
                     >
-                    <AddressGeocode geocode={this.setCurrentRegionAddress} />
+
+                    <br />
                             <div className="cards-layout">
                             <CollapsibleCard title="Profile">
                                 <Profile />
@@ -68,14 +69,11 @@ class ContainerMap extends Component {
 
                             <CollapsibleCard title="Participants">
                                 <ParticipantsContainer />
+                                <br />
                                 <Participant />
                             </CollapsibleCard>
                             </div>
                       </Layout>
-
-
-            </div>
-            }
             < /div>
     )
 }
@@ -87,7 +85,8 @@ function mapStateToProps(state) {
     console.log("ContainerMap --> mapStateToProps --> account", account)
 
     return {
-        account: account
+        account,
+        event
     }
 }
 

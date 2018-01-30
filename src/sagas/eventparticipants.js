@@ -1,9 +1,11 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import * as api from "../api/restful"
+import * as account from "./account"
+import * as participant from "./participant"
 
 function* fetchParticipant(action) {
     try {
-        const item = yield call(api.call, '/participant_get', action.payload);
+        const item = yield participant.get(action)
 
         console.log("fetchParticipant --> ", item)
 
@@ -21,11 +23,15 @@ function* fetchParticipant(action) {
 
 
 function* fetchUpsert(action) {
-    try {
+    //  try {
 
-        const { newAccount, participant } = action.payload
+    const { newAccount, participant } = action.payload
 
-        const item = yield call(api.call, '/account_upsert', newAccount);
+    account.upsert(newAccount)
+
+    /*
+
+        let item = yield call(api.call, '/account_upsert', newAccount);
 
         if (item.data.errors) {
             yield put({ type: "EVENT_PARTICIPANTS_FETCH_FAILED", message: JSON.stringify(item.data.errors) });
@@ -34,27 +40,31 @@ function* fetchUpsert(action) {
             yield put({ type: "EVENT_PARTICIPANTS_FETCH_FAILED", message: "No data" });
             return;
         }
+*/
 
-        var account = item.data;
-        console.log("EventPart -->fetchUpsert-->account", account)
+    var account = item.data;
+    console.log("EventPart -->fetchUpsert-->account", account)
 
-        participant._accountId = account._id;
+    participant._accountId = account._id;
 
-        console.log("EventPart -->fetchUpsert-->participant", participant);
+    console.log("EventPart -->fetchUpsert-->participant", participant);
 
-        item = yield call(api.call, '/participant_upsert', participant);
+    /*
+            item = yield call(api.call, '/participant_upsert', participant);
 
-        if (item.data.errors)
-            yield put({ type: "EVENT_PARTICIPANTS_UPSERT_FAILED", message: JSON.stringify(item.data.errors) });
-        else if (!item.data)
-            yield put({ type: "EVENT_PARTICIPANTS_UPSERT_FAILED", message: "No data" });
-        else if (item.data)
-            yield put({ type: "EVENT_PARTICIPANTS_UPSERT_SUCCEEDED", payload: participant });
+            if (item.data.errors)
+                yield put({ type: "EVENT_PARTICIPANTS_UPSERT_FAILED", message: JSON.stringify(item.data.errors) });
+            else if (!item.data)
+                yield put({ type: "EVENT_PARTICIPANTS_UPSERT_FAILED", message: "No data" });
+            else if (item.data)
+                yield put({ type: "EVENT_PARTICIPANTS_UPSERT_SUCCEEDED", payload: participant });
 
-    } catch (e) {
-        yield put({ type: "EVENT_PARTICIPANTS_UPSERT_FAILED", message: e.message });
-    }
+        } catch (e) {
+            yield put({ type: "EVENT_PARTICIPANTS_UPSERT_FAILED", message: e.message });
+        }
+        */
 }
+
 
 function* eventParticipantsSaga() {
     yield takeLatest("EVENT_PARTICIPANTS_FETCH_REQUESTED", fetchParticipant);

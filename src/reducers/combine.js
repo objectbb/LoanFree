@@ -12,6 +12,7 @@ import { event } from "./event"
 import { events } from "./events"
 import { participant } from "./participant"
 import { eventparticipants } from "./eventparticipants"
+import { eventparticipant } from "./eventparticipant"
 import { profile } from "./profile"
 
 import { persistStore, persistReducer } from 'redux-persist'
@@ -31,6 +32,7 @@ const loggerMiddleware = createLogger()
 
 const rootReducer = combineReducers({
     eventparticipants,
+    eventparticipant,
     participant,
     account,
     routemarkers,

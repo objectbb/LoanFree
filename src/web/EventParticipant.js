@@ -2,24 +2,16 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { PropTypes } from "prop-types"
 import Button from "material-ui/Button"
-import "./app.css"
 import TextInput from "./components/TextInput"
 import { CircularProgress } from "material-ui/Progress"
 import { Card, CardHeader, CardText } from "material-ui/Card"
+import "./styles/app.css"
 
-
-class Participant extends Component {
+class EventParticipant extends Component {
     constructor(props) {
         super(props)
 
-        this.state = {
-            newAccount: {
-                email: '',
-                firstname: '',
-                lastname: '',
-                authorization: 'PARTICIPANT'
-            }
-        };
+        this.state = {...props.eventparticipant};
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -27,19 +19,32 @@ class Participant extends Component {
         this.validateEmail = this.validateEmail.bind(this)
     }
 
+    componentWillReceiveProps() {
+        const { eventparticipant } = this.props;
+        console.log("eventparticipant --> componentWillReceiveProps --> eventparticipant", eventparticipant)
+        console.log("eventparticipant --> componentWillReceiveProps --> props", this.props)
+
+        this.setState({
+            ...eventparticipant
+        });
+    }
+
     handleSubmit(e) {
         e.preventDefault()
 
+        console.log("EventParticipant --> handleSubmit --> state ", this.state)
+
+/*
         const participant = {
             _eventId: this.props.event.item._id,
             _accountId: '',
             _teamdId: '',
             coords: this.props.event.item.coords
         }
+*/
+        console.log("EventParticipant --> handleSubmit --> eventparticipant ", participant)
 
-        console.log("Participant --> handleSubmit --> participant ", participant)
-
-        this.props.dispatch({ type: 'PARTICIPANT_UPSERT_REQUESTED', payload: { ...this.state, participant } })
+        this.props.dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { ...this.state, participant } })
     }
 
     handleChange(e) {
@@ -50,7 +55,7 @@ class Participant extends Component {
         const name = target.name
 
         this.setState(prevState => ({
-            newAccount: { ...prevState.newAccount,
+            account: { ...prevState.account,
                 [name]: value
             }
         }))
@@ -58,7 +63,7 @@ class Participant extends Component {
     }
 
     isEnabled() {
-        const { email, firstname, lastname } = this.state.newAccount
+        const { email, firstname, lastname } = this.props.eventparticipant.item.account
         return (
             email &&
             email.trim().length > 5 &&
@@ -76,9 +81,17 @@ class Participant extends Component {
     }
 
     render() {
-        const { error, isFetching } = this.props.participant
-        const { email, firstname, lastname } = this.state.newAccount
-        const { name } = this.props.event.item
+
+  if (!this.props.eventparticipant.item.account) return (<div></div>);
+      console.log("EventParticipant --> render --> this.props.eventparticipant.item ",
+        this.props.eventparticipant,
+        this.props.eventparticipant.item.account.email,
+        this.props.eventparticipant.item.event
+        )
+
+        const { error, isFetching } = this.props.eventparticipant
+        const { email, firstname, lastname } = this.props.eventparticipant.item.account
+        const { name } = this.props.eventparticipant.item.event
 
         let isEnabled = this.isEnabled()
 
@@ -141,13 +154,13 @@ class Participant extends Component {
 }
 
 function mapStateToProps(state) {
-    const { account, event, participant } = state
+    const {eventparticipant } = state
+
+     console.log("EventParticipant --> mapStateToProps --> eventparticipant ", eventparticipant)
 
     return {
-        account,
-        event,
-        participant
+        eventparticipant
     }
 }
 
-export default connect(mapStateToProps)(Participant)
+export default connect(mapStateToProps)(EventParticipant)

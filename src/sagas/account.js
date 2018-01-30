@@ -1,9 +1,19 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import * as api from "../api/restful"
 
+export const auth = (action) => {
+    return call(api.call, '/account_get', action.payload);
+}
+
+export const upsert = (action) => {
+    return call(api.call, '/account_upsert', action.payload);
+}
+
 function* fetchUser(action) {
     try {
-        const item = yield call(api.call, '/account_get', action.payload);
+        //const item = yield call(api.call, '/account_get', action.payload);
+
+        const item = yield auth(action)
 
         if (item.data.errors)
             yield put({ type: "ACCOUNT_FETCH_FAILED", message: JSON.stringify(item.data.errors) });
@@ -19,7 +29,9 @@ function* fetchUser(action) {
 
 function* fetchUpsert(action) {
     try {
-        const item = yield call(api.call, '/account_upsert', action.payload);
+        // const item = yield call(api.call, '/account_upsert', action.payload);
+
+        const item = yield upsert(action)
 
         if (item.data.errors)
             yield put({ type: "ACCOUNT_UPSERT_FAILED", message: JSON.stringify(item.data.errors) });
@@ -34,7 +46,9 @@ function* fetchUpsert(action) {
 
 function* fetchAuthenticate(action) {
     try {
-        const item = yield call(api.call, '/account_get', action.payload);
+        //const item = yield call(api.call, '/account_get', action.payload);
+
+        const item = yield auth(action)
 
         if (item.data.length == 0)
             yield put({ type: "ACCOUNT_AUTHENTICATE_FAILED", message: "No data" });

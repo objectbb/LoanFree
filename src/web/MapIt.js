@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import classnames from "classnames";
-import { connect } from "react-redux";
-import geolib from "geolib";
+import React, { Component } from "react"
+import classnames from "classnames"
+import { connect } from "react-redux"
+import geolib from "geolib"
 
-import { Map, Marker, TileLayer, Popup, Tooltip } from 'react-leaflet';
-import { divIcon, point } from "leaflet";
-import AppCss from "./app.css";
+import { Map, Marker, TileLayer, Popup, Tooltip } from 'react-leaflet'
+import { divIcon, point } from "leaflet"
+import "./styles/app.css"
 
 
 class MapIt extends Component {
@@ -19,7 +19,7 @@ class MapIt extends Component {
 
     closeIndicator(coords) {
 
-        return this.props.routeMarkers.some((marker) => {
+        return this.props.routeMarkers && this.props.routeMarkers.some((marker) => {
             let distance = geolib.getDistance({ latitude: coords[0], longitude: coords[1] }, { latitude: marker.coords[0], longitude: marker.coords[1] })
             return distance < marker.range
         });
@@ -30,6 +30,8 @@ class MapIt extends Component {
         let item = e.target.options.name;
         item.coords = [e.target._latlng.lat, e.target._latlng.lng]
 
+        console.log("MapIt --> updatePosition --> item", item)
+
         this.props.updatePosition(item);
     }
 
@@ -38,11 +40,15 @@ class MapIt extends Component {
         this.props.removeMarker(item);
     }
 
+    editMarker(item, e) {
+        e.preventDefault()
+        this.props.editMarker(item);
+    }
+
     render() {
-        const cover = { position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, zIndex: -1 };
 
         return (
-            <Map center={this.props.region} zoom={17} style={cover}>
+            <Map center={this.props.region} zoom={17} className="map">
             <TileLayer
               url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -100,7 +106,7 @@ class MapIt extends Component {
                 let circlerange = "border: 1px solid #000;border-radius: 50%;height:" + item.range + "px;width:" + item.range + "px;";
                 let center = "display:table-cell;vertical-align:middle;height:" + item.range + "px;width:" + item.range + "px;text-align:right;";
 
-                const icon = divIcon({ html: `<div style="${circlerange}"><span style="${center}"> <div class="routemarker rail290">${item.place.name}</div></span></div>`});
+                const icon = divIcon({ html: `<div style="${circlerange}"><span style="${center}"> <div class="routemarker rail290">${item.name}</div></span></div>`});
                 return (
                   <Marker key={index}
 
@@ -109,12 +115,12 @@ class MapIt extends Component {
                     draggable={this.props.draggable}
                       onDragend={this.updatePosition}
                        ref="marker">
-                        <Tooltip permanent minWidth={90}>
+                          <Popup minWidth={90}>
                           <span>
-                            <div><b>{item.place.name}</b> range: {item.range}m</div>
+                            <div><b>{item.name}</b> range: {item.range}m</div>
                             <div>{item.coords} </div>
                             <div>
-                                <button>
+                                <button onClick={(e) => this.editMarker(item,e)}>
                                     <i className="material-icons">edit_location</i>
                                 </button>
                                 <button onClick={(e) => this.removeMarker(item,e)}>
@@ -122,7 +128,7 @@ class MapIt extends Component {
                                 </button>
                               </div>
                           </span>
-                        </Tooltip>
+                        </Popup>
 
                   >
                 </Marker>

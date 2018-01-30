@@ -1,12 +1,12 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import "./app.css"
+import "./styles/app.css"
 
 import CircularProgress from "material-ui/Progress"
 import Paper from "material-ui/Paper"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 
-import IntegrationAutosuggest from './IntegrationAutosuggest'
+import IntegrationAutosuggest from './components/IntegrationAutosuggest'
 
 class Events extends Component {
     constructor(props) {
@@ -59,7 +59,7 @@ function mapStateToProps(state) {
     const { events, event } = state
 
     return {
-        events: events,
+        events,
         event
     }
 }

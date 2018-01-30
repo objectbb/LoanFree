@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { PropTypes } from "prop-types"
 import { connect } from "react-redux"
 import TextInput from "./components/TextInput"
-import "./app.css"
+import "./styles/app.css"
 
 import Button from "material-ui/Button"
 import Paper from "material-ui/Paper"

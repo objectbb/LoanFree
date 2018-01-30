@@ -13,7 +13,7 @@ import * as actions from "../actions"
 import uuid from 'uuid'
 import Grid from 'material-ui/Grid';
 
-class RouteMaker extends Component {
+class ParticipantTracking extends Component {
 
     constructor(props) {
         super(props);
@@ -109,25 +109,12 @@ class RouteMaker extends Component {
                   editMarker={this.openEditMarker}
                   region={this.props.region}
                   currLocation={this.props.location}
-                   draggable={true}
+                   draggable={false}
                    updatePosition={this.updatePosition}
                 />
 
-                <Dialog open={this.state.isEditMarker} header={""}>
-                    <EditMarkerForm marker={this.state.marker}  handleSubmit={this.handleSubmit}  />
-                </Dialog>
-
-                {Object.getOwnPropertyNames(event.item).length > 0 &&
                 <div className="tool-bar bottom">
-                    <Grid container spacing={24}>
-                    <Grid item xs={9}>
                          <AddressGeocode geocode={this.setCurrentRegionAddress} />
-                    </Grid>
-                    <Grid item xs>
-                        <Icon onClick={this.addMarker}  className="tool-bar-items" color="action">add_location</Icon>
-                    </Grid>
-
-                    </Grid>
                 </div>
             }
             < /div>
@@ -138,7 +125,7 @@ class RouteMaker extends Component {
 function mapStateToProps(state) {
     const { location, region, eventparticipants, event } = state
 
-    console.log("RouteMaker --> mapStateToProps --> eventparticipants", eventparticipants)
+    console.log("ParticipantTracking --> mapStateToProps --> eventparticipants", eventparticipants)
 
     return {
         event,
@@ -154,4 +141,4 @@ const mapDispatchToProps = (dispatch, props) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RouteMaker)
+export default connect(mapStateToProps, mapDispatchToProps)(ParticipantTracking)

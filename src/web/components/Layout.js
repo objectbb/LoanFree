@@ -64,7 +64,7 @@ const styles = theme => ({
     drawerPaper: {
         position: 'absolute',
         height: '100%',
-        width: '50%',
+        width: '80%',
     },
     flex: {
         flex: 1,
@@ -83,7 +83,7 @@ const styles = theme => ({
     content: {
         width: '100%',
         flexGrow: 1,
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: 'theme.palette.background.default',
         padding: theme.spacing.unit * 3,
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
@@ -117,10 +117,15 @@ const styles = theme => ({
 });
 
 class PersistentDrawer extends React.Component {
-    state = {
-        open: false,
-        anchor: 'left',
-    };
+
+    constructor() {
+        super();
+        this.state = {
+            open: false,
+            anchor: 'left',
+        };
+    }
+
 
     handleDrawerOpen = () => {
         this.setState({ open: true });
@@ -142,22 +147,22 @@ class PersistentDrawer extends React.Component {
 
         const drawer = (
             <Drawer
-        type="persistent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-        anchor={anchor}
-        open={open}
-      >
-        <div className={classes.drawerInner}>
-          <div className={classes.drawerHeader}>
-            <IconButton onClick={this.handleDrawerClose}>
-              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-            </IconButton>
-          </div>
-            {this.props.children}
-        </div>
-      </Drawer>
+                type="persistent"
+                classes={{
+                  paper: classes.drawerPaper,
+                }}
+                anchor={anchor}
+                open={open}
+              >
+                <div className={classes.drawerInner}>
+                  <div className={classes.drawerHeader}>
+                    <IconButton onClick={this.handleDrawerClose}>
+                      {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                    </IconButton>
+                  </div>
+                    {this.props.children}
+                </div>
+              </Drawer>
         );
 
         let before = null;

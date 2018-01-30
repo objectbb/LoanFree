@@ -1,9 +1,8 @@
 import React, { Component } from "react"
 import { PropTypes } from "prop-types"
 import { connect } from "react-redux"
-
+import "./styles/app.css"
 import Events from './Events'
-import "./app.css"
 
 class EventsContainer extends Component {
     constructor(props) {
@@ -11,7 +10,13 @@ class EventsContainer extends Component {
     }
 
     componentWillReceiveProps() {
+        const { dispatch, account, event } = this.props
+
         console.log("EventsContainer -->  componentWillReceiveProps -->Events", this.props)
+               dispatch({
+                type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED',
+                payload: { _eventId: event._id }
+            })
     }
 
     render() {
@@ -26,10 +31,11 @@ class EventsContainer extends Component {
 
 function mapStateToProps(state) {
 
-    const { account } = state
+    const { account, event } = state
 
     return {
-        account
+        account,
+        event
     }
 }
 

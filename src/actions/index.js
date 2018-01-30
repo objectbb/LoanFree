@@ -32,13 +32,20 @@ export const PARTICIPANT_FETCH_SUCCEEDED = "PARTICIPANT_FETCH_SUCCEEDED"
 export const PARTICIPANT_FETCH_FAILED = "PARTICIPANT_FETCH_FAILED"
 export const PARTICIPANT_UPSERT_SUCCEEDED = "PARTICIPANT_UPSERT_SUCCEEDED"
 export const PARTICIPANT_UPSERT_FAILED = "PARTICIPANT_UPSERT_FAILED"
+export const PARTICIPANT_ACCOUNT_UPSERT_REQUESTED = "PARTICIPANT_ACCOUNT_UPSERT_REQUESTED"
 
-export const EVENT_PARTICIPANTS_UPSERT_REQUESTED = "EVENT_PARTICIPANTS_UPSERT_REQUESTED"
+export const EVENT_PARTICIPANT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_UPSERT_REQUESTED"
+export const EVENT_PARTICIPANT_FETCH_REQUESTED = "EVENT_PARTICIPANT_FETCH_REQUESTED"
+export const EVENT_PARTICIPANT_FETCH_SUCCEEDED = "EVENT_PARTICIPANT_FETCH_SUCCEEDED"
+export const EVENT_PARTICIPANT_FETCH_FAILED = "EVENT_PARTICIPANT_FETCH_FAILED"
+export const EVENT_PARTICIPANT_UPSERT_SUCCEEDED = "EVENT_PARTICIPANT_UPSERT_SUCCEEDED"
+export const EVENT_PARTICIPANT_UPSERT_FAILED = "EVENT_PARTICIPANT_UPSERT_FAILED"
+export const EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED"
+
+
 export const EVENT_PARTICIPANTS_FETCH_REQUESTED = "EVENT_PARTICIPANTS_FETCH_REQUESTED"
 export const EVENT_PARTICIPANTS_FETCH_SUCCEEDED = "EVENT_PARTICIPANTS_FETCH_SUCCEEDED"
 export const EVENT_PARTICIPANTS_FETCH_FAILED = "EVENT_PARTICIPANTS_FETCH_FAILED"
-export const EVENT_PARTICIPANTS_UPSERT_SUCCEEDED = "EVENT_PARTICIPANTS_UPSERT_SUCCEEDED"
-export const EVENT_PARTICIPANTS_UPSERT_FAILED = "EVENT_PARTICIPANTS_UPSERT_FAILED"
 
 export const EVENTS_FETCH_REQUESTED = "EVENTS_FETCH_REQUESTED"
 export const EVENTS_FETCH_SUCCEEDED = "EVENTS_FETCH_SUCCEEDED"
@@ -109,38 +116,6 @@ export const loadParticipants = (payload) => dispatch => {
     });
 }
 
-export const loadRouteMarkers = (payload) => dispatch => {
-
-    dispatch(requestRouteMarkers(payload))
-
-    let items = [{
-            index: 0,
-            guid: "62r63de1-52f3-43f2-ba69-a21b8ead0a5f",
-            place: {
-                name: "Point Blank 1"
-            },
-            coords: [
-                41.9082277, -87.6886718
-            ],
-            range: 70
-        },
-        {
-            index: 1,
-            guid: "122720d7-4b50-494f-b4a7-44aa0071305a",
-            place: {
-                name: "Point Blank 2"
-            },
-            coords: [
-                41.9089477, -87.6880218
-            ],
-            range: 50
-        }
-    ];
-
-    dispatch(retrieveRouteMarkers(items))
-
-}
-
 export const setCurrentRegionAddress = (address) => dispatch => {
 
     dispatch({ type: 'SET_START_ADDRESS', address })
@@ -151,10 +126,12 @@ export const setRouteMarkers = (payload) => dispatch => {
     dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: payload });
 }
 
-
 export const setCurrLocation = (coords) => dispatch => {
-
     dispatch(currLocation(coords))
+}
+
+export const updateParticipantCurrLocation = (item) => dispatch => {
+    dispatch({ type: 'PARTICIPANT_UPSERT_REQUESTED', payload: item })
 }
 
 export const registerUser = (payload) => dispatch => {
