@@ -92,7 +92,6 @@ const styles = theme => ({
         flexGrow: 1,
         maxHeight: 200,
         width: '100%'
-
     },
     suggestionsContainerOpen: {
         position: 'absolute',

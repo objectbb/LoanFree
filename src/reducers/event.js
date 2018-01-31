@@ -1,4 +1,4 @@
-import { EVENT_UPSERT_REQUESTED, EVENT_FETCH_REQUESTED, EVENT_FETCH_SUCCEEDED, EVENT_FETCH_FAILED, EVENT_UPSERT_SUCCEEDED, EVENT_UPSERT_FAILED } from "../actions";
+import { EVENT_PARTICIPANT_UPSERT_REQUESTED, EVENT_UPSERT_REQUESTED, EVENT_FETCH_REQUESTED, EVENT_FETCH_SUCCEEDED, EVENT_FETCH_FAILED, EVENT_UPSERT_SUCCEEDED, EVENT_UPSERT_FAILED } from "../actions";
 
 export const event = (
     state = { item: {}, isFetching: false, message: "", error: "" },
@@ -7,6 +7,7 @@ export const event = (
     switch (action.type) {
     case EVENT_FETCH_REQUESTED:
     case EVENT_UPSERT_REQUESTED:
+    case EVENT_PARTICIPANT_UPSERT_REQUESTED:
         return {
             ...state,
             payload: action.payload,

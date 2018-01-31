@@ -5,13 +5,18 @@ import Button from "material-ui/Button"
 import TextInput from "./components/TextInput"
 import { CircularProgress } from "material-ui/Progress"
 import { Card, CardHeader, CardText } from "material-ui/Card"
+import Icon from 'material-ui/Icon'
+
+import AddIcon from 'material-ui-icons/Add';
+import DeleteIcon from 'material-ui-icons/Delete';
+import Tooltip from 'material-ui/Tooltip';
 import "./styles/app.css"
 
 class EventParticipant extends Component {
     constructor(props) {
         super(props)
 
-        this.state = {...props.eventparticipant};
+        this.state = { ...props.eventparticipant.item.account };
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -33,18 +38,18 @@ class EventParticipant extends Component {
         e.preventDefault()
 
         console.log("EventParticipant --> handleSubmit --> state ", this.state)
+        const { eventparticipant } = this.props;
 
-/*
         const participant = {
-            _eventId: this.props.event.item._id,
-            _accountId: '',
+            _eventId: eventparticipant.item._eventId,
+            _accountId: eventparticipant.item._accountId,
             _teamdId: '',
-            coords: this.props.event.item.coords
+            coords: eventparticipant.item.coords
         }
-*/
+
         console.log("EventParticipant --> handleSubmit --> eventparticipant ", participant)
 
-        this.props.dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { ...this.state, participant } })
+        this.props.dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { account: { ...this.state }, participant } })
     }
 
     handleChange(e) {
@@ -60,10 +65,15 @@ class EventParticipant extends Component {
             }
         }))
 
+        console.log("EventParticipant --> handleChange --> state", this.state)
+
     }
 
     isEnabled() {
-        const { email, firstname, lastname } = this.props.eventparticipant.item.account
+        const { email, firstname, lastname } = this.state
+
+        console.log("email, firstname, lastname", email, firstname, lastname)
+
         return (
             email &&
             email.trim().length > 5 &&
@@ -82,22 +92,21 @@ class EventParticipant extends Component {
 
     render() {
 
-  if (!this.props.eventparticipant.item.account) return (<div></div>);
-      console.log("EventParticipant --> render --> this.props.eventparticipant.item ",
-        this.props.eventparticipant,
-        this.props.eventparticipant.item.account.email,
-        this.props.eventparticipant.item.event
+        if (!this.props.eventparticipant.item.account) return (<div></div>);
+        console.log("EventParticipant --> render --> this.props.eventparticipant.item ",
+            this.props.eventparticipant,
+            this.props.eventparticipant.item.account.email,
+            this.props.eventparticipant.item.event
         )
 
         const { error, isFetching } = this.props.eventparticipant
         const { email, firstname, lastname } = this.props.eventparticipant.item.account
-        const { name } = this.props.eventparticipant.item.event
+
 
         let isEnabled = this.isEnabled()
 
         return (
             <div className="card">
-               {name}
                 <br />
                 <TextInput
                   uniquename="email"
@@ -133,30 +142,24 @@ class EventParticipant extends Component {
                   errorMessage="Last Name is invalid"
                   emptyMessage="Last Name is required"
                 />
-                <br />
-                <Button
-                  raised
-                  disabled={!isEnabled}
-                  fullWidth={true}
-                  onClick={event => this.handleSubmit(event)}
-                >
-                  {isFetching && <CircularProgress size={25} />} Add
-                </Button>
-
                 {error &&
                   <p style={{ color: "red" }}>
                     {error}
                   </p>}
-
+                  <Tooltip id="tooltip-icon" title="Save">
+                    <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} fab color="primary">
+                        {isFetching && <CircularProgress size={25} />}  <Icon>edit</Icon>
+                      </Button>
+                  </Tooltip>
                   </div>
         )
     }
 }
 
 function mapStateToProps(state) {
-    const {eventparticipant } = state
+    const { eventparticipant } = state
 
-     console.log("EventParticipant --> mapStateToProps --> eventparticipant ", eventparticipant)
+    console.log("EventParticipant --> mapStateToProps --> eventparticipant ", eventparticipant)
 
     return {
         eventparticipant

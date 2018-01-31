@@ -1,20 +1,13 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import * as api from "../api/restful"
-import * as account from "./account"
-import * as participant from "./participant"
+import * as accountApi from "./account"
+import * as participantApi from "./participant"
+import * as eventApi from "./event"
 
 function* fetchParticipant(action) {
     try {
-        const item = yield participant.get(action)
-
-        console.log("fetchParticipant --> ", item)
-
-        if (item.data.errors)
-            yield put({ type: "EVENT_PARTICIPANTS_FETCH_FAILED", payload: item.data.errors });
-        else if (!item.data)
-            yield put({ type: "EVENT_PARTICIPANTS_FETCH_FAILED", message: "No data" });
-        else if (item.data && item.data.length > 0)
-            yield put({ type: "EVENT_PARTICIPANTS_FETCH_SUCCEEDED", payload: [].concat(item.data) });
+        const item = yield participantApi.get(action)
+        yield api.resultHandler(item, 'EVENT_PARTICIPANTS_FETCH_')
 
     } catch (e) {
         yield put({ type: "EVENT_PARTICIPANTS_FETCH_FAILED", message: e.message });
@@ -22,25 +15,14 @@ function* fetchParticipant(action) {
 }
 
 
-function* fetchUpsert(action) {
+function* fetchAccountUpsert(action) {
     //  try {
 
-    const { newAccount, participant } = action.payload
+    console.log("eventparticipants --> fetchUpstart --> action ", action.payload)
 
-    account.upsert(newAccount)
-
+    const { account, participant } = action.payload
     /*
-
-        let item = yield call(api.call, '/account_upsert', newAccount);
-
-        if (item.data.errors) {
-            yield put({ type: "EVENT_PARTICIPANTS_FETCH_FAILED", message: JSON.stringify(item.data.errors) });
-            return;
-        } else if (!item.data) {
-            yield put({ type: "EVENT_PARTICIPANTS_FETCH_FAILED", message: "No data" });
-            return;
-        }
-*/
+    account.upsert(newAccount)
 
     var account = item.data;
     console.log("EventPart -->fetchUpsert-->account", account)
@@ -49,26 +31,34 @@ function* fetchUpsert(action) {
 
     console.log("EventPart -->fetchUpsert-->participant", participant);
 
-    /*
-            item = yield call(api.call, '/participant_upsert', participant);
-
-            if (item.data.errors)
-                yield put({ type: "EVENT_PARTICIPANTS_UPSERT_FAILED", message: JSON.stringify(item.data.errors) });
-            else if (!item.data)
-                yield put({ type: "EVENT_PARTICIPANTS_UPSERT_FAILED", message: "No data" });
-            else if (item.data)
-                yield put({ type: "EVENT_PARTICIPANTS_UPSERT_SUCCEEDED", payload: participant });
-
-        } catch (e) {
-            yield put({ type: "EVENT_PARTICIPANTS_UPSERT_FAILED", message: e.message });
-        }
         */
 }
 
+function* fetchParticipantUpsert(action) {
+
+    const { event, newParticipant } = action.payload
+
+    console.log("eventparticipants --> fetchParticipantUpsert --> event ", event)
+    console.log("eventparticipants --> fetchParticipantUpsert --> newParticipant ", newParticipant)
+
+    const evt = yield eventApi.upsert({ payload: event })
+    yield api.resultHandler(evt, 'EVENT_UPSERT_')
+
+    console.log("eventparticipants --> fetchParticipantUpsert --> evt ", evt.data)
+
+    newParticipant._eventId = evt.data._id;
+
+    const prt = yield participantApi.upsert({ payload: { ...newParticipant } })
+    yield api.resultHandler(prt, 'PARTICIPANT_UPSERT_')
+
+    console.log("eventparticipants --> fetchParticipantUpsert --> prt ", prt)
+
+
+}
 
 function* eventParticipantsSaga() {
     yield takeLatest("EVENT_PARTICIPANTS_FETCH_REQUESTED", fetchParticipant);
-    yield takeLatest("EVENT_PARTICIPANTS_UPSERT_REQUESTED", fetchUpsert);
+    yield takeLatest("EVENT_PARTICIPANT_UPSERT_REQUESTED", fetchParticipantUpsert);
 }
 
 export default eventParticipantsSaga;

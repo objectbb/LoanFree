@@ -17,6 +17,13 @@
     left: 0;
 }
 
+.participants-list {
+    width: 90%;
+    height: 300px;
+    border: 1px dotted #ddd;
+    background-color: #eee;
+}
+
 .bottom {
     position: fixed;
     left: 0;
@@ -63,6 +70,10 @@
 
 .tool-bar-items:hover {
     color: #795548;
+}
+
+.coords {
+    color: #757575;
 }
 
 .card {
@@ -142,30 +153,6 @@
     box-shadow: 0 0 1px 2px #00cae9;
     animation-delay: 1.1s;
     margin: -50px -50px 0 -80px;
-}
-
-.bus {
-    background-color: #333;
-}
-
-.rail90 {
-    background-color: #D11241;
-}
-
-.rail100 {
-    background-color: #0069AA;
-}
-
-.rail190 {
-    background-color: #FFC423;
-}
-
-.rail200 {
-    background-color: #008752;
-}
-
-.rail290 {
-    background-color: #D25D13;
 }
 
 

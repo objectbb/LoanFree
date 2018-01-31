@@ -12,13 +12,7 @@ export const upsert = (action) => {
 function* fetchParticipant(action) {
     try {
         const item = yield get(action)
-
-        if (item.data.errors)
-            yield put({ type: "PARTICIPANT_FETCH_FAILED", message: JSON.stringify(item.data.errors) });
-        else if (!item.data)
-            yield put({ type: "PARTICIPANT_FETCH_FAILED", message: "No data" });
-        else if (item.data && item.data.length > 0)
-            yield put({ type: "PARTICIPANT_FETCH_SUCCEEDED", payload: item.data[0] });
+        yield api.resultHandler(item, 'PARTICIPANT_FETCH_')
 
     } catch (e) {
         yield put({ type: "PARTICIPANT_FETCH_FAILED", message: e.message });
@@ -29,14 +23,8 @@ function* fetchUpsert(action) {
 
     try {
 
-        item = yield upsert(action)
-
-        if (item.data.errors)
-            yield put({ type: "PARTICIPANT_UPSERT_FAILED", message: JSON.stringify(item.data.errors) });
-        else if (!item.data)
-            yield put({ type: "PARTICIPANT_UPSERT_FAILED", message: "No data" });
-        else if (item.data)
-            yield put({ type: "PARTICIPANT_UPSERT_SUCCEEDED", payload: participant });
+        const item = yield upsert(action)
+        yield api.resultHandler(item, 'PARTICIPANT_UPSERT_')
 
     } catch (e) {
         yield put({ type: "PARTICIPANT_UPSERT_FAILED", message: e.message });

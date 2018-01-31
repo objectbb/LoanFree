@@ -15,7 +15,6 @@ class Events extends Component {
     }
 
     componentDidMount() {
-        console.log("Events ---> componentDidMount --> account", this.props.account)
         const { dispatch } = this.props
         this.props.dispatch({
             type: 'EVENTS_FETCH_REQUESTED',
@@ -24,16 +23,14 @@ class Events extends Component {
     }
 
     handleUpdateInput(item) {
-        console.log("Events --> handleUpdateInput ", item.value)
         this.props.dispatch({ type: 'EVENT_FETCH_SUCCEEDED', payload: item.value })
+        this.props.dispatch({ type: 'PARTICIPANT_FETCH_REQUESTED', payload: { _eventId: item.value._id, _accountId: this.props.account._id } })
     };
 
 
     render() {
 
-        const { events } = this.props
-
-        console.log("Events --> render ", events)
+        const { events, account } = this.props
 
         if (Object.getOwnPropertyNames(events.item).length === 0) return (<div/>)
 
@@ -48,7 +45,7 @@ class Events extends Component {
 
         return (
             <div>
-                <IntegrationAutosuggest data={menuitems} handleUpdateInput={this.handleUpdateInput} placeholder={"Search for YOUR Event"}/>
+                <IntegrationAutosuggest data={menuitems} handleUpdateInput={this.handleUpdateInput} placeholder={`${account.item.firstname}'s Events`}/>
             </div>
         )
     }
@@ -56,11 +53,12 @@ class Events extends Component {
 
 function mapStateToProps(state) {
 
-    const { events, event } = state
+    const { events, event, account } = state
 
     return {
         events,
-        event
+        event,
+        account
     }
 }
 

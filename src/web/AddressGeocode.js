@@ -1,4 +1,8 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import * as actions from "../actions"
+
 import style from "./styles/app.css";
 import TextInput from "./components/TextInput"
 
@@ -16,7 +20,8 @@ class AddressGeocode extends Component {
     handleSubmit(e) {
         e.preventDefault();
         console.log(this.state.address)
-        this.props.geocode(this.state.address)
+        this.props.actions.setCurrentRegionAddress(this.state.address)
+        //this.props.geocode(this.state.address)
     }
 
     handleChange(event) {
@@ -41,5 +46,11 @@ class AddressGeocode extends Component {
     }
 }
 
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        actions: bindActionCreators(actions, dispatch)
+    }
+}
 
-export default AddressGeocode
+
+export default connect(null, mapDispatchToProps)(AddressGeocode)

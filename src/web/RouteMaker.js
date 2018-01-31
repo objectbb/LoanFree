@@ -121,7 +121,7 @@ class RouteMaker extends Component {
                 <div className="tool-bar bottom">
                     <Grid container spacing={24}>
                     <Grid item xs={9}>
-                         <AddressGeocode geocode={this.setCurrentRegionAddress} />
+                         <AddressGeocode />
                     </Grid>
                     <Grid item xs>
                         <Icon onClick={this.addMarker}  className="tool-bar-items" color="action">add_location</Icon>

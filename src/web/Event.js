@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { PropTypes } from "prop-types"
 import { connect } from "react-redux"
+import moment from 'moment'
 import TextInput from "./components/TextInput"
 import "./styles/app.css"
 
@@ -13,6 +14,13 @@ import Select from "material-ui/Select"
 import MenuItem from "material-ui/Menu"
 import { withStyles } from 'material-ui/styles'
 import TextField from 'material-ui/TextField'
+import Grid from 'material-ui/Grid';
+import Icon from 'material-ui/Icon'
+
+import AddIcon from 'material-ui-icons/Add';
+import DeleteIcon from 'material-ui-icons/Delete';
+import Tooltip from 'material-ui/Tooltip';
+
 
 class Event extends Component {
     constructor(props) {
@@ -23,17 +31,17 @@ class Event extends Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.handleGeocode = this.handleGeocode.bind(this)
+        this.clearState = this.clearState.bind(this)
+        this.newState = this.newState.bind(this)
         this.isEnabled = this.isEnabled.bind(this)
     }
 
     componentDidMount() {
         const { event } = this.props;
-        console.log("Event --> componentDidMount --> event", event)
     }
 
     componentWillReceiveProps() {
         const { event } = this.props;
-        console.log("Event --> componentWillReceiveProps --> event", event)
 
         this.setState({
             ...this.props.event.item
@@ -46,21 +54,16 @@ class Event extends Component {
 
         const { dispatch, account, participant } = this.props;
 
-        console.log("Events --> handleSubmit --> event", this.state)
-
-        dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: { ...this.state, coords, _accountId: account.item.id } });
-
-/*
-        const participant = {
+        const newParticipant = {
             _id: participant.item._id,
-            _eventId: event.item._id,
-            _accountId: account.item._id,
+            _eventId: '',
+            _accountId: account.item.id,
             _teamdId: '',
-            coords: event.item.coords
+            coords: coords
         }
 
-        dispatch({ type: 'PARTICIPANT_UPSERT_REQUESTED', payload: { ...participant } })
-*/
+        dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { newParticipant, event: { ...this.state, coords, _accountId: account.item.id } } });
+        // dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { ...participant } });
     }
 
     handleChange(e) {
@@ -102,7 +105,7 @@ class Event extends Component {
             displayname,
             description,
             address,
-            startdate,
+            startDate,
             city,
             state,
             zipcode
@@ -110,7 +113,7 @@ class Event extends Component {
 
         return (
             (description && description.trim().length > 9) &&
-            startdate &&
+            startDate &&
             (name && name.trim().length > 5) &&
             (displayname && displayname.trim().length > 1) &&
             (address && address.trim().length > 5) &&
@@ -118,6 +121,19 @@ class Event extends Component {
             (state && state.trim().length > 1) &&
             (zipcode && zipcode.trim().length > 4)
         )
+    }
+
+    clearState() {
+
+        // this.setState(...this.state, { Name: '', displayName: '', description: '', address: '', startDate: '', city: '', state: '', zipcode: '' })
+        this.setState((prevState) => { prevState, { name: '' } })
+        console.log(this.state)
+    }
+
+    newState() {
+
+        this.setState(...this.state, {})
+
     }
 
     render() {
@@ -175,19 +191,17 @@ class Event extends Component {
                 emptyMessage="Display Name  is required"
               />
               <br />
-
-
-                 <TextField
-                     name="startdate"
-                    label="Start Date"
-                     fullWidth={true}
-                    onChange={this.handleChange}
-                    type="datetime-local"
-                        value={startdate}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
+             <TextField
+                 name="startdate"
+                label="Start Date"
+                 fullWidth={true}
+                onChange={this.handleChange}
+                type="datetime-local"
+                    value={moment(startdate).format(moment.HTML5_FMT.DATETIME_LOCAL)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
 
             <TextInput
                 uniquename="description"
@@ -214,7 +228,7 @@ class Event extends Component {
                 emptyMessage="Address is required"
               />
               <br />
-               {coords}
+               <div className="coords">{coords}</div>
               <br />
                  <TextInput
                 uniquename="city"
@@ -260,14 +274,35 @@ class Event extends Component {
             {error}
           </p>}
         <br />
-                 <Button
-                 raised
-                  disabled={!isEnabled}
-                   fullWidth={true}
-                  onClick={item => this.handleSubmit(item)}
-                >
-                  {isFetching && <CircularProgress size={25} />} OK
-                </Button>
+
+              {error &&
+                  <p style={{ color: "red" }}>
+                    {error}
+                  </p>}
+<br />
+<Tooltip id="tooltip-icon" title="Save">
+    <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} fab color="primary" aria-label="add">
+        {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
+      </Button>
+    </Tooltip>
+
+<Tooltip id="tooltip-icon" title="Clear">
+      <Button onClick={item => this.clearState}  fab color="secondary" aria-label="edit" >
+        <Icon>clear</Icon>
+      </Button>
+</Tooltip>
+
+<Tooltip id="tooltip-icon" title="New Event">
+    <Button onClick={item => this.newState} fab  aria-label="delete" >
+         <Icon>add_circle</Icon>
+      </Button>
+      </Tooltip>
+
+      <Tooltip id="tooltip-icon" title="Delete">
+      <Button fab  aria-label="delete" >
+        <DeleteIcon />
+      </Button>
+      </Tooltip>
 
 
       </div>
@@ -278,10 +313,6 @@ class Event extends Component {
 function mapStateToProps(state) {
 
     const { event, account, participant } = state
-
-    console.log("Event --> mapStateToProps --> event", event)
-    console.log("Event --> mapStateToProps --> account", account)
-    console.log("Event --> mapStateToProps --> participant", participant)
 
     return {
         event,

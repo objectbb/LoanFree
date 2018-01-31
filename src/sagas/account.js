@@ -2,7 +2,7 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import * as api from "../api/restful"
 
 export const auth = (action) => {
-    return call(api.call, '/account_get', action.payload);
+    return call(api.call, '/authenticate', action.payload);
 }
 
 export const upsert = (action) => {
@@ -11,16 +11,9 @@ export const upsert = (action) => {
 
 function* fetchUser(action) {
     try {
-        //const item = yield call(api.call, '/account_get', action.payload);
 
         const item = yield auth(action)
-
-        if (item.data.errors)
-            yield put({ type: "ACCOUNT_FETCH_FAILED", message: JSON.stringify(item.data.errors) });
-        else if (!item.data)
-            yield put({ type: "ACCOUNT_FETCH_FAILED", message: "No data" });
-        else if (item.data && item.data.length > 0)
-            yield put({ type: "ACCOUNT_FETCH_SUCCEEDED", payload: item.data[0] });
+        yield api.resultHandler(item, 'ACCOUNT_FETCH_')
 
     } catch (e) {
         yield put({ type: "ACCOUNT_FETCH_FAILED", message: e.message });
@@ -29,16 +22,10 @@ function* fetchUser(action) {
 
 function* fetchUpsert(action) {
     try {
-        // const item = yield call(api.call, '/account_upsert', action.payload);
 
         const item = yield upsert(action)
+        yield api.resultHandler(item, 'ACCOUNT_UPSERT_')
 
-        if (item.data.errors)
-            yield put({ type: "ACCOUNT_UPSERT_FAILED", message: JSON.stringify(item.data.errors) });
-        else if (!item.data)
-            yield put({ type: "ACCOUNT_UPSERT_FAILED", message: "No data" });
-        else if (item.data)
-            yield put({ type: "ACCOUNT_UPSERT_SUCCEEDED", payload: item.data });
     } catch (e) {
         yield put({ type: "ACCOUNT_UPSERT_FAILED", message: e.message });
     }
@@ -46,14 +33,10 @@ function* fetchUpsert(action) {
 
 function* fetchAuthenticate(action) {
     try {
-        //const item = yield call(api.call, '/account_get', action.payload);
 
         const item = yield auth(action)
+        yield api.resultHandler(item, 'ACCOUNT_AUTHENTICATE_')
 
-        if (item.data.length == 0)
-            yield put({ type: "ACCOUNT_AUTHENTICATE_FAILED", message: "No data" });
-        else
-            yield put({ type: "ACCOUNT_AUTHENTICATE_SUCCEEDED", payload: item.data[0] });
     } catch (e) {
         yield put({ type: "ACCOUNT_AUTHENTICATE_FAILED", message: e.message });
     }

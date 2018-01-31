@@ -12,13 +12,7 @@ export const upsert = (action) => {
 function* fetchEvent(action) {
     try {
         const event = yield get(action)
-
-        if (account.data.errors)
-            yield put({ type: "EVENT_FETCH_FAILED", message: JSON.stringify(item.data.errors) });
-        else if (!account.data)
-            yield put({ type: "EVENT_FETCH_FAILED", message: "No data" });
-        else if (account.data && account.data.length > 0)
-            yield put({ type: "EVENT_FETCH_SUCCEEDED", payload: account.data[0] });
+        yield api.resultHandler(event, 'EVENT_FETCH_')
 
     } catch (e) {
         yield put({ type: "EVENT_FETCH_FAILED", message: e.message });
@@ -26,20 +20,18 @@ function* fetchEvent(action) {
 }
 
 function* fetchUpsert(action) {
+
+    let event
     try {
-        //const account = yield call(api.call, '/event_upsert', action.payload);
 
-        const event = yield upsert(action)
+        event = yield upsert(action)
+        yield api.resultHandler(event, 'EVENT_UPSERT_')
 
-        if (account.data.errors)
-            yield put({ type: "EVENT_UPSERT_FAILED", message: JSON.stringify(event.data.errors) });
-        else if (!account.data)
-            yield put({ type: "EVENT_UPSERT_FAILED", message: "No data" });
-        else if (account.data)
-            yield put({ type: "EVENT_UPSERT_SUCCEEDED", payload: event.data });
     } catch (e) {
         yield put({ type: "EVENT_UPSERT_FAILED", message: e.message });
     }
+
+    return event;
 }
 
 function* eventSaga() {

@@ -20,13 +20,7 @@ class ParticipantContainer extends Component {
         super(props);
     }
 
-    componentDidMount() {
-        const { event, account } = this.props
-        console.log("ParticipantContainer --> componentDidMount --> event", this.props.event)
-    }
-
     render() {
-        console.log("ParticipantContainer --> render --> account", this.props.account)
 
         const { account } = this.props
         return (
@@ -56,8 +50,6 @@ class ParticipantContainer extends Component {
 
 function mapStateToProps(state) {
     const { account } = state
-
-    console.log("ParticipantContainer --> mapStateToProps --> account", account)
 
     return {
         account,

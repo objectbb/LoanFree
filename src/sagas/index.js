@@ -5,9 +5,7 @@ import * as config from "../config/config";
 function* setCurrentRegionAddress(action) {
     try {
         const geocoderesults =
-            yield call(api.call, config.GEOCODE_URL, action.address);
-
-        //const item = yield call(api.call, '/account_get', action.payload);
+            yield call(api.callget, config.GEOCODE_URL, `address=${action.address}`);
 
         const loc = geocoderesults.data.results[0].geometry.location
 
@@ -23,8 +21,7 @@ function* requestGeocode(action) {
         console.log(action)
         const { address, city, state, zipcode, nextAction } = action.payload
         const fulladdress = `${address}, ${city}, ${state}, ${zipcode}`
-        const geocoderesults =  yield call(api.call, config.GEOCODE_URL, fulladdress)
-            //yield axios.get(config.GEOCODE_URL + fulladdress);
+        const geocoderesults = yield call(api.callget, config.GEOCODE_URL, `address=${fulladdress}`)
 
         const loc = geocoderesults.data.results[0].geometry.location
 

@@ -11,6 +11,7 @@ import EventParticipant from "./EventParticipant"
 
 import EventsContainer from './EventsContainer'
 import EventParticipants from './EventParticipants'
+import ImportEventParticipants from './ImportEventParticipants'
 import Layout from './components/Layout'
 import CollapsibleCard from './components/CollapsibleCard'
 import Logout from './Logout'
@@ -28,18 +29,20 @@ class RouteMakerContainer extends Component {
 
     render() {
 
-            const {  account, event, eventparticipant,eventparticipants } = this.props
+            const { account, event, eventparticipant, eventparticipants } = this.props
 
-            console.log("RouteMakerContainer --> mapStateToProps --> account", account)
-            console.log("RouteMakerContainer --> render --> event", event)
-            console.log("RouteMakerContainer --> render --> eventparticipant", eventparticipant)
-            console.log("RouteMakerContainer --> render --> eventparticipants", eventparticipants)
-
+            /*
+                        console.log("RouteMakerContainer --> mapStateToProps --> account", account)
+                        console.log("RouteMakerContainer --> render --> event", event)
+                        console.log("RouteMakerContainer --> render --> eventparticipant", eventparticipant)
+                        console.log("RouteMakerContainer --> render --> eventparticipants", eventparticipants)
+            */
             return (
                     <div>
                     <Layout
                     header={<span><EventsContainer /> </span>}
                       logout={<Logout />}
+                      drawerheader={event.item.name}
                         body={
                                 <div>
                                     <DataFeeder>
@@ -62,12 +65,18 @@ class RouteMakerContainer extends Component {
                              </CollapsibleCard>
                             }
 
-                             {eventparticipants &&
+
                             <CollapsibleCard title="Participants">
-                                <EventParticipants />
+
+                                {eventparticipants.item.length > 0 &&  <EventParticipants />}
                                 <br />
-                                {eventparticipant && <EventParticipant />}
-                            </CollapsibleCard>}
+
+
+                                <EventParticipant />
+
+                                <ImportEventParticipants />
+
+                            </CollapsibleCard>
                             </div>
                       </Layout>
             < /div>
@@ -78,11 +87,12 @@ class RouteMakerContainer extends Component {
 function mapStateToProps(state) {
     const { account, event, eventparticipant,eventparticipants } = state
 
+/*
     console.log("RouteMakerContainer --> mapStateToProps --> account", account)
     console.log("RouteMakerContainer --> mapStateToProps --> event", event)
     console.log("RouteMakerContainer --> mapStateToProps --> eventparticipant", eventparticipant)
     console.log("RouteMakerContainer --> mapStateToProps --> eventparticipants", eventparticipants)
-
+*/
     return {
         account,
         event,

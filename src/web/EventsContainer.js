@@ -12,11 +12,10 @@ class EventsContainer extends Component {
     componentWillReceiveProps() {
         const { dispatch, account, event } = this.props
 
-        console.log("EventsContainer -->  componentWillReceiveProps -->Events", this.props)
-               dispatch({
-                type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED',
-                payload: { _eventId: event._id }
-            })
+        dispatch({
+            type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED',
+            payload: { _eventId: event._id }
+        })
     }
 
     render() {

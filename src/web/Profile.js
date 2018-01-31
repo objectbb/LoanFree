@@ -11,6 +11,11 @@ import Checkbox from "material-ui/Checkbox"
 import Select from "material-ui/Select"
 import MenuItem from "material-ui/Menu"
 import CircularProgress from "material-ui/Progress"
+import Icon from 'material-ui/Icon'
+
+import AddIcon from 'material-ui-icons/Add';
+import DeleteIcon from 'material-ui-icons/Delete';
+import Tooltip from 'material-ui/Tooltip';
 
 class Profile extends Component {
     constructor(props) {
@@ -149,14 +154,19 @@ class Profile extends Component {
           </p>}
         <br />
 
-                 <Button
-                 raised
-                  disabled={!isEnabled}
-                   fullWidth={true}
-                  onClick={item => this.handleSubmit(item)}
-                >
-                  {isFetching && <CircularProgress size={25} />} OK
-                </Button>
+<Tooltip id="tooltip-icon" title="Save">
+    <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} fab color="primary" aria-label="add">
+         {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
+      </Button>
+    </Tooltip>
+
+<Tooltip id="tooltip-icon" title="Clear">
+      <Button onClick={item => this.clearState}  fab color="secondary" aria-label="edit" >
+        <Icon>clear</Icon>
+      </Button>
+</Tooltip>
+
+
 
       </div>
         )
@@ -165,8 +175,6 @@ class Profile extends Component {
 
 function mapStateToProps(state) {
     const { account } = state
-
-    console.log("Profile --> mapStateToProps --> account ", account)
 
     return {
         account

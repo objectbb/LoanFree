@@ -25,7 +25,8 @@ const styles = theme => ({
         right: 0,
         top: 0,
         bottom: 0,
-        zIndex: -1
+        zIndex: -1,
+        color: '#CFD8DC'
     },
     appFrame: {
         position: 'relative',
@@ -65,9 +66,11 @@ const styles = theme => ({
         position: 'absolute',
         height: '100%',
         width: '80%',
+        backgroundColor: '#BDBDBD'
     },
     flex: {
-        flex: 1,
+        flex: 1
+
     },
     drawerHeader: {
         display: 'flex',
@@ -75,7 +78,8 @@ const styles = theme => ({
         justifyContent: 'flex-end',
         padding: '0 8px',
         ...theme.mixins.toolbar,
-        width: '100%'
+        width: '100%',
+        color: '#000'
     },
     drawerInner: {
         width: '100%'
@@ -155,7 +159,12 @@ class PersistentDrawer extends React.Component {
                 open={open}
               >
                 <div className={classes.drawerInner}>
+
                   <div className={classes.drawerHeader}>
+
+                    <Typography type="title" color="inherit">
+                        "{this.props.drawerheader}"
+                    </Typography>
                     <IconButton onClick={this.handleDrawerClose}>
                       {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>

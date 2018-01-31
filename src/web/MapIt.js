@@ -30,8 +30,6 @@ class MapIt extends Component {
         let item = e.target.options.name;
         item.coords = [e.target._latlng.lat, e.target._latlng.lng]
 
-        console.log("MapIt --> updatePosition --> item", item)
-
         this.props.updatePosition(item);
     }
 
