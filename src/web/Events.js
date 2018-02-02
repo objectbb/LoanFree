@@ -12,25 +12,41 @@ class Events extends Component {
     constructor(props) {
         super(props)
         this.handleUpdateInput = this.handleUpdateInput.bind(this)
+        this.clearSelectedEvent = this.clearSelectedEvent.bind(this)
     }
 
     componentDidMount() {
         const { dispatch } = this.props
+
+        console.log("Events --> componentDidMount --> ", this.props.account)
+
         this.props.dispatch({
             type: 'EVENTS_FETCH_REQUESTED',
             payload: { _accountId: this.props.account._id }
         })
     }
 
+    clearSelectedEvent() {
+        const { dispatch } = this.props
+        dispatch({ type: 'EVENT_CLEAR' })
+    }
+
     handleUpdateInput(item) {
-        this.props.dispatch({ type: 'EVENT_FETCH_SUCCEEDED', payload: item.value })
-        this.props.dispatch({ type: 'PARTICIPANT_FETCH_REQUESTED', payload: { _eventId: item.value._id, _accountId: this.props.account._id } })
+        const { dispatch, account } = this.props
+
+        console.log("Events --> handleUpdateInput --> ", account)
+        dispatch({ type: 'EVENT_FETCH_SUCCEEDED', payload: item.value })
+        dispatch({ type: 'PARTICIPANT_FETCH_REQUESTED', payload: { _eventId: item.value._id, _accountId: account.item._id } })
+        dispatch({ type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED', payload: { _eventId: item.value._id } })
+
     };
 
 
     render() {
 
         const { events, account } = this.props
+
+        console.log("Events --> render --> ", events.item)
 
         if (Object.getOwnPropertyNames(events.item).length === 0) return (<div/>)
 
@@ -45,7 +61,13 @@ class Events extends Component {
 
         return (
             <div>
-                <IntegrationAutosuggest data={menuitems} handleUpdateInput={this.handleUpdateInput} placeholder={`${account.item.firstname}'s Events`}/>
+                <IntegrationAutosuggest
+                data={menuitems}
+                handleUpdateInput={this.handleUpdateInput}
+                value=""
+                 placeholder={`${account.item.firstname}'s Events`}
+                 clearSelected={this.clearSelectedEvent}
+                 />
             </div>
         )
     }
@@ -53,11 +75,10 @@ class Events extends Component {
 
 function mapStateToProps(state) {
 
-    const { events, event, account } = state
+    const { events, account } = state
 
     return {
         events,
-        event,
         account
     }
 }

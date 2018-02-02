@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { PropTypes } from "prop-types"
+import Typography from 'material-ui/Typography'
 import TextField from "material-ui/TextField"
 import InputError from "./InputError"
 
@@ -114,10 +115,9 @@ class TextInput extends Component {
 
           */}
 
-
         <TextField
           name={this.props.uniquename}
-          value={this.state.value}
+          value={this.props.content}
           onChange={this.handleChange}
           onBlur={this.handleBlur}
           label={this.props.text}
@@ -128,6 +128,7 @@ class TextInput extends Component {
         <InputError
             visible={this.state.errorVisible}
             errorMessage={this.state.errorMessage} />
+
       </div>
         )
     }

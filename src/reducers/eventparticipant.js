@@ -1,4 +1,4 @@
-import { EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED, EVENT_PARTICIPANT_UPSERT_REQUESTED, EVENT_PARTICIPANT_FETCH_REQUESTED, EVENT_PARTICIPANT_FETCH_SUCCEEDED, EVENT_PARTICIPANT_FETCH_FAILED, EVENT_PARTICIPANT_UPSERT_SUCCEEDED, EVENT_PARTICIPANT_UPSERT_FAILED } from "../actions";
+import { EVENT_PARTICIPANT_CLEAR, EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED, EVENT_PARTICIPANT_UPSERT_REQUESTED, EVENT_PARTICIPANT_FETCH_REQUESTED, EVENT_PARTICIPANT_FETCH_SUCCEEDED, EVENT_PARTICIPANT_FETCH_FAILED, EVENT_PARTICIPANT_UPSERT_SUCCEEDED, EVENT_PARTICIPANT_UPSERT_FAILED } from "../actions";
 
 export const eventparticipant = (
     state = { item: {}, isFetching: false, message: "", error: "" },
@@ -30,6 +30,11 @@ export const eventparticipant = (
             error: action.message,
             isFetching: false
         }
+    case EVENT_PARTICIPANT_CLEAR:
+        return {
+            ...state,
+            item: {}
+        };
     default:
         return state;
     }

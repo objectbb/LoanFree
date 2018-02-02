@@ -4,6 +4,31 @@
     height: 500px;
 }
 
+
+.bus {
+    background-color: #333;
+}
+
+.rail90 {
+    background-color: #D11241;
+}
+
+.rail100 {
+    background-color: #0069AA;
+}
+
+.rail190 {
+    background-color: #FFC423;
+}
+
+.rail200 {
+    background-color: #008752;
+}
+
+.rail290 {
+    background-color: #D25D13;
+}
+
 .login-form {
     width: 375px;
     margin: auto;
@@ -22,6 +47,10 @@
     height: 300px;
     border: 1px dotted #ddd;
     background-color: #eee;
+}
+
+.participant {
+    background-color: #795548;
 }
 
 .bottom {

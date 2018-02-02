@@ -1,7 +1,9 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
+import Button from "material-ui/Button"
 import Icon from 'material-ui/Icon'
+import TextField from 'material-ui/TextField'
 import TextInput from "./components/TextInput"
 import style from "./styles/app.css"
 
@@ -72,17 +74,23 @@ class EditMarkerForm extends Component {
                 errorMessage="Name is invalid"
                 emptyMessage="Name is required"
               />
-                <TextInput
-                uniquename="range"
-                text="Range"
-                minCharacters={6}
-                onChange={this.handleChange}
-                content={range}
-                required={true}
-                errorMessage="Range is invalid"
-                emptyMessage="Range is required"
-              />
-              <button type="submit" >OK</button>
+
+              <TextField
+              id="number"
+              label="Number"
+              name="range"
+              value={range}
+              onChange={this.handleChange}
+              type="number"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              margin="normal"
+            />
+
+            <Button fab mini disabled={!isEnabled} onClick={this.handleSubmit} color="primary" aria-label="save">
+              <Icon>save</Icon>
+            </Button>
     </form>
         )
     }

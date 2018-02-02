@@ -28,6 +28,7 @@ class MapIt extends Component {
     updatePosition(e) {
 
         let item = e.target.options.name;
+
         item.coords = [e.target._latlng.lat, e.target._latlng.lng]
 
         this.props.updatePosition(item);
@@ -84,13 +85,17 @@ class MapIt extends Component {
               )
             }
             {
-                this.props.currLocation &&
+                this.props.currLocation && this.props.currLocation.coords &&
                 <Marker key={1}
-                    position={this.props.currLocation}
+                    position={this.props.currLocation.coords}
                     icon={divIcon({ className: 'youmarker ', html: `<div>YOU</div>`})}
                        ref="marker">
                        <Popup minWidth={90}>
-                          <div>{this.props.currLocation}</div>
+                          <div>
+                          {this.props.currLocation.coords}
+                          <br />
+                          {this.props.currLocation.history && this.props.currLocation.history.join(',')}
+                          </div>
                       </Popup>
                   >
                 </Marker>

@@ -11,6 +11,7 @@ class EventParticipants extends Component {
     constructor(props) {
         super(props)
         this.handleUpdateInput = this.handleUpdateInput.bind(this)
+        this.clearSelectedParticipant = this.clearSelectedParticipant.bind(this)
     }
 
     handleUpdateInput(item) {
@@ -18,6 +19,10 @@ class EventParticipants extends Component {
         this.props.dispatch({ type: 'EVENT_PARTICIPANT_FETCH_SUCCEEDED', payload: item.value })
     };
 
+    clearSelectedParticipant() {
+        const { dispatch } = this.props
+        dispatch({ type: 'EVENT_PARTICIPANT_CLEAR' })
+    }
 
     render() {
 
@@ -27,7 +32,7 @@ class EventParticipants extends Component {
         if (!eventparticipants.item) return (<div/>)
 
         const menuitems = (eventparticipants.item) ?
-            eventparticipants.item.map((item) => ({
+            eventparticipants.item.filter((item) => item.authorization === 'PARTICIPANT').map((item) => ({
                 text: `${item.account.lastname}, ${item.account.firstname} -- ${item.account.email} `,
                 value: item
             }))
@@ -35,7 +40,13 @@ class EventParticipants extends Component {
 
         return (
             <div>
-                <IntegrationAutosuggest data={menuitems} placeholder={"Search for participant"} handleUpdateInput={this.handleUpdateInput}/>
+                <IntegrationAutosuggest
+                data={menuitems}
+                placeholder={"Search for participant(s)"}
+                value=""
+                 handleUpdateInput={this.handleUpdateInput}
+                  clearSelected={this.clearSelectedParticipant}
+                 />
               </div>
         )
 

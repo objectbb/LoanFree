@@ -36,14 +36,13 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-    const { account } = state
+    const { account, event } = state
 
     console.log("App --> mapStateToProps --> account", account)
 
     return {
         account,
         event
-
     }
 }
 

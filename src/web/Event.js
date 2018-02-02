@@ -26,7 +26,18 @@ class Event extends Component {
     constructor(props) {
         super(props)
 
-        this.state = { ...props.event.item };
+        this.state = props.event.item._id ? { ...props.event.item } : {
+            name: '',
+            displayname: '',
+            description: '',
+            markers: [],
+            teams: [],
+            address: '',
+            startdate: '',
+            city: '',
+            state: '',
+            zipcode: ''
+        }
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -36,15 +47,12 @@ class Event extends Component {
         this.isEnabled = this.isEnabled.bind(this)
     }
 
-    componentDidMount() {
-        const { event } = this.props;
-    }
 
-    componentWillReceiveProps() {
-        const { event } = this.props;
+    componentWillReceiveProps(nextProps) {
+        const { event } = nextProps;
 
         this.setState({
-            ...this.props.event.item
+            ...event.item
         });
     }
 
@@ -63,7 +71,6 @@ class Event extends Component {
         }
 
         dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { newParticipant, event: { ...this.state, coords, _accountId: account.item.id } } });
-        // dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { ...participant } });
     }
 
     handleChange(e) {
@@ -105,6 +112,7 @@ class Event extends Component {
             displayname,
             description,
             address,
+            startdate,
             startDate,
             city,
             state,
@@ -113,7 +121,7 @@ class Event extends Component {
 
         return (
             (description && description.trim().length > 9) &&
-            startDate &&
+            (startdate || startDate) &&
             (name && name.trim().length > 5) &&
             (displayname && displayname.trim().length > 1) &&
             (address && address.trim().length > 5) &&
@@ -125,22 +133,44 @@ class Event extends Component {
 
     clearState() {
 
-        // this.setState(...this.state, { Name: '', displayName: '', description: '', address: '', startDate: '', city: '', state: '', zipcode: '' })
-        this.setState((prevState) => { prevState, { name: '' } })
-        console.log(this.state)
+        this.setState((prevState) => ({
+            name: '',
+            displayname: '',
+            description: '',
+            markers: [],
+            teams: [],
+            address: '',
+            startdate: '',
+            city: '',
+            state: '',
+            zipcode: ''
+        }))
+
     }
 
     newState() {
-
-        this.setState(...this.state, {})
-
+        this.setState({
+            _id: '',
+            name: '',
+            displayname: '',
+            description: '',
+            markers: [],
+            teams: [],
+            address: '',
+            startdate: '',
+            city: '',
+            state: '',
+            zipcode: ''
+        })
     }
 
     render() {
 
         const { error, isFetching } = this.props.event
         const { coords } = this.props.event.item
+
         const {
+            _id,
             name,
             displayname,
             startdate,
@@ -156,7 +186,7 @@ class Event extends Component {
 
         const items = [];
 
-        const states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT',
+        const states = [' ', 'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT',
             'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA',
             'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO',
             'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK',
@@ -228,7 +258,7 @@ class Event extends Component {
                 emptyMessage="Address is required"
               />
               <br />
-               <div className="coords">{coords}</div>
+              {_id && <div className="coords">{coords}</div>}
               <br />
                  <TextInput
                 uniquename="city"
@@ -268,42 +298,21 @@ class Event extends Component {
                 errorMessage="Zip Code is invalid"
                 emptyMessage="Zip Code is required"
               />
-              <br />
-        {error &&
-          <p style={{ color: "red" }}>
-            {error}
-          </p>}
-        <br />
-
               {error &&
                   <p style={{ color: "red" }}>
                     {error}
                   </p>}
-<br />
-<Tooltip id="tooltip-icon" title="Save">
-    <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} fab color="primary" aria-label="add">
-        {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
-      </Button>
-    </Tooltip>
+                <Tooltip id="tooltip-icon" title="Save">
+                    <Button  disabled={!isEnabled} onClick={this.handleSubmit} fab color="primary" aria-label="save">
+                    {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
+                    </Button>
+                </Tooltip>
 
-<Tooltip id="tooltip-icon" title="Clear">
-      <Button onClick={item => this.clearState}  fab color="secondary" aria-label="edit" >
-        <Icon>clear</Icon>
-      </Button>
-</Tooltip>
-
-<Tooltip id="tooltip-icon" title="New Event">
-    <Button onClick={item => this.newState} fab  aria-label="delete" >
-         <Icon>add_circle</Icon>
-      </Button>
-      </Tooltip>
-
-      <Tooltip id="tooltip-icon" title="Delete">
-      <Button fab  aria-label="delete" >
-        <DeleteIcon />
-      </Button>
-      </Tooltip>
-
+                <Tooltip id="tooltip-icon" title="Clear" style={{float:'right'}}>
+                    <Button onClick={this.clearState}  fab color="secondary" aria-label="edit" >
+                    <Icon>clear</Icon>
+                    </Button>
+                </Tooltip>
 
       </div>
         )

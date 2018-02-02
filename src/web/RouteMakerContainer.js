@@ -14,7 +14,10 @@ import EventParticipants from './EventParticipants'
 import ImportEventParticipants from './ImportEventParticipants'
 import Layout from './components/Layout'
 import CollapsibleCard from './components/CollapsibleCard'
+import FullWidthTabs from './components/FullWidthTabs'
 import Logout from './Logout'
+
+import moment from 'moment'
 
 import "./styles/app.css"
 
@@ -31,18 +34,12 @@ class RouteMakerContainer extends Component {
 
             const { account, event, eventparticipant, eventparticipants } = this.props
 
-            /*
-                        console.log("RouteMakerContainer --> mapStateToProps --> account", account)
-                        console.log("RouteMakerContainer --> render --> event", event)
-                        console.log("RouteMakerContainer --> render --> eventparticipant", eventparticipant)
-                        console.log("RouteMakerContainer --> render --> eventparticipants", eventparticipants)
-            */
             return (
                     <div>
                     <Layout
                     header={<span><EventsContainer /> </span>}
                       logout={<Logout />}
-                      drawerheader={event.item.name}
+                      drawerheader={event.item.name && `${event.item.name} ${moment(event.item.startDate).format('llll')}`}
                         body={
                                 <div>
                                     <DataFeeder>
@@ -55,44 +52,26 @@ class RouteMakerContainer extends Component {
 
                     <br />
                             <div className="cards-layout">
-                            <CollapsibleCard title="Profile">
-                                <Profile />
-                             </CollapsibleCard>
-
-                             {Object.getOwnPropertyNames(event.item).length > 0  &&
-                             <CollapsibleCard title="Event">
-                                <Event />
-                             </CollapsibleCard>
-                            }
-
-
-                            <CollapsibleCard title="Participants">
-
-                                {eventparticipants.item.length > 0 &&  <EventParticipants />}
-                                <br />
-
-
-                                <EventParticipant />
-
-                                <ImportEventParticipants />
-
-                            </CollapsibleCard>
+                         <FullWidthTabs>
+                                <Profile header= "Profile" />
+                                <Event header= "Name"/>
+                                    <div header={`Participants ${eventparticipants.item.length}`}  disable={event.item._id === undefined}>
+                                    {eventparticipants.item.length > 1 &&  <EventParticipants />}
+                                    <br />
+                                    <EventParticipant />
+                                    <ImportEventParticipants />
+                                    </div>
+                               </FullWidthTabs>
                             </div>
-                      </Layout>
+            < /Layout>
             < /div>
-    )
-}
+        )
+    }
 }
 
 function mapStateToProps(state) {
-    const { account, event, eventparticipant,eventparticipants } = state
+    const { account, event, eventparticipant, eventparticipants } = state
 
-/*
-    console.log("RouteMakerContainer --> mapStateToProps --> account", account)
-    console.log("RouteMakerContainer --> mapStateToProps --> event", event)
-    console.log("RouteMakerContainer --> mapStateToProps --> eventparticipant", eventparticipant)
-    console.log("RouteMakerContainer --> mapStateToProps --> eventparticipants", eventparticipants)
-*/
     return {
         account,
         event,

@@ -144,7 +144,7 @@ function mapStateToProps(state) {
         event,
         participant: eventparticipants.item,
         region: region.coords,
-        location: location.coords
+        location
     }
 }
 

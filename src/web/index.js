@@ -3,7 +3,6 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux'
 
 import { PersistGate } from 'redux-persist/lib/integration/react'
-//import configureStore from './store/configureStore'
 
 import injectTapEventPlugin from "react-tap-event-plugin"
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'

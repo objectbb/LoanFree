@@ -8,24 +8,36 @@ import Paper from 'material-ui/Paper';
 import { MenuItem } from 'material-ui/Menu';
 import { withStyles } from 'material-ui/styles';
 
-
+import IconButton from 'material-ui/IconButton';
+import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
+import { FormControl, FormHelperText } from 'material-ui/Form';
+import Visibility from 'material-ui-icons/Visibility';
+import VisibilityOff from 'material-ui-icons/VisibilityOff';
 
 function renderInput(inputProps) {
-    const { classes, autoFocus, value, ref, ...other } = inputProps;
+    const { onClear, classes, autoFocus, value, ref, ...other } = inputProps;
 
     return (
-        <TextField
-      autoFocus={autoFocus}
-      className={classes.textField}
-      value={value}
-      inputRef={ref}
-      InputProps={{
-        classes: {
-          input: classes.input,
-        },
-        ...other,
-      }}
-    />
+        <div>
+      <FormControl
+           className={classes.textField}
+        >
+          <Input
+              autoFocus={autoFocus}
+              className={classes.textField}
+              value={value}
+              inputRef={ref}
+              { ...other}
+              inputProps={{
+                classes: {
+                  input: classes.input,
+                }
+              }}
+        endAdornment={<InputAdornment  onClick={onClear} position="end">X</InputAdornment>}
+          />
+        </FormControl>
+
+    </div>
     );
 }
 
@@ -112,7 +124,8 @@ const styles = theme => ({
         width: '100%'
     },
     textField: {
-        width: '100%'
+        width: '100%',
+        fonstSize: '10px'
     },
 });
 
@@ -125,6 +138,20 @@ class IntegrationAutosuggest extends React.Component {
             suggestions: [],
         };
     }
+
+    componentWillReceiveProps() {
+        this.setState({
+            value: ''
+        });
+    }
+
+    handleSuggestionSelected = () => {
+        this.props.clearSelected()
+        this.setState({
+            value: ''
+        });
+        this.handleSuggestionsClearRequested()
+    };
 
     handleSuggestionsFetchRequested = ({ value }) => {
 
@@ -169,6 +196,7 @@ class IntegrationAutosuggest extends React.Component {
           placeholder: this.props.placeholder,
           value: this.state.value,
           onChange: this.handleChange,
+          onClear: this.handleSuggestionSelected
         }}
       />
         );

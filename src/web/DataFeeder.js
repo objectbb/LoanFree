@@ -7,33 +7,42 @@ class DataFeeder extends Component {
 
     constructor(props) {
         super(props);
+
+        this.tracker = this.tracker.bind(this)
     }
 
     componentDidMount() {
 
-        const { dispatch, participant } = this.props
 
-        console.log("DataFeeder --> componentDidMount --> participant", participant)
+        console.log("DataFeeder --> componentDidMount --> props", this.props)
+
+        this.tracker();
+    }
+
+    tracker() {
 
         navigator.geolocation.watchPosition(position => {
+            const { dispatch, participant } = this.props
 
             const coords = [position.coords.latitude, position.coords.longitude]
             this.props.actions.setCurrLocation(coords)
 
             if (Object.getOwnPropertyNames(participant.item).length === 0) return
+            console.log("DataFeeder --> geolocation.watchPosition --> participant.item", participant.item)
 
-            console.log("DataFeeder --> componentDidMount --> participant", participant.item)
-            const prtCoords = { ...participant.item[0] }
+            const prtCoords = { ...participant.item }
             prtCoords.coords = coords
 
+            console.log("DataFeeder --> geolocation.watchPosition --> prtCoords", prtCoords)
+
             this.props.actions.updateParticipantCurrLocation(prtCoords)
+            this.props.actions.loadParticipants({ _eventId: prtCoords._eventId })
 
         }, function error(msg) {
 
             alert('Please enable your GPS position future.');
 
         }, { maximumAge: 600000000, timeout: 5000, enableHighAccuracy: true });
-
     }
 
 

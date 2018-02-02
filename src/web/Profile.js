@@ -27,23 +27,37 @@ class Profile extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.validateEmail = this.validateEmail.bind(this)
         this.isEnabled = this.isEnabled.bind(this)
+        this.clearState = this.clearState.bind(this)
     }
 
+    /*
+        componentWillReceiveProps() {
 
-    componentWillReceiveProps() {
+            this.setState({
+                ...this.props.account.item
+            });
 
-        this.setState({
-            ...this.props.account.item
-        });
-
-    }
-
+        }
+    */
     handleSubmit(e) {
         e.preventDefault()
 
         const { dispatch } = this.props
 
-        dispatch({ type: 'PROFILE_UPSERT_REQUESTED', payload: this.state })
+        dispatch({ type: 'ACCOUNT_UPSERT_REQUESTED', payload: this.state })
+    }
+
+    clearState() {
+
+
+        this.setState((prevState) => ({
+            firstname: '',
+            lastname: '',
+            email: '',
+            authorization: ''
+        }))
+
+
     }
 
     handleChange(e) {
@@ -154,20 +168,17 @@ class Profile extends Component {
           </p>}
         <br />
 
-<Tooltip id="tooltip-icon" title="Save">
-    <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} fab color="primary" aria-label="add">
-         {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
-      </Button>
-    </Tooltip>
+        <Tooltip id="tooltip-icon" title="Save">
+            <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} fab color="primary" aria-label="add">
+                 {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
+              </Button>
+            </Tooltip>
 
-<Tooltip id="tooltip-icon" title="Clear">
-      <Button onClick={item => this.clearState}  fab color="secondary" aria-label="edit" >
-        <Icon>clear</Icon>
-      </Button>
-</Tooltip>
-
-
-
+        <Tooltip id="tooltip-icon" title="Clear" style={{float:'right'}}>
+              <Button onClick={this.clearState}  fab color="secondary" aria-label="edit" >
+                <Icon>clear</Icon>
+              </Button>
+        </Tooltip>
       </div>
         )
     }

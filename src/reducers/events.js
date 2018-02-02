@@ -1,4 +1,4 @@
-import { EVENTS_FETCH_REQUESTED, EVENTS_FETCH_SUCCEEDED, EVENTS_FETCH_FAILED } from "../actions";
+import { EVENTS_UPSERT, EVENTS_FETCH_REQUESTED, EVENTS_FETCH_SUCCEEDED, EVENTS_FETCH_FAILED } from "../actions";
 
 export const events = (
     state = { item: [], isFetching: false, message: "", error: "" },
@@ -12,6 +12,16 @@ export const events = (
             error: action.message,
             isFetching: true
         }
+    case EVENTS_UPSERT:
+        return {
+            item: state.item.find((item) => (item.id === action.payload.id)) ? state.item.map(item => {
+                if (item.id === action.payload.id) {
+                    return { ...item, ...action.payload }
+                }
+                return item
+            }) : [...state.item, ...action.payload],
+            isFetching: false
+        };
     case EVENTS_FETCH_SUCCEEDED:
         return {
             item: action.payload,

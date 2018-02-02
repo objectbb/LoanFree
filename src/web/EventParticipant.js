@@ -16,7 +16,7 @@ class EventParticipant extends Component {
     constructor(props) {
         super(props)
 
-        this.state = { ...props.eventparticipant.item.account };
+        this.state = { ...this.props.eventparticipant.item.account }
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -24,32 +24,17 @@ class EventParticipant extends Component {
         this.validateEmail = this.validateEmail.bind(this)
     }
 
-    componentWillReceiveProps() {
-        const { eventparticipant } = this.props;
-        console.log("eventparticipant --> componentWillReceiveProps --> eventparticipant", eventparticipant)
-        console.log("eventparticipant --> componentWillReceiveProps --> props", this.props)
-
+    componentWillReceiveProps(nextProps) {
         this.setState({
-            ...eventparticipant
+            ...nextProps.eventparticipant.item.account
         });
     }
 
     handleSubmit(e) {
         e.preventDefault()
 
-        console.log("EventParticipant --> handleSubmit --> state ", this.state)
-        const { eventparticipant } = this.props;
-
-        const participant = {
-            _eventId: eventparticipant.item._eventId,
-            _accountId: eventparticipant.item._accountId,
-            _teamdId: '',
-            coords: eventparticipant.item.coords
-        }
-
-        console.log("EventParticipant --> handleSubmit --> eventparticipant ", participant)
-
-        this.props.dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { account: { ...this.state }, participant } })
+        console.log("EventParticipant --> handleSubmit --> state", this.state)
+        this.props.dispatch({ type: 'EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED', payload: { ...this.state, authorization: 'PARTICIPANT' } })
     }
 
     handleChange(e) {
@@ -59,11 +44,9 @@ class EventParticipant extends Component {
         const value = target.type === "checkbox" ? target.checked : target.value
         const name = target.name
 
-        this.setState(prevState => ({
-            account: { ...prevState.account,
-                [name]: value
-            }
-        }))
+        this.setState({
+            [name]: value
+        })
 
         console.log("EventParticipant --> handleChange --> state", this.state)
 
@@ -71,8 +54,6 @@ class EventParticipant extends Component {
 
     isEnabled() {
         const { email, firstname, lastname } = this.state
-
-        console.log("email, firstname, lastname", email, firstname, lastname)
 
         return (
             email &&
@@ -93,15 +74,9 @@ class EventParticipant extends Component {
     render() {
 
         if (!this.props.eventparticipant.item.account) return (<div></div>);
-        console.log("EventParticipant --> render --> this.props.eventparticipant.item ",
-            this.props.eventparticipant,
-            this.props.eventparticipant.item.account.email,
-            this.props.eventparticipant.item.event
-        )
 
         const { error, isFetching } = this.props.eventparticipant
-        const { email, firstname, lastname } = this.props.eventparticipant.item.account
-
+        const { email, firstname, lastname } = this.state
 
         let isEnabled = this.isEnabled()
 
@@ -158,8 +133,6 @@ class EventParticipant extends Component {
 
 function mapStateToProps(state) {
     const { eventparticipant } = state
-
-    console.log("EventParticipant --> mapStateToProps --> eventparticipant ", eventparticipant)
 
     return {
         eventparticipant

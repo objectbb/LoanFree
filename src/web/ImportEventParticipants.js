@@ -27,24 +27,12 @@ class ImportEventParticipants extends Component {
         this.isEnabled = this.isEnabled.bind(this)
     }
 
-
     isEnabled() {
-        console.log(this.state.participants.split("\n").length)
         return this.state.participants.split("\n").length > 0
-    }
-    componentWillReceiveProps() {
-        const { eventparticipant } = this.props;
-
-        this.setState({
-            ...eventparticipant
-        });
     }
 
     clearState() {
-
-        // this.setState(...this.state, { Name: '', displayName: '', description: '', address: '', startDate: '', city: '', state: '', zipcode: '' })
-        this.setState((prevState) => { prevState, { name: '' } })
-        console.log(this.state)
+        this.setState({ participants: '' })
     }
 
     handleChange(e) {
@@ -61,19 +49,21 @@ class ImportEventParticipants extends Component {
     handleSubmit(e) {
         e.preventDefault()
 
-        console.log("EventParticipant --> handleSubmit --> state ", this.state)
-        const { eventparticipant } = this.props;
+        const { event } = this.props;
 
         const participant = {
-            _eventId: eventparticipant.item._eventId,
-            _accountId: eventparticipant.item._accountId,
+            _eventId: event.item._id,
+            _accountId: '',
             _teamdId: '',
-            coords: eventparticipant.item.coords
+            coords: event.item.coords
         }
 
-        console.log("EventParticipant --> handleSubmit --> eventparticipant ", participant)
+        const accounts = this.state.participants.split("\n")
 
-        this.props.dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { account: { ...this.state }, participant } })
+        this.props.dispatch({
+            type: 'EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED',
+            payload: { accounts, participant }
+        })
     }
 
 
@@ -85,7 +75,7 @@ class ImportEventParticipants extends Component {
 
     render() {
 
-        const { error, isFetching } = this.props.eventparticipant
+        const { error, isFetching } = this.props.event
         let isEnabled = this.isEnabled()
 
         return (
@@ -96,7 +86,8 @@ class ImportEventParticipants extends Component {
                   placeholder=""
                   className="participants-list"
                   value={this.state.participants}/>
-{this.state.participants.split("\n").length}
+                  <br />
+                {this.state.participants.split("\n").length - 1}
 
                 {error &&
                   <p style={{ color: "red" }}>
@@ -108,8 +99,8 @@ class ImportEventParticipants extends Component {
                       {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
                     </Button>
                   </Tooltip>
-                  <Tooltip id="tooltip-icon" title="Clear">
-                      <Button onClick={item => this.clearState}  fab color="secondary" aria-label="edit" >
+                  <Tooltip id="tooltip-icon" title="Clear" style={{float:'right'}}>
+                      <Button onClick={this.clearState}  fab color="secondary" aria-label="edit" >
                         <Icon>clear</Icon>
                       </Button>
                 </Tooltip>
@@ -119,12 +110,12 @@ class ImportEventParticipants extends Component {
 }
 
 function mapStateToProps(state) {
-    const { eventparticipant } = state
+    const { event } = state
 
-    console.log("EventParticipant --> mapStateToProps --> eventparticipant ", eventparticipant)
+    console.log("ImportEventParticipant --> mapStateToProps --> event ", event)
 
     return {
-        eventparticipant
+        event
     }
 }
 
