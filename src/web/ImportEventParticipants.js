@@ -55,7 +55,8 @@ class ImportEventParticipants extends Component {
             _eventId: event.item._id,
             _accountId: '',
             _teamdId: '',
-            coords: event.item.coords
+            coords: event.item.coords,
+            markers: []
         }
 
         const accounts = this.state.participants.split("\n")

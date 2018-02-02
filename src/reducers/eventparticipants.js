@@ -1,4 +1,4 @@
-import { EVENT_PARTICIPANTS_FETCH_FAILED, EVENT_PARTICIPANTS_FETCH_REQUESTED, EVENT_PARTICIPANTS_FETCH_SUCCEEDED, } from "../actions";
+import { EVENT_PARTICIPANTS_UPSERT, EVENT_PARTICIPANTS_FETCH_FAILED, EVENT_PARTICIPANTS_FETCH_REQUESTED, EVENT_PARTICIPANTS_FETCH_SUCCEEDED, } from "../actions";
 
 export const eventparticipants = (
     state = { item: [], isFetching: false, message: "", error: "" },
@@ -16,6 +16,12 @@ export const eventparticipants = (
             ...state,
             item: action.payload,
             authenticated: true,
+            isFetching: false
+        };
+    case EVENT_PARTICIPANTS_UPSERT:
+        return {
+            ...state,
+            item: [...state.item, ...action.payload],
             isFetching: false
         };
     case EVENT_PARTICIPANTS_FETCH_FAILED:

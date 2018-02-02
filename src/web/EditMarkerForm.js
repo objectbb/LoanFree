@@ -76,8 +76,8 @@ class EditMarkerForm extends Component {
               />
 
               <TextField
-              id="number"
-              label="Number"
+              id="range"
+              label="Range (m)"
               name="range"
               value={range}
               onChange={this.handleChange}

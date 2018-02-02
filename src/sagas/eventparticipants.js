@@ -12,9 +12,6 @@ export const upsert = (action) => {
     return call(api.call, '/eventparticipants_upsert', action.payload);
 }
 
-export const upsertAccount = (action) => {
-    return call(api.call, '/account_upsert', action.payload);
-}
 
 function* fetchParticipant(action) {
     try {
@@ -46,35 +43,14 @@ function* fetchBatchUpsert(action) {
 
         const { accounts, participant } = action.payload
 
-        for (var item in accounts) {
-            const acctArray = accounts[item].split(',');
+        const acctBatch = accounts.map((item) => {
+            values = item.split(',')
+            return { email: values[0], firstname: values[1], lastname: values[2], authorization: 'PARTICIPANT' }
+        })
 
-            if (acctArray.length < 3) {
-                return;
-            }
+        const prt = yield upsert({ payload: { participant, accounts: acctBatch } })
 
-            const act = call(upsertAccount, {
-                payload: {
-                    email: acctArray[0].trim(),
-                    firstname: acctArray[1].trim(),
-                    lastname: acctArray[2].trim()
-                }
-            })
-
-            console.log("sagas --> eventparticipants --> fetchBatchUpsert --> account ", act)
-
-            //participant._accountId = act._id
-
-            //console.log("sagas --> eventparticipants --> fetchBatchUpsert --> participant ", participant)
-
-            const prt = call(upsert, { payload: { ...participant, _accountId: act._id } })
-
-            console.log("sagas --> eventparticipants --> prt", prt)
-
-        }
-        // }).bind(this)
-
-        //call fetchParticipant({ payload: { _eventId: participant._eventId } })
+        yield put({ type: "EVENT_PARTICIPANTS_FETCH_REQUESTED", payload: { _eventId: participant._eventId } });
 
     } catch (e) {
         yield put({ type: "EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED", message: e.message });

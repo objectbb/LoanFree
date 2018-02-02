@@ -113,7 +113,6 @@ class Event extends Component {
             description,
             address,
             startdate,
-            startDate,
             city,
             state,
             zipcode
@@ -121,7 +120,7 @@ class Event extends Component {
 
         return (
             (description && description.trim().length > 9) &&
-            (startdate || startDate) &&
+            startdate &&
             (name && name.trim().length > 5) &&
             (displayname && displayname.trim().length > 1) &&
             (address && address.trim().length > 5) &&

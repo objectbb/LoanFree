@@ -26,28 +26,41 @@ class EventParticipants extends Component {
 
     render() {
 
-        console.log("EventParticipants --> render ", this.props.eventparticipants)
+
         const { eventparticipants } = this.props
 
         if (!eventparticipants.item) return (<div/>)
 
         const menuitems = (eventparticipants.item) ?
-            eventparticipants.item.filter((item) => item.authorization === 'PARTICIPANT').map((item) => ({
+            eventparticipants.item.filter((item) => item.account.authorization === 'PARTICIPANT').map((item) => ({
                 text: `${item.account.lastname}, ${item.account.firstname} -- ${item.account.email} `,
                 value: item
             }))
             : []
 
+        console.log("EventParticipants --> render --->  menuitems ", menuitems)
+
         return (
-            <div>
-                <IntegrationAutosuggest
+
+            <IntegrationAutosuggest
                 data={menuitems}
+                position="relative"
                 placeholder={"Search for participant(s)"}
                 value=""
                  handleUpdateInput={this.handleUpdateInput}
                   clearSelected={this.clearSelectedParticipant}
+                      oc ={
+                    ({suggestionsContainerOpen: {
+                        position: 'relative',
+                        left: 0,
+                        right: 0,
+                        width: '100%',
+                        zIndex: 999999999
+                    }
+                })
+                 }
                  />
-              </div>
+
         )
 
     }

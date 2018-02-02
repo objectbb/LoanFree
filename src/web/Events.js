@@ -63,10 +63,21 @@ class Events extends Component {
             <div>
                 <IntegrationAutosuggest
                 data={menuitems}
+                position="absolute"
                 handleUpdateInput={this.handleUpdateInput}
                 value=""
                  placeholder={`${account.item.firstname}'s Events`}
                  clearSelected={this.clearSelectedEvent}
+                 oc ={
+                    ({suggestionsContainerOpen: {
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        width: '100%',
+                        zIndex: 999999999
+                    }
+                })
+                 }
                  />
             </div>
         )

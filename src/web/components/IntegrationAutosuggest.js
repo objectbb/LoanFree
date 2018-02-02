@@ -47,14 +47,14 @@ function renderSuggestion(suggestion, { query, isHighlighted }) {
 
     return (
         <MenuItem selected={isHighlighted} component="div">
-      <div>
+      <div >
         {parts.map((part, index) => {
           return part.highlight ? (
-            <span key={String(index)} style={{ fontWeight: 300 }}>
+            <span key={String(index)} style={{ fontWeight: 300, fontSize: '12px' }}>
               {part.text}
             </span>
           ) : (
-            <strong key={String(index)} style={{ fontWeight: 500 }}>
+            <strong key={String(index)} style={{ fontWeight: 500, fontSize: '12px'  }}>
               {part.text}
             </strong>
           );
@@ -106,12 +106,13 @@ const styles = theme => ({
         width: '100%'
     },
     suggestionsContainerOpen: {
-        position: 'absolute',
+        position: 'relative',
         marginTop: theme.spacing.unit,
         marginBottom: theme.spacing.unit * 3,
         left: 0,
         right: 0,
-        width: '100%'
+        width: '100%',
+        zIndex: 999999999
     },
     suggestion: {
         display: 'block',
@@ -125,7 +126,7 @@ const styles = theme => ({
     },
     textField: {
         width: '100%',
-        fonstSize: '10px'
+        fontSize: '13px'
     },
 });
 
@@ -173,13 +174,13 @@ class IntegrationAutosuggest extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, oc } = this.props;
 
         return (
             <Autosuggest
         theme={{
           container: classes.container,
-          suggestionsContainerOpen: classes.suggestionsContainerOpen,
+          suggestionsContainerOpen: oc.suggestionsContainerOpen,
           suggestionsList: classes.suggestionsList,
           suggestion: classes.suggestion,
         }}

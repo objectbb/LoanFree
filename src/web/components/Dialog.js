@@ -60,7 +60,7 @@ class SimpleModal extends React.Component {
             <Typography type="subheading" id="simple-modal-description">
               {this.props.children}
             </Typography>
-            <Dialog />
+            <Dialog open={this.state.open} />
           </div>
         </Modal>
       </div>

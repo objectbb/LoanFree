@@ -39,7 +39,7 @@ class RouteMakerContainer extends Component {
                     <Layout
                     header={<span><EventsContainer /> </span>}
                       logout={<Logout />}
-                      drawerheader={event.item.name && `${event.item.name} ${moment(event.item.startDate).format('llll')}`}
+                      drawerheader={event.item.name && `${event.item.name} -- ${moment(event.item.startDate).format('llll')}`}
                         body={
                                 <div>
                                     <DataFeeder>
@@ -49,20 +49,18 @@ class RouteMakerContainer extends Component {
                                 </div>
                             }
                     >
-
-                    <br />
-                            <div className="cards-layout">
                          <FullWidthTabs>
                                 <Profile header= "Profile" />
                                 <Event header= "Name"/>
                                     <div header={`Participants ${eventparticipants.item.length}`}  disable={event.item._id === undefined}>
+                                    <br />
                                     {eventparticipants.item.length > 1 &&  <EventParticipants />}
                                     <br />
                                     <EventParticipant />
-                                    <ImportEventParticipants />
+                                   <ImportEventParticipants />
                                     </div>
                                </FullWidthTabs>
-                            </div>
+
             < /Layout>
             < /div>
         )

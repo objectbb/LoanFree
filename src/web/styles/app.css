@@ -4,6 +4,9 @@
     height: 500px;
 }
 
+.error-input {
+    color: #FF5252;
+}
 
 .bus {
     background-color: #333;
@@ -98,7 +101,7 @@
 }
 
 .tool-bar-items:hover {
-    color: #795548;
+    color: #FF5252;
 }
 
 .coords {

@@ -7,7 +7,6 @@ import { Map, Marker, TileLayer, Popup, Tooltip } from 'react-leaflet'
 import { divIcon, point } from "leaflet"
 import "./styles/app.css"
 
-
 class MapIt extends Component {
 
     constructor(props) {
@@ -94,7 +93,7 @@ class MapIt extends Component {
                           <div>
                           {this.props.currLocation.coords}
                           <br />
-                          {this.props.currLocation.history && this.props.currLocation.history.join(',')}
+                          {this.props.currLocation.history && this.props.currLocation.history.join(', ')}
                           </div>
                       </Popup>
                   >
@@ -104,7 +103,6 @@ class MapIt extends Component {
              {
               this.props.routeMarkers &&
                 this.props.routeMarkers.map((item, index) => {
-
 
                 let circlerange = "border: 1px solid #000;border-radius: 50%;height:" + item.range + "px;width:" + item.range + "px;";
                 let center = "display:table-cell;vertical-align:middle;height:" + item.range + "px;width:" + item.range + "px;text-align:right;";
@@ -126,7 +124,7 @@ class MapIt extends Component {
                                 <button onClick={(e) => this.editMarker(item,e)}>
                                     <i className="material-icons">edit_location</i>
                                 </button>
-                                <button onClick={(e) => this.removeMarker(item,e)}>
+                                <button style={{float:'right'}} onClick={(e) => this.removeMarker(item,e)}>
                                     <i className="material-icons">delete</i>
                                 </button>
                               </div>

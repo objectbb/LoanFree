@@ -18,6 +18,10 @@ injectTapEventPlugin()
 
 
 const theme = createMuiTheme({
+    typography: {
+        fontFamily: 'Lato',
+        fontSize: '5rem'
+    },
     palette: {
         primary: {
             light: '#CFD8DC',
