@@ -64,18 +64,14 @@ class RouteMaker extends Component {
 
     }
 
-    addParticipantMarker(participant, markers) {
+    addParticipantMarker(participant, newmarkers) {
 
         const prtmarkers = { ...participant }
         const origmarkers = [...participant.markers]
-        prtmarkers.markers = origmarkers.concat(markers)
 
+        const { _id, markers, _accountId, _eventId, coords } = participant
 
-        console.log("RouteMaker --> addParticipantMarker -->  participant ", participant)
-        console.log("RouteMaker --> addParticipantMarker -->  markers ", markers)
-
-        //  this.props.actions.setParticipantMarkers({ _id: participant._id, markers: origmarkers.concat(markers) })
-        //this.props.actions.setParticipantMarkers()
+        this.props.actions.updateParticipantCurrLocation({ _id, markers: origmarkers.concat(newmarkers), _accountId, _eventId, coords })
 
     }
 

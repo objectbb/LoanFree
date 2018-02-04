@@ -48,6 +48,7 @@
     "react-autosuggest": "^9.3.2",
     "react-bootstrap-datetimepicker": "0.0.22",
     "react-button": "^1.2.1",
+    "react-camera": "^0.1.3",
     "react-datetime": "^2.11.1",
     "react-dom": "^16.2.0",
     "react-icons": "^2.2.7",

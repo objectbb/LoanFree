@@ -2,11 +2,12 @@ import React, { Component } from "react"
 import classnames from "classnames"
 import { connect } from "react-redux"
 import moment from 'moment'
-
 import geolib from "geolib"
 
 import { Map, Marker, TileLayer, Popup, Tooltip } from 'react-leaflet'
 import { divIcon, point } from "leaflet"
+import CaptureMoments from "./CaptureMoments"
+
 import "./styles/app.css"
 
 class MapIt extends Component {
@@ -74,26 +75,18 @@ class MapIt extends Component {
 
                 const closemarker = this.withinRangeMarkerIndicator(item)
 
-                console.log("MapIt --> render --> closemarker ", closemarker)
-                console.log("MapIt --> render --> item.markers ", item.markers)
-
                 let newmarkers = []
                 if( item.markers.length === 0)
                    newmarkers = closemarker
                  else
-                   newmarkers = closemarker.filter(
+                   newmarkers = closemarker ? closemarker.filter(
                     (marker) =>
                     item.markers.find((item) =>
                     {
-                      console.log("MapIt --> render --> marker.guid ",marker.marker)
-                      console.log("MapIt --> render --> item.guid", item.marker)
-                      console.log("MapIt --> render --> item.guid", item.marker)
                      return marker.marker.guid !== item.marker.guid
                    }
                      )
-                   )
-
-                console.log("MapIt --> render -->  newmarkers ", newmarkers)
+                   ) : []
 
                 if(newmarkers.length > 0)
                     this.props.addParticipantMarker(item,newmarkers)
@@ -133,8 +126,6 @@ class MapIt extends Component {
                        <Popup minWidth={90}>
                           <div>
                           {this.props.currLocation.coords}
-                          <br />
-                          {this.props.currLocation.history && this.props.currLocation.history.join(', ')}
                           </div>
                       </Popup>
                   >
@@ -157,10 +148,11 @@ class MapIt extends Component {
                     draggable={this.props.draggable}
                       onDragend={this.updatePosition}
                        ref="marker">
-                          <Popup minWidth={90}>
+                          <Popup maxWidth={90} maxHeight={200}>
                           <span>
                             <div><b>{item.name}</b> range: {item.range}m</div>
                             <div>{item.coords} </div>
+                            <div><CaptureMoments /></div>
                             <div>
                                 <button onClick={(e) => this.editMarker(item,e)}>
                                     <i className="material-icons">edit_location</i>

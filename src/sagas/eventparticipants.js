@@ -37,7 +37,7 @@ function* fetchAccountUpsert(action) {
 function* fetchUpsert(action) {
     try {
         console.log("eventparticipants --> fetchUpsert ", action.payload)
-        // item = yield participantApi.upsert(action)
+        item = yield participantApi.upsert(action)
 
         /*
                 yield put({

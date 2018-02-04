@@ -1,4 +1,5 @@
 import * as config from "../config/config"
+import * as api from "../api/restful"
 import io from 'socket.io-client';
 
 export const CURR_LOCATION = "CURR_LOCATION"
@@ -113,13 +114,12 @@ export const appError = (error) => ({
 
 export const loadParticipants = (payload) => dispatch => {
 
-    dispatch(requestParticipants(payload))
-
     const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
     socket.on('connect', function () {
         socket.emit('eventparticipants_get',
-            payload, (data) => dispatch(retrieveParticipants((data))));
+            payload, (data) =>
+            api.resultHandler(data, 'EVENT_PARTICIPANT_FETCH_'))
     });
 }
 
@@ -141,13 +141,19 @@ export const setCurrLocation = (coords) => dispatch => {
 }
 
 export const updateParticipantCurrLocation = (payload) => dispatch => {
+
+    const { _id, markers, _accountId, _eventId, coords } = payload
+
+
     const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
     socket.on('connect', function () {
-        socket.emit('eventparticipant_upsert', payload, (data) =>
-            dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: data }));
+        socket.emit('eventparticipant_upsert', { _id, markers, _accountId, _eventId, coords }, (data) =>
+            api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
     });
-    //dispatch({ type: 'PARTICIPANT_UPSERT_REQUESTED', payload: item })
+
+
+    //dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { _id, markers, _accountId, _eventId } })
 }
 
 export const registerUser = (payload) => dispatch => {

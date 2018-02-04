@@ -8,6 +8,14 @@
     color: #FF5252;
 }
 
+.leaflet-popup-content {
+    max-width: 70%;
+    min-width: 300px;
+    max-height: 400px;
+    min-height: 300px;
+    overflow-y: scroll;
+}
+
 .bus {
     background-color: #333;
 }
