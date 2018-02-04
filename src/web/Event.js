@@ -70,7 +70,7 @@ class Event extends Component {
             coords: coords
         }
 
-        dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { newParticipant, event: { ...this.state, coords, _accountId: account.item.id } } });
+        dispatch({ type: 'EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED', payload: { newParticipant, event: { ...this.state, coords, _accountId: account.item.id } } });
     }
 
     handleChange(e) {

@@ -44,12 +44,12 @@ class FullWidthTabs extends React.Component {
 
         const tabviews = children && children.map(
             (item, idx) => (
-                <Tab label={!item.props.disable ? `{ ${item.props.header} }` : item.props.header} disabled={item.props.disable}>
+                <Tab key={idx} label={!item.props.disable ? `{ ${item.props.header} }` : item.props.header} disabled={item.props.disable}>
              {item} </Tab>
             )
         )
-        const tabcontainers = children && children.map((item, index) =>
-            (<TabContainer disabled={item.props.disable} dir={theme.direction}>{item}</TabContainer>)
+        const tabcontainers = children && children.map((item, idx) =>
+            (<TabContainer key={idx}  disabled={item.props.disable} dir={theme.direction}>{item}</TabContainer>)
         )
 
         return (

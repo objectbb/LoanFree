@@ -20,8 +20,12 @@ export const eventparticipants = (
         };
     case EVENT_PARTICIPANTS_UPSERT:
         return {
-            ...state,
-            item: [...state.item, ...action.payload],
+            item: state.item.find((item) => (item.id === action.payload.id)) ? state.item.map(item => {
+                if (item.id === action.payload.id) {
+                    return { ...item, ...action.payload }
+                }
+                return item
+            }) : [...state.item, ...action.payload],
             isFetching: false
         };
     case EVENT_PARTICIPANTS_FETCH_FAILED:

@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import classnames from "classnames"
 import { connect } from "react-redux"
+import moment from 'moment'
+
 import geolib from "geolib"
 
 import { Map, Marker, TileLayer, Popup, Tooltip } from 'react-leaflet'
@@ -22,6 +24,20 @@ class MapIt extends Component {
             let distance = geolib.getDistance({ latitude: coords[0], longitude: coords[1] }, { latitude: marker.coords[0], longitude: marker.coords[1] })
             return distance < marker.range
         });
+    }
+
+    withinRangeMarkerIndicator(prt) {
+
+        return this.props.routeMarkers &&
+            this.props.routeMarkers.map((marker) => {
+                let distance = geolib.getDistance({
+                    latitude: prt.coords[0],
+                    longitude: prt.coords[1]
+                }, { latitude: marker.coords[0], longitude: marker.coords[1] })
+                if (distance < marker.range) {
+                    return Object.assign({}, { details: { range: distance, coords: prt.coords } }, { marker })
+                }
+            }).filter((item) => item);
     }
 
     updatePosition(e) {
@@ -56,9 +72,33 @@ class MapIt extends Component {
               this.props.participants &&
                 this.props.participants.map((item, index) => {
 
-                let cI = this.closeIndicator(item.coords);
+                const closemarker = this.withinRangeMarkerIndicator(item)
 
-                const icon = divIcon({ className: 'marker ' + (!cI ? 'bus' : 'bus mark'), html: `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})
+                console.log("MapIt --> render --> closemarker ", closemarker)
+                console.log("MapIt --> render --> item.markers ", item.markers)
+
+                let newmarkers = []
+                if( item.markers.length === 0)
+                   newmarkers = closemarker
+                 else
+                   newmarkers = closemarker.filter(
+                    (marker) =>
+                    item.markers.find((item) =>
+                    {
+                      console.log("MapIt --> render --> marker.guid ",marker.marker)
+                      console.log("MapIt --> render --> item.guid", item.marker)
+                      console.log("MapIt --> render --> item.guid", item.marker)
+                     return marker.marker.guid !== item.marker.guid
+                   }
+                     )
+                   )
+
+                console.log("MapIt --> render -->  newmarkers ", newmarkers)
+
+                if(newmarkers.length > 0)
+                    this.props.addParticipantMarker(item,newmarkers)
+
+                const icon = divIcon({ className: 'marker ' + (closemarker.length === 0 ? 'bus' : 'bus mark'), html: `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})
 
                 return (
                   <Marker key={index}
@@ -74,6 +114,7 @@ class MapIt extends Component {
                         <div>
                           {item.coords}
                         </div>
+                        {item.markers && item.markers.map((item, idx) => (<div key={idx}><div>...</div>{item.marker.name} {item.details.range}m {item.details.coords && <div> {item.details.coords.join(', ')}   </div>} <div>{moment(item.details.timeStamp).format(moment.HTML5_FMT.DATETIME_LOCAL)} </div> </div>)) }
                         </span>
                       </Popup>
                   >

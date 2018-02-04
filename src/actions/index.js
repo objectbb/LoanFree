@@ -42,6 +42,7 @@ export const EVENT_PARTICIPANT_FETCH_FAILED = "EVENT_PARTICIPANT_FETCH_FAILED"
 export const EVENT_PARTICIPANT_UPSERT_SUCCEEDED = "EVENT_PARTICIPANT_UPSERT_SUCCEEDED"
 export const EVENT_PARTICIPANT_UPSERT_FAILED = "EVENT_PARTICIPANT_UPSERT_FAILED"
 export const EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED"
+export const EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED"
 
 export const EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED = "EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED"
 export const EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED = "EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED"
@@ -117,12 +118,12 @@ export const loadParticipants = (payload) => dispatch => {
     const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
     socket.on('connect', function () {
-        socket.emit('participant_broadcast', payload, (data) => dispatch(retrieveParticipants((data))));
+        socket.emit('eventparticipants_get',
+            payload, (data) => dispatch(retrieveParticipants((data))));
     });
 }
 
 export const setCurrentRegionAddress = (address) => dispatch => {
-
     dispatch({ type: 'SET_START_ADDRESS', address })
 }
 
@@ -131,12 +132,22 @@ export const setRouteMarkers = (payload) => dispatch => {
     dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: payload });
 }
 
+export const setParticipantMarkers = (payload) => dispatch => {
+    dispatch({ type: 'EVENT_PARTICIPANTS_UPSERT', payload: payload });
+}
+
 export const setCurrLocation = (coords) => dispatch => {
     dispatch(currLocation(coords))
 }
 
-export const updateParticipantCurrLocation = (item) => dispatch => {
-    dispatch({ type: 'PARTICIPANT_UPSERT_REQUESTED', payload: item })
+export const updateParticipantCurrLocation = (payload) => dispatch => {
+    const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
+
+    socket.on('connect', function () {
+        socket.emit('eventparticipant_upsert', payload, (data) =>
+            dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: data }));
+    });
+    //dispatch({ type: 'PARTICIPANT_UPSERT_REQUESTED', payload: item })
 }
 
 export const registerUser = (payload) => dispatch => {

@@ -12,6 +12,7 @@ import style from "./styles/app.css"
 import * as actions from "../actions"
 import uuid from 'uuid'
 import Grid from 'material-ui/Grid';
+import { differenceWith } from 'lodash'
 
 class RouteMaker extends Component {
 
@@ -26,12 +27,14 @@ class RouteMaker extends Component {
         this.updatePosition = this.updatePosition.bind(this);
         this.removeMarker = this.removeMarker.bind(this);
         this.setCurrentRegionAddress = this.setCurrentRegionAddress.bind(this);
+        this.addParticipantMarker = this.addParticipantMarker.bind(this)
 
     }
 
     setCurrentRegionAddress(address) {
         this.props.actions.setCurrentRegionAddress(address)
     }
+
     addMarker() {
         let offset = .002
         let length = this.props.event.item.markers.length;
@@ -58,6 +61,21 @@ class RouteMaker extends Component {
         event.markers = newmarkers;
 
         this.props.actions.setRouteMarkers(event)
+
+    }
+
+    addParticipantMarker(participant, markers) {
+
+        const prtmarkers = { ...participant }
+        const origmarkers = [...participant.markers]
+        prtmarkers.markers = origmarkers.concat(markers)
+
+
+        console.log("RouteMaker --> addParticipantMarker -->  participant ", participant)
+        console.log("RouteMaker --> addParticipantMarker -->  markers ", markers)
+
+        //  this.props.actions.setParticipantMarkers({ _id: participant._id, markers: origmarkers.concat(markers) })
+        //this.props.actions.setParticipantMarkers()
 
     }
 
@@ -111,6 +129,7 @@ class RouteMaker extends Component {
                   currLocation={this.props.location}
                    draggable={true}
                    updatePosition={this.updatePosition}
+                   addParticipantMarker= {this.addParticipantMarker}
                 />
 
                 <Dialog open={this.state.isEditMarker} header={""}>

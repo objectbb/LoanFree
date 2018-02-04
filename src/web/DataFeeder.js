@@ -27,6 +27,8 @@ class DataFeeder extends Component {
             const coords = [position.coords.latitude, position.coords.longitude]
             this.props.actions.setCurrLocation(coords)
 
+            console.log("DataFeeder --> geolocation.watchPosition --> participant.item", participant)
+
             if (Object.getOwnPropertyNames(participant.item).length === 0) return
             console.log("DataFeeder --> geolocation.watchPosition --> participant.item", participant.item)
 

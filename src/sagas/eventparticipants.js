@@ -12,7 +12,6 @@ export const upsert = (action) => {
     return call(api.call, '/eventparticipants_upsert', action.payload);
 }
 
-
 function* fetchParticipant(action) {
     try {
         const item = yield get(action)
@@ -35,6 +34,21 @@ function* fetchAccountUpsert(action) {
     return yield item
 }
 
+function* fetchUpsert(action) {
+    try {
+        console.log("eventparticipants --> fetchUpsert ", action.payload)
+        // item = yield participantApi.upsert(action)
+
+        /*
+                yield put({
+                    type: "EVENT_PARTICIPANTS_UPSERT",
+                    payload: action.payload
+                })
+        */
+    } catch (e) {
+        yield put({ type: "APP_ERROR", message: e.message });
+    }
+}
 
 function* fetchBatchUpsert(action) {
     try {
@@ -57,17 +71,17 @@ function* fetchBatchUpsert(action) {
     }
 }
 
-function* fetchParticipantUpsert(action) {
+function* fetchEventParticipantUpsert(action) {
 
     const { event, newParticipant } = action.payload
 
-    console.log("eventparticipants --> fetchParticipantUpsert --> event ", event)
-    console.log("eventparticipants --> fetchParticipantUpsert --> newParticipant ", newParticipant)
+    console.log("eventparticipants --> fetchEventParticipantUpsert --> event ", event)
+    console.log("eventparticipants --> fetchEventParticipantUpsert --> newParticipant ", newParticipant)
 
     const evt = yield eventApi.upsert({ payload: event })
     yield api.resultHandler(evt, 'EVENT_UPSERT_')
 
-    console.log("eventparticipants --> fetchParticipantUpsert --> evt ", evt.data)
+    console.log("eventparticipants --> fetchEventParticipantUpsert --> evt ", evt.data)
 
     yield put({ type: "EVENTS_UPSERT", payload: evt.data });
 
@@ -76,14 +90,17 @@ function* fetchParticipantUpsert(action) {
     const prt = yield participantApi.upsert({ payload: { ...newParticipant } })
     yield api.resultHandler(prt, 'PARTICIPANT_UPSERT_')
 
-    console.log("eventparticipants --> fetchParticipantUpsert --> prt ", prt)
+    console.log("eventparticipants --> fetchEventParticipantUpsert --> prt ", prt)
 
 
 }
 
 function* eventParticipantsSaga() {
     yield takeLatest("EVENT_PARTICIPANTS_FETCH_REQUESTED", fetchParticipant);
-    yield takeLatest("EVENT_PARTICIPANT_UPSERT_REQUESTED", fetchParticipantUpsert);
+    yield takeLatest("EVENT_PARTICIPANT_UPSERT_REQUESTED", fetchUpsert);
+
+    yield takeLatest("EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED", fetchEventParticipantUpsert);
+
     yield takeLatest("EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED", fetchAccountUpsert);
     yield takeEvery("EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED", fetchBatchUpsert);
 }

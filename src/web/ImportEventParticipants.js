@@ -28,7 +28,7 @@ class ImportEventParticipants extends Component {
     }
 
     isEnabled() {
-        return this.state.participants.split("\n").length > 0
+        return this.state.participants.trim().split("\n").length > 0
     }
 
     clearState() {
@@ -59,7 +59,7 @@ class ImportEventParticipants extends Component {
             markers: []
         }
 
-        const accounts = this.state.participants.split("\n")
+        const accounts = this.state.participants.trim().split("\n")
 
         this.props.dispatch({
             type: 'EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED',
@@ -88,7 +88,7 @@ class ImportEventParticipants extends Component {
                   className="participants-list"
                   value={this.state.participants}/>
                   <br />
-                {this.state.participants.split("\n").length - 1}
+                {this.state.participants.split("\n").length}
 
                 {error &&
                   <p style={{ color: "red" }}>
