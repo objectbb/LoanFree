@@ -3,10 +3,12 @@ import classnames from "classnames"
 import { connect } from "react-redux"
 import moment from 'moment'
 import geolib from "geolib"
+import Icon from 'material-ui/Icon'
 
 import { Map, Marker, TileLayer, Popup, Tooltip } from 'react-leaflet'
 import { divIcon, point } from "leaflet"
 import CaptureMoments from "./CaptureMoments"
+import FullScreenDialog from "./components/FullScreenDialog"
 
 import "./styles/app.css"
 
@@ -14,9 +16,14 @@ class MapIt extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = { isCamera: false }
+
         this.updatePosition = this.updatePosition.bind(this);
         this.removeMarker = this.removeMarker.bind(this);
         this.closeIndicator = this.closeIndicator.bind(this);
+        this.handleCamera = this.handleCamera.bind(this)
+        this.handleClose = this.handleClose.bind(this)
     }
 
     closeIndicator(coords) {
@@ -60,6 +67,14 @@ class MapIt extends Component {
         this.props.editMarker(item);
     }
 
+    handleCamera() {
+        this.setState({ isCamera: true })
+    }
+
+    handleClose() {
+        this.setState({ isCamera: false });
+    };
+
     render() {
 
         return (
@@ -91,7 +106,7 @@ class MapIt extends Component {
                 if(newmarkers.length > 0)
                     this.props.addParticipantMarker(item,newmarkers)
 
-                const icon = divIcon({ className: 'marker ' + (closemarker.length === 0 ? 'bus' : 'bus mark'), html: `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})
+                const icon = divIcon({ className: 'marker ' + (closemarker && closemarker.length === 0 ? 'bus' : 'bus mark'), html: `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})
 
                 return (
                   <Marker key={index}
@@ -99,8 +114,11 @@ class MapIt extends Component {
                     name={item}
                     position={item.coords}
                        ref="marker">
-                      <Popup minWidth={90}>
+                      <Popup>
                         <span>
+                        {closemarker  && closemarker.length > 0 &&
+                          <Icon onClick={this.handleCamera}  className="tool-bar-items" color="action">camera</Icon>}
+
                         <div>
                         {item.account.firstname} {item.account.lastname}
                         </div>
@@ -111,7 +129,12 @@ class MapIt extends Component {
                         </span>
                       </Popup>
                   >
+                  <FullScreenDialog  open={this.state.isCamera} onHandleClose={this.handleClose} onClick={this.handleClickOpen}  header={""} >
+                     <CaptureMoments />
+                  </FullScreenDialog>
                 </Marker>
+
+
 
                 )
               }
@@ -152,7 +175,6 @@ class MapIt extends Component {
                           <span>
                             <div><b>{item.name}</b> range: {item.range}m</div>
                             <div>{item.coords} </div>
-                            <div><CaptureMoments /></div>
                             <div>
                                 <button onClick={(e) => this.editMarker(item,e)}>
                                     <i className="material-icons">edit_location</i>
