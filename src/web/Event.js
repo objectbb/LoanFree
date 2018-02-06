@@ -67,7 +67,7 @@ class Event extends Component {
 
         console.log("Event --> componentWillReceiveProps  event ", event.item)
 
-        this.setState(event.item._id ? event.item : initialState);
+        this.setState(event.item._id || event.item.coords ? event.item : initialState);
 
         console.log("Event --> componentWillReceiveProps  this.state ", this.state)
     }
@@ -193,8 +193,6 @@ class Event extends Component {
             zipcode
         } = this.state
 
-        console.log("Event --> render  this.state ", this.state)
-
         let isEnabled = this.isEnabled()
 
         const items = [];
@@ -206,9 +204,6 @@ class Event extends Component {
             'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
         ].
         map((state, i) => <option value={state} key={i}>{state}</option>)
-
-
-
 
         return (
             <div className="card">
@@ -319,7 +314,7 @@ class Event extends Component {
                     {error}
                   </p>}
                 <Tooltip id="tooltip-icon" title="Save">
-                    <Button  disabled={!isEnabled} onClick={this.handleSubmit} fab color="primary" aria-label="save">
+                    <Button  disabled={!isEnabled && !coords} onClick={this.handleSubmit} fab color="primary" aria-label="save">
                     {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
                     </Button>
                 </Tooltip>

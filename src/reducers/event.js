@@ -22,7 +22,6 @@ export const event = (
             item: action.payload,
             isFetching: false
         };
-    case REQUEST_GEOCODE_FAILED:
     case EVENT_UPSERT_FAILED:
     case EVENT_FETCH_FAILED:
         return {

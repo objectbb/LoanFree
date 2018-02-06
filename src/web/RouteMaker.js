@@ -71,7 +71,20 @@ class RouteMaker extends Component {
 
         const { _id, markers, _accountId, _eventId, coords } = participant
 
-        this.props.actions.updateParticipantCurrLocation({ _id, markers: origmarkers.concat(newmarkers), _accountId, _eventId, coords })
+        const unqMarkers = origmarkers.concat(newmarkers).
+        filter(function (x, i, a) {
+            return a.indexOf(x)._id == a[i]._id;
+        });
+
+        console.log("RouteMaker --> addParticipantMarker --> unqMarkers", unqMarkers)
+
+        this.props.actions.updateParticipantCurrLocation({
+            _id,
+            markers: unqMarkers,
+            _accountId,
+            _eventId,
+            coords
+        })
 
     }
 
