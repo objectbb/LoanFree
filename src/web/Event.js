@@ -21,17 +21,32 @@ import AddIcon from 'material-ui-icons/Add';
 import DeleteIcon from 'material-ui-icons/Delete';
 import Tooltip from 'material-ui/Tooltip';
 
+const initialState = {
+    _id: '',
+    name: '',
+    displayname: '',
+    description: '',
+    markers: [],
+    teams: [],
+    coords: [],
+    address: '',
+    startdate: '',
+    city: '',
+    state: '',
+    zipcode: ''
+}
 
 class Event extends Component {
     constructor(props) {
         super(props)
 
-        this.state = props.event.item._id ? { ...props.event.item } : {
+        this.state = props.event.item._id ? props.event.item : {
             name: '',
             displayname: '',
             description: '',
             markers: [],
             teams: [],
+            coords: [],
             address: '',
             startdate: '',
             city: '',
@@ -47,13 +62,14 @@ class Event extends Component {
         this.isEnabled = this.isEnabled.bind(this)
     }
 
-
     componentWillReceiveProps(nextProps) {
         const { event } = nextProps;
 
-        this.setState({
-            ...event.item
-        });
+        console.log("Event --> componentWillReceiveProps  event ", event.item)
+
+        this.setState(event.item._id ? event.item : initialState);
+
+        console.log("Event --> componentWillReceiveProps  this.state ", this.state)
     }
 
     handleSubmit(e) {
@@ -70,7 +86,16 @@ class Event extends Component {
             coords: coords
         }
 
-        dispatch({ type: 'EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED', payload: { newParticipant, event: { ...this.state, coords, _accountId: account.item.id } } });
+        if (!this.state._id)
+            dispatch({ type: 'EVENT_PARTICIPANTS_CLEAR' })
+
+        dispatch({
+            type: 'EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED',
+            payload: {
+                newParticipant,
+                event: { ...this.state, coords, _accountId: account.item.id }
+            }
+        });
     }
 
     handleChange(e) {
@@ -99,7 +124,7 @@ class Event extends Component {
 
         this.props.dispatch({
             type: 'REQUEST_GEOCODE',
-            payload: { ...this.state, nextAction: 'EVENT_UPSERT_SUCCEEDED' }
+            payload: { ...this.state }
         })
     }
 
@@ -148,19 +173,7 @@ class Event extends Component {
     }
 
     newState() {
-        this.setState({
-            _id: '',
-            name: '',
-            displayname: '',
-            description: '',
-            markers: [],
-            teams: [],
-            address: '',
-            startdate: '',
-            city: '',
-            state: '',
-            zipcode: ''
-        })
+        this.setState(initialState)
     }
 
     render() {
@@ -173,13 +186,14 @@ class Event extends Component {
             name,
             displayname,
             startdate,
-            enddate,
             description,
             address,
             city,
             state,
             zipcode
         } = this.state
+
+        console.log("Event --> render  this.state ", this.state)
 
         let isEnabled = this.isEnabled()
 
@@ -192,6 +206,9 @@ class Event extends Component {
             'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
         ].
         map((state, i) => <option value={state} key={i}>{state}</option>)
+
+
+
 
         return (
             <div className="card">
@@ -226,7 +243,7 @@ class Event extends Component {
                  fullWidth={true}
                 onChange={this.handleChange}
                 type="datetime-local"
-                    value={moment(startdate).format(moment.HTML5_FMT.DATETIME_LOCAL)}
+                    value={moment(startdate,"yyyy-MM-DDThh:mm:ss.SSSZ").format("YYYY-MM-DDTkk:mm")}
                 InputLabelProps={{
                   shrink: true,
                 }}

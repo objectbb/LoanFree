@@ -1,4 +1,4 @@
-import { EVENT_PARTICIPANTS_UPSERT, EVENT_PARTICIPANTS_FETCH_FAILED, EVENT_PARTICIPANTS_FETCH_REQUESTED, EVENT_PARTICIPANTS_FETCH_SUCCEEDED, } from "../actions";
+import { EVENT_PARTICIPANTS_CLEAR, EVENT_PARTICIPANTS_UPSERT, EVENT_PARTICIPANTS_FETCH_FAILED, EVENT_PARTICIPANTS_FETCH_REQUESTED, EVENT_PARTICIPANTS_FETCH_SUCCEEDED, } from "../actions";
 
 export const eventparticipants = (
     state = { item: [], isFetching: false, message: "", error: "" },
@@ -34,6 +34,11 @@ export const eventparticipants = (
             error: action.message,
             isFetching: false
         }
+    case EVENT_PARTICIPANTS_CLEAR:
+        return {
+            ...state,
+            item: []
+        };
     default:
         return state;
     }

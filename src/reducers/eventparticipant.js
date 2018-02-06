@@ -38,6 +38,10 @@ export const eventparticipant = (
             isFetching: false
         }
     case EVENT_PARTICIPANT_CLEAR:
+        return {
+            ...state,
+            item: {},
+        }
     default:
         return state;
     }

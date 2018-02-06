@@ -27,9 +27,9 @@ function* requestGeocode(action) {
 
         action.payload = { ...action.payload, coords: [loc.lat, loc.lng] }
 
-
-        yield put({ type: nextAction, payload: action.payload });
+        yield put({ type: 'REQUEST_GEOCODE_SUCCEEDED', payload: action.payload });
     } catch (err) {
+        yield put({ type: 'REQUEST_GEOCODE_FAILED', payload: action.payload });
         yield put({ type: 'APP_ERROR', error: err });
     }
 }

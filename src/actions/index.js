@@ -2,15 +2,19 @@ import * as config from "../config/config"
 import * as api from "../api/restful"
 import io from 'socket.io-client';
 
+export const REQUEST_GEOCODE_FAILED = "REQUEST_GEOCODE_FAILED"
+export const REQUEST_GEOCODE_SUCCEEDED = "REQUEST_GEOCODE_SUCCEEDED"
 export const CURR_LOCATION = "CURR_LOCATION"
 export const REQUEST_PARTICIPANTS = "REQUEST_PARTICIPANTS"
 export const RETRIEVE_PARTICIPANTS = "RETRIEVE_PARTICIPANTS"
+
 export const REQUEST_ROUTE_MARKERS = "REQUEST_ROUTE_MARKERS"
 export const RETRIEVE_ROUTE_MARKERS = "RETRIEVE_ROUTE_MARKERS"
 export const UPDATE_ROUTE_MARKERS = "UPDATE_ROUTE_MARKERS"
 export const AUTHENTICATED_USER = "AUTHENTICATED_USER"
 export const SET_CURRENT_REGION = "SET_CURRENT_REGION"
 export const APP_ERROR = "APP_ERROR"
+
 export const ACCOUNT_AUTHENTICATE_SUCCEEDED = "ACCOUNT_AUTHENTICATE_SUCCEEDED"
 export const ACCOUNT_FETCH_REQUESTED = "ACCOUNT_FETCH_REQUESTED"
 export const ACCOUNT_UPSERT_REQUESTED = "ACCOUNT_UPSERT_REQUESTED"
@@ -20,6 +24,7 @@ export const ACCOUNT_UPSERT_SUCCEEDED = "ACCOUNT_UPSERT_SUCCEEDED"
 export const ACCOUNT_AUTHENTICATE_FAILED = "ACCOUNT_AUTHENTICATE_FAILED"
 export const ACCOUNT_UPSERT_FAILED = "ACCOUNT_UPSERT_FAILED"
 export const ACCOUNT_FETCH_FAILED = "ACCOUNT_FETCH_FAILED"
+
 export const EVENT_UPSERT_REQUESTED = "EVENT_UPSERT_REQUESTED"
 export const EVENT_FETCH_REQUESTED = "EVENT_FETCH_REQUESTED"
 export const EVENT_FETCH_SUCCEEDED = "EVENT_FETCH_SUCCEEDED"
@@ -47,11 +52,13 @@ export const EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_EVENT
 
 export const EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED = "EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED"
 export const EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED = "EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED"
+export const EVENT_PARTICIPANTS_CLEAR = "EVENT_PARTICIPANTS_CLEAR"
 
 export const EVENT_PARTICIPANTS_FETCH_REQUESTED = "EVENT_PARTICIPANTS_FETCH_REQUESTED"
 export const EVENT_PARTICIPANTS_FETCH_SUCCEEDED = "EVENT_PARTICIPANTS_FETCH_SUCCEEDED"
 export const EVENT_PARTICIPANTS_FETCH_FAILED = "EVENT_PARTICIPANTS_FETCH_FAILED"
 export const EVENT_PARTICIPANTS_UPSERT = "EVENT_PARTICIPANTS_UPSERT"
+export const EVENT_PARTICIPANT_CLEAR = "EVENT_PARTICIPANT_CLEAR"
 
 export const EVENTS_FETCH_REQUESTED = "EVENTS_FETCH_REQUESTED"
 export const EVENTS_FETCH_SUCCEEDED = "EVENTS_FETCH_SUCCEEDED"
@@ -114,13 +121,20 @@ export const appError = (error) => ({
 
 export const loadParticipants = (payload) => dispatch => {
 
-    const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
-    socket.on('connect', function () {
-        socket.emit('eventparticipants_get',
-            payload, (data) =>
-            api.resultHandler(data, 'EVENT_PARTICIPANT_FETCH_'))
-    });
+    dispatch(retrieveParticipants(payload))
+
+    /*
+       const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
+
+       socket.on('connect', function () {
+           setInterval(() => socket.emit('eventparticipants_get',
+                   payload, (data) =>
+                   api.resultHandler(data, 'EVENT_PARTICIPANTS_FETCH_')),
+               10000
+           )
+       });
+       */
 }
 
 export const setCurrentRegionAddress = (address) => dispatch => {
@@ -150,9 +164,12 @@ export const updateParticipantCurrLocation = (payload) => dispatch => {
     socket.on('connect', function () {
         socket.emit('eventparticipant_upsert', { _id, markers, _accountId, _eventId, coords }, (data) =>
             api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
+
+        //socket.emit('eventparticipants_get', { _eventId: _eventId },
+        //   (data) => api.resultHandler(data, 'EVENT_PARTICIPANTS_FETCH_'))
     });
 
-
+    // dispatch(retrieveParticipants({ _eventId: _eventId }))
     //dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { _id, markers, _accountId, _eventId } })
 }
 

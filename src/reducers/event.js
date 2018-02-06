@@ -1,4 +1,4 @@
-import { EVENT_CLEAR, EVENT_PARTICIPANT_UPSERT_REQUESTED, EVENT_UPSERT_REQUESTED, EVENT_FETCH_REQUESTED, EVENT_FETCH_SUCCEEDED, EVENT_FETCH_FAILED, EVENT_UPSERT_SUCCEEDED, EVENT_UPSERT_FAILED } from "../actions";
+import { REQUEST_GEOCODE_FAILED, REQUEST_GEOCODE_SUCCEEDED, EVENT_CLEAR, EVENT_PARTICIPANT_UPSERT_REQUESTED, EVENT_UPSERT_REQUESTED, EVENT_FETCH_REQUESTED, EVENT_FETCH_SUCCEEDED, EVENT_FETCH_FAILED, EVENT_UPSERT_SUCCEEDED, EVENT_UPSERT_FAILED } from "../actions";
 
 export const event = (
     state = { item: {}, isFetching: false, message: "", error: "" },
@@ -14,6 +14,7 @@ export const event = (
             error: action.message,
             isFetching: true
         }
+    case REQUEST_GEOCODE_SUCCEEDED:
     case EVENT_FETCH_SUCCEEDED:
     case EVENT_UPSERT_SUCCEEDED:
         return {
@@ -21,6 +22,7 @@ export const event = (
             item: action.payload,
             isFetching: false
         };
+    case REQUEST_GEOCODE_FAILED:
     case EVENT_UPSERT_FAILED:
     case EVENT_FETCH_FAILED:
         return {
@@ -30,8 +32,20 @@ export const event = (
         }
     case EVENT_CLEAR:
         return {
-            ...state,
-            item: {}
+            item: {
+                name: '',
+                displayname: '',
+                description: '',
+                coords: [],
+                markers: [],
+                teams: [],
+                address: '',
+                startdate: '',
+                city: '',
+                state: '',
+                zipcode: ''
+
+            }
         };
     default:
         return state;

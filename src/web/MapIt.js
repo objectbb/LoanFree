@@ -88,6 +88,8 @@ class MapIt extends Component {
               this.props.participants &&
                 this.props.participants.map((item, index) => {
 
+              console.log("MapIt --> render --> item ", item)
+
                 const closemarker = this.withinRangeMarkerIndicator(item)
 
                 let newmarkers = []
@@ -146,7 +148,7 @@ class MapIt extends Component {
                     position={this.props.currLocation.coords}
                     icon={divIcon({ className: 'youmarker ', html: `<div>YOU</div>`})}
                        ref="marker">
-                       <Popup minWidth={90}>
+                       <Popup>
                           <div>
                           {this.props.currLocation.coords}
                           </div>
@@ -171,7 +173,7 @@ class MapIt extends Component {
                     draggable={this.props.draggable}
                       onDragend={this.updatePosition}
                        ref="marker">
-                          <Popup maxWidth={90} maxHeight={200}>
+                          <Popup>
                           <span>
                             <div><b>{item.name}</b> range: {item.range}m</div>
                             <div>{item.coords} </div>

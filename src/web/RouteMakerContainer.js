@@ -29,7 +29,6 @@ class RouteMakerContainer extends Component {
         super(props);
     }
 
-
     render() {
 
             const { account, event, eventparticipant, eventparticipants } = this.props
@@ -52,7 +51,8 @@ class RouteMakerContainer extends Component {
                          <FullWidthTabs>
                                 <Profile header= "Profile" />
                                 <Event header= "Event"/>
-                                    <div header={`Participants ${eventparticipants.item.length}`}  disable={event.item._id === undefined}>
+                                    <div header={`Participants ${eventparticipants.item.length}`}
+                                    disable={event.item._id === undefined}>
                                     <br />
                                     {eventparticipants.item.length > 1 &&  <EventParticipants />}
                                     <br />

@@ -25,10 +25,15 @@ class ImportEventParticipants extends Component {
         this.clearState = this.clearState.bind(this)
         this.validateEmail = this.validateEmail.bind(this)
         this.isEnabled = this.isEnabled.bind(this)
+        this.participantCount = this.participantCount.bind(this)
+    }
+
+    participantCount() {
+        return this.state.participants.trim().split("\n").length
     }
 
     isEnabled() {
-        return this.state.participants.trim().split("\n").length > 0
+        return this.participantCount() > 0
     }
 
     clearState() {
@@ -88,7 +93,7 @@ class ImportEventParticipants extends Component {
                   className="participants-list"
                   value={this.state.participants}/>
                   <br />
-                {this.state.participants.split("\n").length}
+                { this.participantCount()}
 
                 {error &&
                   <p style={{ color: "red" }}>

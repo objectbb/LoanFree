@@ -28,7 +28,9 @@ class Events extends Component {
 
     clearSelectedEvent() {
         const { dispatch } = this.props
+
         dispatch({ type: 'EVENT_CLEAR' })
+        dispatch({ type: 'EVENT_PARTICIPANTS_CLEAR' })
     }
 
     handleUpdateInput(item) {
@@ -56,8 +58,6 @@ class Events extends Component {
                 value: item
             }))
             : []
-
-        console.log(menuitems)
 
         return (
             <div>

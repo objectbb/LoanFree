@@ -9,16 +9,6 @@ class EventsContainer extends Component {
         super(props)
     }
 
-    componentWillReceiveProps() {
-        /*
-        const { dispatch, account, event } = this.props
-
-        dispatch({
-            type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED',
-            payload: { _eventId: event._id }
-        })*/
-    }
-
     render() {
 
         return (
