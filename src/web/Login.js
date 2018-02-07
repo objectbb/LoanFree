@@ -55,8 +55,6 @@ class Login extends Component {
     render() {
         const { error, isFetching } = this.props.account
 
-        console.log("Login --> render ---> error", error)
-
         let isEnabled = this.isEnabled()
 
         return (

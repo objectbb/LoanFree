@@ -205,7 +205,7 @@ class PersistentDrawer extends React.Component {
               <Typography type="title" color="inherit" className={classes.flex}>
              {this.props.header}
           </Typography>
-             {this.props.logout}
+
             </Toolbar>
           </AppBar>
           {before}

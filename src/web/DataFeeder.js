@@ -13,8 +13,12 @@ class DataFeeder extends Component {
 
     componentDidMount() {
 
+        const { participant } = this.props
 
-        console.log("DataFeeder --> componentDidMount --> props", this.props)
+        console.log("DataFeeder --> componentDidMount --> participant", participant)
+
+        if (Object.getOwnPropertyNames(participant.item).length === 0) return
+        this.props.actions.loadParticipants({ _eventId: participant._eventId })
 
         this.tracker();
     }
@@ -38,8 +42,6 @@ class DataFeeder extends Component {
             console.log("DataFeeder --> geolocation.watchPosition --> prtCoords", prtCoords)
 
             this.props.actions.updateParticipantCurrLocation(prtCoords)
-            this.props.actions.loadParticipants({ _eventId: prtCoords._eventId })
-
         }, function error(msg) {
 
             alert('Please enable your GPS position future.');

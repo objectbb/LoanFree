@@ -11,7 +11,7 @@ function* setCurrentRegionAddress(action) {
 
         yield put({ type: 'SET_CURRENT_REGION', coords: [loc.lat, loc.lng] });
     } catch (err) {
-        yield put({ type: 'APP_ERROR', error: err });
+        yield put({ type: 'APP_ERROR', message: String(err) });
     }
 }
 
@@ -25,12 +25,11 @@ function* requestGeocode(action) {
 
         const loc = geocoderesults.data.results[0].geometry.location
 
-        //const payload = { ...action.payload, coords: [loc.lat, loc.lng] }
-
         yield put({ type: 'REQUEST_GEOCODE_SUCCEEDED', payload: { ...action.payload, coords: [loc.lat, loc.lng] } });
     } catch (err) {
         yield put({ type: 'REQUEST_GEOCODE_FAILED', payload: action.payload });
-        yield put({ type: 'APP_ERROR', error: err });
+
+        yield put({ type: 'APP_ERROR', message: String(err) });
     }
 }
 

@@ -122,25 +122,29 @@ export const appError = (error) => ({
 export const loadParticipants = (payload) => dispatch => {
 
 
-    dispatch(retrieveParticipants(payload))
+    setInterval(() => dispatch(retrieveParticipants(payload)), 30000)
 
     /*
-       const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
+        const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
-       socket.on('connect', function () {
-           setInterval(() => socket.emit('eventparticipants_get',
-                   payload, (data) =>
-                   api.resultHandler(data, 'EVENT_PARTICIPANTS_FETCH_')),
-               10000
-           )
-       });
-       */
+        socket.on('connect', function () {
+            setInterval(() => socket.emit('eventparticipants_get',
+                    payload, (data) =>
+                    api.resultHandler(data, 'EVENT_PARTICIPANTS_FETCH_')),
+                10000
+            )
+        });
+        */
+
+}
+
+export const logoutUser = () => dispatch => {
+    dispatch({ type: 'ACCOUNT_LOGOFF' })
 }
 
 export const setCurrentRegionAddress = (address) => dispatch => {
     dispatch({ type: 'SET_START_ADDRESS', address })
 }
-
 
 export const setRouteMarkers = (payload) => dispatch => {
     dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: payload });
@@ -164,13 +168,7 @@ export const updateParticipantCurrLocation = (payload) => dispatch => {
     socket.on('connect', function () {
         socket.emit('eventparticipant_upsert', { _id, markers, _accountId, _eventId, coords }, (data) =>
             api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
-
-        //socket.emit('eventparticipants_get', { _eventId: _eventId },
-        //   (data) => api.resultHandler(data, 'EVENT_PARTICIPANTS_FETCH_'))
     });
-
-    // dispatch(retrieveParticipants({ _eventId: _eventId }))
-    //dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { _id, markers, _accountId, _eventId } })
 }
 
 export const registerUser = (payload) => dispatch => {

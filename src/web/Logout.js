@@ -1,9 +1,12 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
+import * as actions from "../actions"
+import { bindActionCreators } from "redux";
 import { PropTypes } from "prop-types"
 import Typography from 'material-ui/Typography'
 
 import Button from "material-ui/Button"
+
 import "./styles/app.css"
 
 
@@ -20,7 +23,7 @@ class Logout extends Component {
         const unauthenicate = { ...account }
         unauthenicate.authenticated = false;
 
-        dispatch({ type: 'ACCOUNT_LOGOFF' })
+        this.props.actions.logoutUser()
     }
 
 
@@ -31,7 +34,7 @@ class Logout extends Component {
             <div>
                   <Button onClick={this.handleLogout} color="inherit">
                              <Typography color="inherit" >
-                              Logout
+                              Leave
                           </Typography>
                   </Button>
           </div>
@@ -46,5 +49,10 @@ function mapStateToProps(state) {
         account
     }
 }
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        actions: bindActionCreators(actions, dispatch)
+    }
+}
 
-export default connect(mapStateToProps)(Logout)
+export default connect(mapStateToProps, mapDispatchToProps)(Logout)

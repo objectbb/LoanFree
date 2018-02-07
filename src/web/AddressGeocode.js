@@ -21,7 +21,6 @@ class AddressGeocode extends Component {
         e.preventDefault();
         console.log(this.state.address)
         this.props.actions.setCurrentRegionAddress(this.state.address)
-        //this.props.geocode(this.state.address)
     }
 
     handleChange(event) {

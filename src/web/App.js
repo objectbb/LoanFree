@@ -3,7 +3,9 @@ import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux'
 import RouteMakerContainer from "./RouteMakerContainer"
 import ParticipantContainer from "./ParticipantContainer"
+import Typography from 'material-ui/Typography';
 import Login from "./Login"
+import Error from "./Error"
 
 class App extends Component {
 
@@ -22,9 +24,11 @@ class App extends Component {
         const { account } = this.props
         return (
             <div>
+
             {!account.authenticated && <Login />}
              {account.authenticated &&  account.item.authorization === "ROUTEMAKER"  && <RouteMakerContainer />}
             {account.authenticated &&  account.item.authorization === "PARTICIPANT"  && <ParticipantContainer />}
+            <Error />
 
             </div>
         );

@@ -8,6 +8,7 @@ import DataFeeder from "./DataFeeder"
 import Profile from "./Profile"
 import Event from "./Event"
 import EventParticipant from "./EventParticipant"
+import Grid from 'material-ui/Grid';
 
 import EventsContainer from './EventsContainer'
 import EventParticipants from './EventParticipants'
@@ -15,6 +16,7 @@ import ImportEventParticipants from './ImportEventParticipants'
 import Layout from './components/Layout'
 import CollapsibleCard from './components/CollapsibleCard'
 import FullWidthTabs from './components/FullWidthTabs'
+import PopOverIt from './components/PopOverIt'
 import Logout from './Logout'
 
 import moment from 'moment'
@@ -31,25 +33,39 @@ class RouteMakerContainer extends Component {
 
     render() {
 
-            const { account, event, eventparticipant, eventparticipants } = this.props
+        const { account, event, events, eventparticipant, eventparticipants } = this.props
 
-            return (
-                    <div>
+        return (
+            <div>
                     <Layout
-                    header={<span><EventsContainer /> </span>}
-                      logout={<Logout />}
+                    header={
+                        <Grid container spacing={16}>
+                               <Grid item xs={6} md={10} lg={14}>
+                          {event.item.name &&  `${event.item.name} -- ${moment(event.item.startDate).format('llll')}`}
+                                </Grid>
+                                <Grid item xs={2} md={1} lg={1}>
+                                 <PopOverIt>
+                                     <Profile />
+                                     </PopOverIt>
+                                </Grid>
+                                <Grid item xs={4} md={1} lg={1}>
+                                  <Logout />
+                                </Grid>
+
+                    </Grid>
+                    }
                       drawerheader={event.item.name && `${event.item.name} -- ${moment(event.item.startDate).format('llll')}`}
                         body={
                                 <div>
                                     <DataFeeder>
                                         <RouteMaker />
                                     </DataFeeder>
-
                                 </div>
                             }
                     >
+
+                    {events.item.length > 0 && <EventsContainer />}
                          <FullWidthTabs>
-                                <Profile header= "Profile" />
                                 <Event header= "Event"/>
                                     <div header={`Participants ${eventparticipants.item.length}`}
                                     disable={event.item._id === undefined}>
@@ -61,18 +77,19 @@ class RouteMakerContainer extends Component {
                                     </div>
                                </FullWidthTabs>
 
-            < /Layout>
-            < /div>
+                </Layout>
+            </div>
         )
     }
 }
 
 function mapStateToProps(state) {
-    const { account, event, eventparticipant, eventparticipants } = state
+    const { account, event, events, eventparticipant, eventparticipants } = state
 
     return {
         account,
         event,
+        events,
         eventparticipant,
         eventparticipants
     }

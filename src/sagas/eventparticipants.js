@@ -39,12 +39,6 @@ function* fetchUpsert(action) {
         console.log("eventparticipants --> fetchUpsert ", action.payload)
         item = yield participantApi.upsert(action)
 
-        /*
-                yield put({
-                    type: "EVENT_PARTICIPANTS_UPSERT",
-                    payload: action.payload
-                })
-        */
     } catch (e) {
         yield put({ type: "APP_ERROR", message: e.message });
     }
@@ -75,13 +69,8 @@ function* fetchEventParticipantUpsert(action) {
 
     const { event, newParticipant } = action.payload
 
-    console.log("eventparticipants --> fetchEventParticipantUpsert --> event ", event)
-    console.log("eventparticipants --> fetchEventParticipantUpsert --> newParticipant ", newParticipant)
-
     const evt = yield eventApi.upsert({ payload: event })
     yield api.resultHandler(evt, 'EVENT_UPSERT_')
-
-    console.log("eventparticipants --> fetchEventParticipantUpsert --> evt ", evt.data)
 
     yield put({ type: "EVENTS_UPSERT", payload: evt.data });
 
@@ -89,9 +78,6 @@ function* fetchEventParticipantUpsert(action) {
 
     const prt = yield participantApi.upsert({ payload: { ...newParticipant } })
     yield api.resultHandler(prt, 'PARTICIPANT_UPSERT_')
-
-    console.log("eventparticipants --> fetchEventParticipantUpsert --> prt ", prt)
-
 
 }
 

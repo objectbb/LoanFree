@@ -8,12 +8,23 @@
     color: #FF5252;
 }
 
+.error {
+    font-size: 10px;
+    color: #FF5252;
+    position: absolute;
+    right: 5%;
+    bottom: 50%;
+}
+
+.error-list {
+    background-color: #0d0d0d;
+}
+
 .icon {
     margin: 15px;
     width: 75px;
-    height: 75px;
-    background-color: #f5f5f5;
-    border: 1px solid #ccc;
+    height: 75px; //background-color: #f5f5f5;
+    //border: 1px solid #ccc;
     box-shadow: 0 0 2px #ccc;
     position: relative;
     float: left;

@@ -88,7 +88,6 @@ class MapIt extends Component {
               this.props.participants &&
                 this.props.participants.map((item, index) => {
 
-              console.log("MapIt --> render --> item ", item)
 
                 const closemarker = this.withinRangeMarkerIndicator(item)
 
@@ -105,7 +104,10 @@ class MapIt extends Component {
                      )
                    ) : []
 
-                if(newmarkers.length > 0)
+                console.log("MapIt --> render --> item ", item)
+                console.log("MapIt --> render --> newmarkers ", newmarkers)
+
+                if(newmarkers && newmarkers.length > 0)
                     this.props.addParticipantMarker(item,newmarkers)
 
                 const icon = divIcon({ className: 'marker ' + (closemarker && closemarker.length === 0 ? 'bus' : 'bus mark'), html: `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})

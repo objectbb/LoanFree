@@ -30,15 +30,6 @@ class Profile extends Component {
         this.clearState = this.clearState.bind(this)
     }
 
-    /*
-        componentWillReceiveProps() {
-
-            this.setState({
-                ...this.props.account.item
-            });
-
-        }
-    */
     handleSubmit(e) {
         e.preventDefault()
 
@@ -49,15 +40,12 @@ class Profile extends Component {
 
     clearState() {
 
-
         this.setState((prevState) => ({
             firstname: '',
             lastname: '',
             email: '',
             authorization: ''
         }))
-
-
     }
 
     handleChange(e) {

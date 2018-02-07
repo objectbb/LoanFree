@@ -179,7 +179,6 @@ class Event extends Component {
     render() {
 
         const { error, isFetching } = this.props.event
-        const { coords } = this.props.event.item
 
         const {
             _id,
@@ -190,7 +189,8 @@ class Event extends Component {
             address,
             city,
             state,
-            zipcode
+            zipcode,
+            coords
         } = this.state
 
         let isEnabled = this.isEnabled()
@@ -269,7 +269,7 @@ class Event extends Component {
                 emptyMessage="Address is required"
               />
               <br />
-              {_id && <div className="coords">{coords}</div>}
+              {<div className="coords">{coords}</div>}
               <br />
                  <TextInput
                 uniquename="city"

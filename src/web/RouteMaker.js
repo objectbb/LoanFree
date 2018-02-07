@@ -12,7 +12,8 @@ import style from "./styles/app.css"
 import * as actions from "../actions"
 import uuid from 'uuid'
 import Grid from 'material-ui/Grid';
-import { differenceWith } from 'lodash'
+import { uniqWith } from 'lodash'
+
 
 class RouteMaker extends Component {
 
@@ -71,10 +72,11 @@ class RouteMaker extends Component {
 
         const { _id, markers, _accountId, _eventId, coords } = participant
 
-        const unqMarkers = origmarkers.concat(newmarkers).
-        filter(function (x, i, a) {
-            return a.indexOf(x)._id == a[i]._id;
-        });
+        let unqMarkers = origmarkers.concat(newmarkers)
+
+        unqMarkers = uniqWith(unqMarkers, function (item) {
+            return item.marker.name
+        })
 
         console.log("RouteMaker --> addParticipantMarker --> unqMarkers", unqMarkers)
 
