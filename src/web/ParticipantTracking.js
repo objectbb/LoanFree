@@ -12,6 +12,7 @@ import style from "./styles/app.css"
 import * as actions from "../actions"
 import uuid from 'uuid'
 import Grid from 'material-ui/Grid';
+import { uniqWith } from 'lodash'
 
 class ParticipantTracking extends Component {
 
@@ -26,74 +27,48 @@ class ParticipantTracking extends Component {
         this.updatePosition = this.updatePosition.bind(this);
         this.removeMarker = this.removeMarker.bind(this);
         this.setCurrentRegionAddress = this.setCurrentRegionAddress.bind(this);
+        this.addParticipantMarker = this.addParticipantMarker.bind(this)
 
     }
 
     setCurrentRegionAddress(address) {
         this.props.actions.setCurrentRegionAddress(address)
     }
-    addMarker() {
-        let offset = .002
-        let length = this.props.event.item.markers.length;
 
-        let lastcoords = this.props.region;
+    addParticipantMarker(participant, newmarkers) {
 
-        let item = { coords: [lastcoords[0] + offset, lastcoords[1] + offset] };
-        item.name = "Marker #" + length + 1
-        item.guid = uuid.v1();
-        item.range = 50;
+        const prtmarkers = { ...participant }
+        const origmarkers = [...participant.markers]
 
-        const event = { ...this.props.event.item }
-        event.markers = [...this.props.event.item.markers, item]
+        const { _id, markers, _accountId, _eventId, coords } = participant
 
-        this.props.actions.setRouteMarkers(event)
+        let unqMarkers = origmarkers.concat(newmarkers)
 
-    }
+        unqMarkers = uniqWith(unqMarkers, function (item) {
+            return item.marker.name
+        })
 
-    removeMarker(item) {
+        console.log("RouteMaker --> addParticipantMarker --> unqMarkers", unqMarkers)
 
-        let newmarkers = this.props.event.item.markers.filter((marker) => marker.guid !== item.guid);
-
-        const event = { ...this.props.event.item }
-        event.markers = newmarkers;
-
-        this.props.actions.setRouteMarkers(event)
+        this.props.actions.updateParticipantCurrLocation({
+            _id,
+            markers: unqMarkers,
+            _accountId,
+            _eventId,
+            coords
+        })
 
     }
+    addMarker() {}
 
-    openEditMarker(item) {
-        this.setState({ isEditMarker: true, marker: item })
-    }
+    removeMarker(item) {}
+
+    openEditMarker(item) {}
 
 
-    handleSubmit(item) {
+    handleSubmit(item) {}
 
-        this.updatePosition({ ...item })
-        this.setState({ isEditMarker: false })
-    }
-
-    updatePosition(item) {
-        const { markers } = this.props.event.item
-
-        let newmarkers = markers.map(
-            (marker) => {
-                if (marker.guid === item.guid) {
-
-                    marker = item;
-                }
-
-                return marker;
-            }
-        );
-
-        const event = { ...this.props.event.item }
-        event.markers = newmarkers;
-
-        console.log("RouteMaker --> updatePosition --> event", event)
-
-        this.props.actions.setRouteMarkers(event)
-
-    }
+    updatePosition(item) {}
 
 
     render() {
@@ -105,16 +80,14 @@ class ParticipantTracking extends Component {
                 <MapIt
                   routeMarkers = {event.item.markers}
                   participants={this.props.participant}
-                  removeMarker={this.removeMarker}
-                  editMarker={this.openEditMarker}
                   region={this.props.region}
                   currLocation={this.props.location}
                    draggable={false}
-                   updatePosition={this.updatePosition}
+                addParticipantMarker= {this.addParticipantMarker}
                 />
 
                 <div className="tool-bar bottom">
-                         <AddressGeocode geocode={this.setCurrentRegionAddress} />
+                    <AddressGeocode geocode={this.setCurrentRegionAddress} />
                 </div>
             }
             < /div>

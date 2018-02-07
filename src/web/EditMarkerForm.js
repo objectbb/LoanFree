@@ -64,34 +64,34 @@ class EditMarkerForm extends Component {
 
         return (
             <form onSubmit={this.handleSubmit}>
-         <TextInput
-                uniquename="name"
-                text="Marker Name"
-                minCharacters={6}
-                onChange={this.handleChange}
-                content={name}
-                required={true}
-                errorMessage="Name is invalid"
-                emptyMessage="Name is required"
-              />
+                <TextInput
+                    uniquename="name"
+                    text="Marker Name"
+                    minCharacters={6}
+                    onChange={this.handleChange}
+                    content={name}
+                    required={true}
+                    errorMessage="Name is invalid"
+                    emptyMessage="Name is required"
+                  />
 
-              <TextField
-              id="range"
-              label="Range (m)"
-              name="range"
-              value={range}
-              onChange={this.handleChange}
-              type="number"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              margin="normal"
-            />
+                  <TextField
+                  id="range"
+                  label="Range (m)"
+                  name="range"
+                  value={range}
+                  onChange={this.handleChange}
+                  type="number"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  margin="normal"
+                />
 
-            <Button fab mini disabled={!isEnabled} onClick={this.handleSubmit} color="primary" aria-label="save">
-              <Icon>save</Icon>
-            </Button>
-    </form>
+                <Button fab mini disabled={!isEnabled} onClick={this.handleSubmit} color="primary" aria-label="save">
+                  <Icon>save</Icon>
+                </Button>
+            </form>
         )
     }
 }

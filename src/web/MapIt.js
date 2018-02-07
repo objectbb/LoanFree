@@ -179,6 +179,8 @@ class MapIt extends Component {
                           <span>
                             <div><b>{item.name}</b> range: {item.range}m</div>
                             <div>{item.coords} </div>
+
+                            {this.props.removeMarker  &&  this.props.updatePosition &&
                             <div>
                                 <button onClick={(e) => this.editMarker(item,e)}>
                                     <i className="material-icons">edit_location</i>
@@ -187,6 +189,7 @@ class MapIt extends Component {
                                     <i className="material-icons">delete</i>
                                 </button>
                               </div>
+                              }
                           </span>
                         </Popup>
 

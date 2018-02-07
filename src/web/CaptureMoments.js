@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Grid from 'material-ui/Grid';
 import Camera from 'react-camera';
 import Gallery from 'react-photo-gallery';
 import SelectedImage from './SelectedImage';
@@ -21,6 +22,7 @@ export default class CaptureMoments extends Component {
         photos[obj.index].selected = !photos[obj.index].selected;
         this.setState({ photos: photos });
     }
+
     toggleSelect() {
         let photos = this.state.photos.map((photo, index) => { return { ...photo, selected: !this.state.selectAll } });
         this.setState({ photos: photos, selectAll: !this.state.selectAll });
@@ -48,29 +50,37 @@ export default class CaptureMoments extends Component {
 
         return (
             <div style={style.container}>
-            <div>
-        <img
-          style={style.captureImage}
-          ref={(img) => {
-            this.img = img;
-          }}
-        />
-        <Gallery photos={this.state.photos} onClick={this.selectPhoto} ImageComponent={SelectedImage} />
-            </div>
-        <Camera
-          style={style.preview}
-          ref={(cam) => {
-            this.camera = cam;
-          }}
-        >
-          <div style={style.captureContainer} onClick={this.takePicture}>
-              <div className="icon">
-                <div className="camera3"><span></span></div>
-              </div>
-                </div>
-        </Camera>
+                <img
+                style={style.captureImage}
+                ref={(img) => {
+                this.img = img;
+                }}
+                />
+                <Grid container spacing={8}>
+                    <Grid item xs={1} md={1} lg={1}>
+                    </Grid>
+                    <Grid item xs={5} md={4} lg={4}>
+                        <Camera
+                        style={style.preview}
+                        ref={(cam) => {
+                        this.camera = cam;
+                        }}
+                        >
+                            <div style={style.captureContainer} onClick={this.takePicture}>
+                                <div className="icon">
+                                    <div className="camera3"><span></span></div>
+                                </div>
+                            </div>
+                        </Camera>
 
-      </div>
+                    </Grid>
+                    <Grid item xs={5} md={4} lg={4}>
+                        <div>
+                            <Gallery photos={this.state.photos} onClick={this.selectPhoto} ImageComponent={SelectedImage} />
+                        </div>
+                    </Grid>
+                </Grid>
+            </div>
         );
     }
 }
