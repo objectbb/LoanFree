@@ -115,13 +115,15 @@ class RouteMaker extends Component {
             }
         );
 
-        const event = { ...this.props.event.item }
-        event.markers = newmarkers;
+        //const event = { ...this.props.event.item }
+        //event.markers = newmarkers;
 
-        console.log("RouteMaker --> updatePosition --> event", event)
+        console.log("RouteMaker --> updatePosition --> event", this.props.event.item)
 
-        this.props.actions.setRouteMarkers(event)
+        const { _id, _accountId, _eventId, coords } = this.props.event.item
 
+        //this.props.actions.setRouteMarkers(event)
+        this.props.actions.setRouteMarkers({ _id, markers: newmarkers, _accountId, _eventId, coords })
     }
 
 

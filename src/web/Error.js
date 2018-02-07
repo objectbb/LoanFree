@@ -39,12 +39,13 @@ class Error extends Component {
         map((item, idx) => <div className="error-list" key={idx}>{item.error} {item.timeStamp}</div>)
 
         return (<div className="error">
+         {this.state.isOpen && errorList}
                 {errorList.length > 0 &&
-                <Badge badgeContent={errorList.length} color="primary">
-                    <Icon onClick={this.openErrors}>error</Icon>
+                <Badge style={{ float: 'right' }}  badgeContent={errorList.length} color="primary">
+                    <Icon style={{ fontSize: 40 }} onClick={this.openErrors}>error</Icon>
                     </Badge>
                 }
-                {this.state.isOpen && errorList}
+
         </div>);
     }
 }

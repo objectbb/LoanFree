@@ -22,11 +22,10 @@ export const error = (
     case EVENT_UPSERT_FAILED:
     case EVENT_FETCH_FAILED:
     case APP_ERROR:
-        console.log("error --> action", action)
         return {
             ...state,
             error: action.message,
-            history: [...history, { error: action.message, timeStamp: moment().format('llll') }],
+            history: [...state.history, { error: action.message, timeStamp: moment().format('llll') }],
             timeStamp: moment().format('llll')
         }
     default:

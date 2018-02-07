@@ -4,6 +4,7 @@ import * as actions from "../actions"
 import { bindActionCreators } from "redux";
 import { PropTypes } from "prop-types"
 import Typography from 'material-ui/Typography'
+import Icon from 'material-ui/Icon'
 
 import Button from "material-ui/Button"
 
@@ -33,9 +34,7 @@ class Logout extends Component {
         return (
             <div>
                   <Button onClick={this.handleLogout} color="inherit">
-                             <Typography color="inherit" >
-                              Leave
-                          </Typography>
+                           <Icon>exit_to_app</Icon>
                   </Button>
           </div>
         )
