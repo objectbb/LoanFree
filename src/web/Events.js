@@ -1,5 +1,8 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
+import { bindActionCreators } from "redux";
+import * as actions from "../actions"
+import isEqual from 'lodash'
 import "./styles/app.css"
 
 import CircularProgress from "material-ui/Progress"
@@ -11,14 +14,23 @@ import IntegrationAutosuggest from './components/IntegrationAutosuggest'
 class Events extends Component {
     constructor(props) {
         super(props)
+        this.state = { timerId: '', watchPositionId: '' }
         this.handleUpdateInput = this.handleUpdateInput.bind(this)
         this.clearSelectedEvent = this.clearSelectedEvent.bind(this)
     }
 
-    componentDidMount() {
-        const { dispatch } = this.props
+    /*
+        shouldComponentUpdate(nextProps, nextState) {
+            console.log("Events --> shouldComponentUpdate --> this.props.event.item ", this.props.event.item)
+            console.log("Events --> shouldComponentUpdate --> nextProps.event.item ", nextProps.event.item)
+            console.log("Events --> shouldComponentUpdate --> isEqual", isEqual(this.props.event.item, nextProps.event.item))
 
-        console.log("Events --> componentDidMount --> ", this.props.account)
+            return !isEqual(this.props.event.item, nextProps.event.item)
+        }
+    */
+    componentDidMount() {
+
+        console.log("Events --> componentWillUpdate --> ", this.props.account)
 
         this.props.dispatch({
             type: 'EVENTS_FETCH_REQUESTED',
@@ -31,15 +43,35 @@ class Events extends Component {
 
         dispatch({ type: 'EVENT_CLEAR' })
         dispatch({ type: 'EVENT_PARTICIPANTS_CLEAR' })
+
+        if (this.state.watchPositionId)
+            this.props.actions.stopWatchPosition(this.state.watchPositionId)
+
+        if (this.state.timerId)
+            this.props.actions.stopLoadParticipants(this.state.timerId)
     }
 
     handleUpdateInput(item) {
-        const { dispatch, account } = this.props
+        const { dispatch, account, participant } = this.props
 
-        console.log("Events --> handleUpdateInput --> ", account)
         dispatch({ type: 'EVENT_FETCH_SUCCEEDED', payload: item.value })
         dispatch({ type: 'PARTICIPANT_FETCH_REQUESTED', payload: { _eventId: item.value._id, _accountId: account.item._id } })
         dispatch({ type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED', payload: { _eventId: item.value._id } })
+        dispatch({ type: 'SET_CURRENT_REGION', coords: [item.value.coords[0], item.value.coords[1]] })
+
+        if (this.state.timerId)
+            this.props.actions.stopLoadParticipants(this.state.timerId)
+
+        if (this.state.watchPositionId)
+            this.props.actions.stopWatchPosition(this.state.watchPositionId)
+
+        const timerId = this.props.actions.intervalLoadParticipants({ _eventId: item.value._id })
+
+        this.setState({ timerId: timerId })
+
+        const watchPositionId = this.props.actions.watchPosition(participant)
+
+        this.setState({ watchPositionId: watchPositionId })
 
     };
 
@@ -54,7 +86,7 @@ class Events extends Component {
 
         const menuitems = (events) ?
             events.item.map((item) => ({
-                text: `${item.name} - ${item.address} ${item.city} ${item.state} `,
+                text: `${item.name} - ${item.address} ${item.city} ${item.state}`,
                 value: item
             }))
             : []
@@ -66,7 +98,7 @@ class Events extends Component {
                 position="absolute"
                 handleUpdateInput={this.handleUpdateInput}
                 value=""
-                 placeholder={`${account.item.firstname}'s Events`}
+                 placeholder={`${account.item.firstname}'s Events (${menuitems.length})`}
                  clearSelected={this.clearSelectedEvent}
                  oc ={
                     ({suggestionsContainerOpen: {
@@ -86,12 +118,21 @@ class Events extends Component {
 
 function mapStateToProps(state) {
 
-    const { events, account } = state
+    const { event, events, account, participant } = state
 
     return {
+        event,
         events,
-        account
+        account,
+        participant
     }
 }
 
-export default connect(mapStateToProps)(Events)
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        dispatch,
+        actions: bindActionCreators(actions, dispatch)
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Events)

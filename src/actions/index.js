@@ -119,16 +119,62 @@ export const appError = (error) => ({
     error
 })
 
-export const loadParticipants = (payload) => dispatch => {
+export const stopWatchPosition = (id) => dispatch => {
+    navigator.geolocation.clearWatch(id)
+}
+
+export const watchPosition = (participant) => dispatch => {
+
+    return navigator.geolocation.watchPosition(position => {
+
+        const coords = [position.coords.latitude, position.coords.longitude]
+        this.setCurrLocation(coords)
+
+        console.log("index --> geolocation.watchPosition --> coords", coords)
+
+        if (Object.getOwnPropertyNames(participant.item).length === 0) return
+        console.log("index --> geolocation.watchPosition --> participant.item", participant.item)
+
+        const prtCoords = { ...participant.item }
+        prtCoords.coords = coords
+
+        console.log("index --> geolocation.watchPosition --> prtCoords", prtCoords)
+
+        this.updateParticipantCurrLocation(prtCoords)
+    }, function error(msg) {
+
+        alert('Please enable your GPS position future.');
+
+    }, { maximumAge: 600000000, timeout: 5000, enableHighAccuracy: true });
+}
+
+export const stopLoadParticipants = (id) => dispatch => {
+    clearInterval(id);
+}
+
+export const intervalLoadParticipants = (payload) => dispatch => {
     const SECOND = 1000
 
     console.log("index loadParticipants -->", payload)
-    setInterval(() => dispatch(retrieveParticipants(payload)), 10 * SECOND)
 
-    setInterval(() => dispatch({
-        type: 'EVENT_FETCH_REQUESTED',
-        payload: { _id: payload._eventId }
-    }), 15 * 60 * SECOND)
+    return setInterval(() => {
+        dispatch(retrieveParticipants(payload));
+    }, 30 * SECOND)
+
+
+    /*
+    // repeat with the interval of 2 seconds
+let timerId = setInterval(() => alert('tick'), 2000);
+
+// after 5 seconds stop
+setTimeout(() => { clearInterval(timerId); alert('stop'); }, 5000);
+
+
+        setInterval(() => dispatch({
+            type: 'EVENT_FETCH_REQUESTED',
+            payload: { _id: payload._eventId }
+        }), 15 * 60 * SECOND)
+    */
 
 
     /*
@@ -138,10 +184,10 @@ export const loadParticipants = (payload) => dispatch => {
             setInterval(() => socket.emit('eventparticipants_get',
                     payload, (data) =>
                     api.resultHandler(data, 'EVENT_PARTICIPANTS_FETCH_')),
-                10000
+                10 * SECOND
             )
-        });
-        */
+        })
+    */
 
 }
 
@@ -169,16 +215,12 @@ export const updateParticipantCurrLocation = (payload) => dispatch => {
 
     const { _id, markers, _accountId, _eventId, coords } = payload
 
-
     const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
     socket.on('connect', function () {
         socket.emit('eventparticipant_upsert', { _id, markers, _accountId, _eventId, coords }, (data) =>
             api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
     });
-
-
-    // dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { _id, markers, _accountId, _eventId, coords } })
 
 }
 

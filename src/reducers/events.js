@@ -14,12 +14,12 @@ export const events = (
         }
     case EVENTS_UPSERT:
         return {
-            item: state.item.find((item) => (item.id === action.payload.id)) ? state.item.map(item => {
-                if (item.id === action.payload.id) {
+            item: state.item.find((item) => (item._id === action.payload._id)) ? state.item.map(item => {
+                if (item._id === action.payload._id) {
                     return { ...item, ...action.payload }
                 }
                 return item
-            }) : [...state.item, ...action.payload],
+            }) : [...state.item, action.payload],
             isFetching: false
         };
     case EVENTS_FETCH_SUCCEEDED:

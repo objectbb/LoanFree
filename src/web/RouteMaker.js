@@ -37,7 +37,7 @@ class RouteMaker extends Component {
     }
 
     addMarker() {
-        let offset = .002
+        let offset = .001
         let length = this.props.event.item.markers.length;
 
         let lastcoords = this.props.region;
@@ -47,8 +47,12 @@ class RouteMaker extends Component {
         item.guid = uuid.v1();
         item.range = 50;
 
-        const event = { ...this.props.event.item }
+        let event = { ...this.props.event.item }
         event.markers = [...this.props.event.item.markers, item]
+
+        event.__v = undefined
+
+        console.log("RouteMaker --> addMarker --> event ", event)
 
         this.props.actions.setRouteMarkers(event)
 
@@ -58,9 +62,10 @@ class RouteMaker extends Component {
 
         let newmarkers = this.props.event.item.markers.filter((marker) => marker.guid !== item.guid);
 
-        const event = { ...this.props.event.item }
+        let event = { ...this.props.event.item }
         event.markers = newmarkers;
 
+        event.__v = undefined
         this.props.actions.setRouteMarkers(event)
 
     }
@@ -78,8 +83,6 @@ class RouteMaker extends Component {
             return item.marker.name
         })
 
-        console.log("RouteMaker --> addParticipantMarker --> unqMarkers", unqMarkers)
-
         this.props.actions.updateParticipantCurrLocation({
             _id,
             markers: unqMarkers,
@@ -93,7 +96,6 @@ class RouteMaker extends Component {
     openEditMarker(item) {
         this.setState({ isEditMarker: true, marker: item })
     }
-
 
     handleSubmit(item) {
 
@@ -115,14 +117,9 @@ class RouteMaker extends Component {
             }
         );
 
-        //const event = { ...this.props.event.item }
-        //event.markers = newmarkers;
-
         console.log("RouteMaker --> updatePosition --> event", this.props.event.item)
 
         const { _id, _accountId, _eventId, coords } = this.props.event.item
-
-        //this.props.actions.setRouteMarkers(event)
         this.props.actions.setRouteMarkers({ _id, markers, _accountId, coords })
     }
 

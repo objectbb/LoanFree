@@ -10,12 +10,7 @@ class EventParticipantsContainer extends Component {
         super(props)
     }
 
-    componentWillReceiveProps() {
-        console.log("EventParticipantsContainer -->  componentWillReceiveProps -->eventparticipants", this.props.eventparticipants)
-    }
-
     render() {
-        console.log("EventParticipantsContainer -->  render -->eventparticipants", this.props.eventparticipants)
 
         return (
             <div>

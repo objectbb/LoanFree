@@ -65,11 +65,9 @@ class ParticipantTracking extends Component {
 
     openEditMarker(item) {}
 
-
     handleSubmit(item) {}
 
     updatePosition(item) {}
-
 
     render() {
 

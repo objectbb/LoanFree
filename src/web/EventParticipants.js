@@ -1,11 +1,13 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
+import shallowCompare from 'react-addons-shallow-compare'
 import "./styles/app.css"
 
 import CircularProgress from "material-ui/Progress"
 import Paper from "material-ui/Paper"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 import IntegrationAutosuggest from './components/IntegrationAutosuggest'
+import isEqual from 'lodash'
 
 class EventParticipants extends Component {
     constructor(props) {
@@ -14,6 +16,11 @@ class EventParticipants extends Component {
         this.clearSelectedParticipant = this.clearSelectedParticipant.bind(this)
     }
 
+    /*
+        shouldComponentUpdate(nextProps, nextState) {
+            return !isEqual(this.props.eventparticipants.item, nextProps.eventparticipants.item)
+        }
+    */
     handleUpdateInput(item) {
         console.log("EventParticipants --> handleUpdateInput ", item.value)
         this.props.dispatch({ type: 'EVENT_PARTICIPANT_FETCH_SUCCEEDED', payload: item.value })
@@ -22,6 +29,7 @@ class EventParticipants extends Component {
     clearSelectedParticipant() {
         const { dispatch } = this.props
         dispatch({ type: 'EVENT_PARTICIPANT_CLEAR' })
+        dispatch({ type: 'EVENT_PARTICIPANTS_CLEAR' })
     }
 
     render() {

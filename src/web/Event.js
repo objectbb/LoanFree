@@ -65,11 +65,23 @@ class Event extends Component {
     componentWillReceiveProps(nextProps) {
         const { event } = nextProps;
 
-        console.log("Event --> componentWillReceiveProps  event ", event.item)
+        console.log("Event --> componentWillReceiveProps --> event ", event)
 
-        this.setState(event.item._id || event.item.coords ? event.item : initialState);
+        this.setState(event.item._id || event.item.coords.length == 2 ? { ...event.item } : {
+            name: '',
+            displayname: '',
+            description: '',
+            markers: [],
+            teams: [],
+            coords: [],
+            address: '',
+            startdate: '',
+            city: '',
+            state: '',
+            zipcode: ''
+        });
 
-        console.log("Event --> componentWillReceiveProps  this.state ", this.state)
+        console.log("Event --> componentWillReceiveProps --> this.state ", this.state)
     }
 
     handleSubmit(e) {
@@ -81,7 +93,7 @@ class Event extends Component {
         const newParticipant = {
             _id: participant.item._id,
             _eventId: '',
-            _accountId: account.item.id,
+            _accountId: account.item._id,
             _teamdId: '',
             coords: coords
         }
@@ -93,9 +105,12 @@ class Event extends Component {
             type: 'EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED',
             payload: {
                 newParticipant,
-                event: { ...this.state, coords, _accountId: account.item.id }
+                event: { ...this.state, coords, _accountId: account.item._id }
             }
         });
+
+        dispatch({ type: 'SET_CURRENT_REGION', coords: [coords[0], coords[1]] })
+
     }
 
     handleChange(e) {
@@ -118,9 +133,11 @@ class Event extends Component {
     handleGeocode() {
         const { address, city, state, zipcode } = this.state
 
-        if (!(address && city && state && zipcode)) return
+        if (!(address && city)) return
 
         const { dispatch } = this.props;
+
+        console.log("Event --> handleGeocode --> this.state ", this.state)
 
         this.props.dispatch({
             type: 'REQUEST_GEOCODE',
@@ -140,12 +157,17 @@ class Event extends Component {
             startdate,
             city,
             state,
-            zipcode
+            zipcode,
+            coords
         } = this.state
+
+
+        console.log("Event --> isEnabled coords ", coords.length)
 
         return (
             (description && description.trim().length > 9) &&
             startdate &&
+            (coords.length == 2) &&
             (name && name.trim().length > 5) &&
             (displayname && displayname.trim().length > 1) &&
             (address && address.trim().length > 5) &&
@@ -238,7 +260,7 @@ class Event extends Component {
                  fullWidth={true}
                 onChange={this.handleChange}
                 type="datetime-local"
-                    value={moment(startdate,"yyyy-MM-DDThh:mm:ss.SSSZ").format("YYYY-MM-DDTkk:mm")}
+                    value={moment(startdate,"yyyy-MM-DDThh:mmZ").format("YYYY-MM-DDTkk:mm")}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -314,7 +336,7 @@ class Event extends Component {
                     {error}
                   </p>}
                 <Tooltip id="tooltip-icon" title="Save">
-                    <Button  disabled={!isEnabled && !coords} onClick={this.handleSubmit} fab color="primary" aria-label="save">
+                    <Button  disabled={!isEnabled} onClick={this.handleSubmit} fab color="primary" aria-label="save">
                     {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
                     </Button>
                 </Tooltip>

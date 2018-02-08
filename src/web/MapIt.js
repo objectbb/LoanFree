@@ -103,9 +103,6 @@ class MapIt extends Component {
                      )
                    ) : []
 
-                console.log("MapIt --> render --> item ", item)
-                console.log("MapIt --> render --> newmarkers ", newmarkers)
-
                 if(newmarkers && newmarkers.length > 0)
                     this.props.addParticipantMarker(item,newmarkers)
 
@@ -136,9 +133,6 @@ class MapIt extends Component {
                      <CaptureMoments />
                   </FullScreenDialog>
                 </Marker>
-
-
-
                 )
               }
               )

@@ -35,13 +35,17 @@ class RouteMakerContainer extends Component {
 
         const { account, event, events, eventparticipant, eventparticipants } = this.props
 
+
+        console.log("RouteMakerContainer --> render --> event.item._id ", event.item._id)
+
+
         return (
             <div>
                     <Layout
                         header={
                         <Grid container spacing={0}>
                             <Grid item xs={8} sm={10} md={10} lg={10}>
-                                {event.item.name &&  `${event.item.name} -- ${moment(event.item.startDate).format('llll')}`}
+                                {event.item.name &&  `${event.item.name} -- ${moment(event.item.startdate).format('llll')}`}
                             </Grid>
                             <Grid item xs={2} sm={1} md={1} lg={1}>
                                 <PopOverIt>
@@ -53,7 +57,7 @@ class RouteMakerContainer extends Component {
                             </Grid>
                         </Grid>
                         }
-                      drawerheader={event.item.name && `${event.item.name} -- ${moment(event.item.startDate).format('llll')}`}
+                      drawerheader={event.item.name && `${event.item.name} -- ${moment(event.item.startdate).format('llll')}`}
                         body={
                                 <div>
                                     <DataFeeder>
@@ -67,7 +71,7 @@ class RouteMakerContainer extends Component {
                          <FullWidthTabs>
                                 <Event header= "Event"/>
                                     <div header={`Participants ${eventparticipants.item.length}`}
-                                    disable={event.item._id === undefined}>
+                                    disable={event.item._id === undefined ? true : false}>
                                     <br />
                                     {eventparticipants.item.length > 1 &&  <EventParticipants />}
                                     <br />

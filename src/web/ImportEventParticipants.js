@@ -28,8 +28,11 @@ class ImportEventParticipants extends Component {
         this.participantCount = this.participantCount.bind(this)
     }
 
+
     participantCount() {
-        return this.state.participants.trim().split("\n").length
+        const originalForm = this.state.participants.trim()
+
+        return originalForm ? this.state.participants.trim().split("\n").length : 0
     }
 
     isEnabled() {
