@@ -26,14 +26,13 @@ class ParticipantContainer extends Component {
         return (
             <div>
                 <AppBar>
-                    <Grid container spacing={24}>
-                    <Grid item xs={9}>
-                      <EventsContainer />
-                    </Grid>
-                    <Grid item xs={3}>
-                           <Logout />
-                    </Grid>
-
+                    <Grid container spacing={0}>
+                        <Grid item xs={10} sm={11}>
+                          <EventsContainer />
+                        </Grid>
+                        <Grid item xs={2} sm={1}>
+                               <Logout />
+                        </Grid>
                     </Grid>
                 </AppBar>
                 <div>

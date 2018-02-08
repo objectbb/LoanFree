@@ -120,9 +120,16 @@ export const appError = (error) => ({
 })
 
 export const loadParticipants = (payload) => dispatch => {
+    const SECOND = 1000
 
+    console.log("index loadParticipants -->", payload)
+    setInterval(() => dispatch(retrieveParticipants(payload)), 10 * SECOND)
 
-    setInterval(() => dispatch(retrieveParticipants(payload)), 30000)
+    setInterval(() => dispatch({
+        type: 'EVENT_FETCH_REQUESTED',
+        payload: { _id: payload._eventId }
+    }), 15 * 60 * SECOND)
+
 
     /*
         const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
@@ -169,6 +176,10 @@ export const updateParticipantCurrLocation = (payload) => dispatch => {
         socket.emit('eventparticipant_upsert', { _id, markers, _accountId, _eventId, coords }, (data) =>
             api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
     });
+
+
+    // dispatch({ type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED', payload: { _id, markers, _accountId, _eventId, coords } })
+
 }
 
 export const registerUser = (payload) => dispatch => {

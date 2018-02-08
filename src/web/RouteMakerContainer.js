@@ -39,16 +39,16 @@ class RouteMakerContainer extends Component {
             <div>
                     <Layout
                         header={
-                        <Grid container spacing={16}>
-                            <Grid item xs={6} md={10} lg={14}>
-                            {event.item.name &&  `${event.item.name} -- ${moment(event.item.startDate).format('llll')}`}
+                        <Grid container spacing={0}>
+                            <Grid item xs={8} sm={10} md={10} lg={10}>
+                                {event.item.name &&  `${event.item.name} -- ${moment(event.item.startDate).format('llll')}`}
                             </Grid>
-                            <Grid item xs={2} md={1} lg={1}>
-                            <PopOverIt>
-                                <Profile />
-                            </PopOverIt>
+                            <Grid item xs={2} sm={1} md={1} lg={1}>
+                                <PopOverIt>
+                                    <Profile />
+                                </PopOverIt>
                             </Grid>
-                            <Grid item xs={4} md={1} lg={1}>
+                            <Grid item xs={1} sm={1} md={1} lg={1}>
                                 <Logout />
                             </Grid>
                         </Grid>

@@ -102,9 +102,9 @@ class RouteMaker extends Component {
     }
 
     updatePosition(item) {
-        const { markers } = this.props.event.item
+        let { markers } = this.props.event.item
 
-        let newmarkers = markers.map(
+        markers = markers.map(
             (marker) => {
                 if (marker.guid === item.guid) {
 
@@ -123,7 +123,7 @@ class RouteMaker extends Component {
         const { _id, _accountId, _eventId, coords } = this.props.event.item
 
         //this.props.actions.setRouteMarkers(event)
-        this.props.actions.setRouteMarkers({ _id, markers: newmarkers, _accountId, _eventId, coords })
+        this.props.actions.setRouteMarkers({ _id, markers, _accountId, coords })
     }
 
 

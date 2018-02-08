@@ -70,7 +70,6 @@ const styles = theme => ({
     },
     flex: {
         flex: 1
-
     },
     drawerHeader: {
         display: 'flex',
@@ -129,7 +128,6 @@ class PersistentDrawer extends React.Component {
             anchor: 'left',
         };
     }
-
 
     handleDrawerOpen = () => {
         this.setState({ open: true });

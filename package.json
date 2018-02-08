@@ -29,6 +29,7 @@
     "classnames": "^2.2.5",
     "css-loader": "^0.28.8",
     "express": "^4.16.2",
+    "firebase": "^4.9.0",
     "fs": "0.0.1-security",
     "geolib": "^2.0.24",
     "gulp": "^3.9.1",

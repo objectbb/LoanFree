@@ -60,8 +60,6 @@ class EditMarkerForm extends Component {
 
         let isEnabled = this.isEnabled()
 
-        console.log("EditMarkerForm --> render --> isEnabled", isEnabled)
-
         return (
             <form onSubmit={this.handleSubmit}>
                 <TextInput

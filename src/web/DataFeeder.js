@@ -18,7 +18,7 @@ class DataFeeder extends Component {
         console.log("DataFeeder --> componentDidMount --> participant", participant)
 
         if (Object.getOwnPropertyNames(participant.item).length === 0) return
-        this.props.actions.loadParticipants({ _eventId: participant._eventId })
+        this.props.actions.loadParticipants({ _eventId: participant.item._eventId })
 
         this.tracker();
     }

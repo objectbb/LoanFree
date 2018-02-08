@@ -88,7 +88,6 @@ class MapIt extends Component {
               this.props.participants &&
                 this.props.participants.map((item, index) => {
 
-
                 const closemarker = this.withinRangeMarkerIndicator(item)
 
                 let newmarkers = []
