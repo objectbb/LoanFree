@@ -23,6 +23,7 @@ import Tooltip from 'material-ui/Tooltip';
 
 const initialState = {
     _id: '',
+    _accountId: '',
     name: '',
     displayname: '',
     description: '',
@@ -51,7 +52,8 @@ class Event extends Component {
             startdate: '',
             city: '',
             state: '',
-            zipcode: ''
+            zipcode: '',
+            _accountId: ''
         }
 
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -64,24 +66,7 @@ class Event extends Component {
 
     componentWillReceiveProps(nextProps) {
         const { event } = nextProps;
-
-        console.log("Event --> componentWillReceiveProps --> event ", event)
-
-        this.setState(event.item._id || event.item.coords.length == 2 ? { ...event.item } : {
-            name: '',
-            displayname: '',
-            description: '',
-            markers: [],
-            teams: [],
-            coords: [],
-            address: '',
-            startdate: '',
-            city: '',
-            state: '',
-            zipcode: ''
-        });
-
-        console.log("Event --> componentWillReceiveProps --> this.state ", this.state)
+        this.setState({ ...event.item, _id: event.item._id })
     }
 
     handleSubmit(e) {
@@ -137,8 +122,6 @@ class Event extends Component {
 
         const { dispatch } = this.props;
 
-        console.log("Event --> handleGeocode --> this.state ", this.state)
-
         this.props.dispatch({
             type: 'REQUEST_GEOCODE',
             payload: { ...this.state }
@@ -161,9 +144,6 @@ class Event extends Component {
             coords
         } = this.state
 
-
-        console.log("Event --> isEnabled coords ", coords.length)
-
         return (
             (description && description.trim().length > 9) &&
             startdate &&
@@ -180,6 +160,8 @@ class Event extends Component {
     clearState() {
 
         this.setState((prevState) => ({
+            id: '',
+            _accountId: '',
             name: '',
             displayname: '',
             description: '',

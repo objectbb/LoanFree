@@ -16,11 +16,10 @@ class EventParticipants extends Component {
         this.clearSelectedParticipant = this.clearSelectedParticipant.bind(this)
     }
 
-    /*
-        shouldComponentUpdate(nextProps, nextState) {
-            return !isEqual(this.props.eventparticipants.item, nextProps.eventparticipants.item)
-        }
-    */
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.eventparticipants.item._id !== nextProps.eventparticipants.item._id
+    }
+
     handleUpdateInput(item) {
         console.log("EventParticipants --> handleUpdateInput ", item.value)
         this.props.dispatch({ type: 'EVENT_PARTICIPANT_FETCH_SUCCEEDED', payload: item.value })
@@ -29,7 +28,6 @@ class EventParticipants extends Component {
     clearSelectedParticipant() {
         const { dispatch } = this.props
         dispatch({ type: 'EVENT_PARTICIPANT_CLEAR' })
-        dispatch({ type: 'EVENT_PARTICIPANTS_CLEAR' })
     }
 
     render() {
@@ -45,8 +43,6 @@ class EventParticipants extends Component {
                 value: item
             }))
             : []
-
-        console.log("EventParticipants --> render --->  menuitems ", menuitems)
 
         return (
 

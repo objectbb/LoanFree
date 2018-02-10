@@ -14,20 +14,10 @@ import IntegrationAutosuggest from './components/IntegrationAutosuggest'
 class Events extends Component {
     constructor(props) {
         super(props)
-        this.state = { timerId: '', watchPositionId: '' }
         this.handleUpdateInput = this.handleUpdateInput.bind(this)
         this.clearSelectedEvent = this.clearSelectedEvent.bind(this)
     }
 
-    /*
-        shouldComponentUpdate(nextProps, nextState) {
-            console.log("Events --> shouldComponentUpdate --> this.props.event.item ", this.props.event.item)
-            console.log("Events --> shouldComponentUpdate --> nextProps.event.item ", nextProps.event.item)
-            console.log("Events --> shouldComponentUpdate --> isEqual", isEqual(this.props.event.item, nextProps.event.item))
-
-            return !isEqual(this.props.event.item, nextProps.event.item)
-        }
-    */
     componentDidMount() {
 
         console.log("Events --> componentWillUpdate --> ", this.props.account)
@@ -44,10 +34,10 @@ class Events extends Component {
         dispatch({ type: 'EVENT_CLEAR' })
         dispatch({ type: 'EVENT_PARTICIPANTS_CLEAR' })
 
-        if (this.state.watchPositionId)
+        if (this.state && this.state.watchPositionId)
             this.props.actions.stopWatchPosition(this.state.watchPositionId)
 
-        if (this.state.timerId)
+        if (this.state && this.state.timerId)
             this.props.actions.stopLoadParticipants(this.state.timerId)
     }
 
@@ -56,22 +46,11 @@ class Events extends Component {
 
         dispatch({ type: 'EVENT_FETCH_SUCCEEDED', payload: item.value })
         dispatch({ type: 'PARTICIPANT_FETCH_REQUESTED', payload: { _eventId: item.value._id, _accountId: account.item._id } })
-        dispatch({ type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED', payload: { _eventId: item.value._id } })
+
+        if (item.value._id)
+            dispatch({ type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED', payload: { _eventId: item.value._id } })
+
         dispatch({ type: 'SET_CURRENT_REGION', coords: [item.value.coords[0], item.value.coords[1]] })
-
-        if (this.state.timerId)
-            this.props.actions.stopLoadParticipants(this.state.timerId)
-
-        if (this.state.watchPositionId)
-            this.props.actions.stopWatchPosition(this.state.watchPositionId)
-
-        const timerId = this.props.actions.intervalLoadParticipants({ _eventId: item.value._id })
-
-        this.setState({ timerId: timerId })
-
-        const watchPositionId = this.props.actions.watchPosition(participant)
-
-        this.setState({ watchPositionId: watchPositionId })
 
     };
 

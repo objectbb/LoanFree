@@ -16,6 +16,10 @@
     bottom: 20%;
 }
 
+.profile {
+    font-size: 5px;
+}
+
 .error-list {
     background-color: #0d0d0d;
 }

@@ -26,19 +26,7 @@ class PopOverIt extends React.Component {
         transformOriginHorizontal: 'center',
         positionTop: 200, // Just so the popover can be spotted more easily
         positionLeft: 400, // Same as above
-        anchorReference: 'anchorEl',
-    };
-
-    handleChange = key => (event, value) => {
-        this.setState({
-            [key]: value,
-        });
-    };
-
-    handleNumberInputChange = key => event => {
-        this.setState({
-            [key]: parseInt(event.target.value, 10),
-        });
+        anchorReference: 'anchorEl'
     };
 
     handleClickButton = () => {

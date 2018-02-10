@@ -12,7 +12,7 @@ import style from "./styles/app.css"
 import * as actions from "../actions"
 import uuid from 'uuid'
 import Grid from 'material-ui/Grid';
-import { uniqWith } from 'lodash'
+import { uniqWith, isEqual } from 'lodash'
 
 
 class RouteMaker extends Component {
@@ -29,7 +29,6 @@ class RouteMaker extends Component {
         this.removeMarker = this.removeMarker.bind(this);
         this.setCurrentRegionAddress = this.setCurrentRegionAddress.bind(this);
         this.addParticipantMarker = this.addParticipantMarker.bind(this)
-
     }
 
     setCurrentRegionAddress(address) {
@@ -55,7 +54,6 @@ class RouteMaker extends Component {
         console.log("RouteMaker --> addMarker --> event ", event)
 
         this.props.actions.setRouteMarkers(event)
-
     }
 
     removeMarker(item) {
@@ -67,7 +65,6 @@ class RouteMaker extends Component {
 
         event.__v = undefined
         this.props.actions.setRouteMarkers(event)
-
     }
 
     addParticipantMarker(participant, newmarkers) {
@@ -83,13 +80,23 @@ class RouteMaker extends Component {
             return item.marker.name
         })
 
-        this.props.actions.updateParticipantCurrLocation({
+        console.log("RouteMaker --> addParticipantMarker ", unqMarkers)
+
+        this.props.actions.setParticipantMarkers({
             _id,
             markers: unqMarkers,
             _accountId,
             _eventId,
             coords
         })
+        /*
+                this.props.actions.updateParticipantCurrLocation({
+                    _id,
+                    markers: unqMarkers,
+                    _accountId,
+                    _eventId,
+                    coords
+                })*/
 
     }
 

@@ -33,7 +33,7 @@ class RouteMakerContainer extends Component {
 
     render() {
 
-        const { account, event, events, eventparticipant, eventparticipants } = this.props
+        const { account, event, events, eventparticipant, eventparticipants, participant } = this.props
 
 
         console.log("RouteMakerContainer --> render --> event.item._id ", event.item._id)
@@ -47,13 +47,11 @@ class RouteMakerContainer extends Component {
                             <Grid item xs={8} sm={10} md={10} lg={10}>
                                 {event.item.name &&  `${event.item.name} -- ${moment(event.item.startdate).format('llll')}`}
                             </Grid>
-                            <Grid item xs={2} sm={1} md={1} lg={1}>
+                            <Grid item xs sm={1} md={1} lg={1}>
+                                <Logout />
                                 <PopOverIt>
                                     <Profile />
                                 </PopOverIt>
-                            </Grid>
-                            <Grid item xs={1} sm={1} md={1} lg={1}>
-                                <Logout />
                             </Grid>
                         </Grid>
                         }
@@ -71,7 +69,7 @@ class RouteMakerContainer extends Component {
                          <FullWidthTabs>
                                 <Event header= "Event"/>
                                     <div header={`Participants ${eventparticipants.item.length}`}
-                                    disable={event.item._id === undefined ? true : false}>
+                                    disable={participant.item._id ? false : true}>
                                     <br />
                                     {eventparticipants.item.length > 1 &&  <EventParticipants />}
                                     <br />
@@ -87,14 +85,15 @@ class RouteMakerContainer extends Component {
 }
 
 function mapStateToProps(state) {
-    const { account, event, events, eventparticipant, eventparticipants } = state
+    const { account, event, events, eventparticipant, eventparticipants, participant } = state
 
     return {
         account,
         event,
         events,
         eventparticipant,
-        eventparticipants
+        eventparticipants,
+        participant
     }
 }
 

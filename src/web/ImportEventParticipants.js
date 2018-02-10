@@ -28,6 +28,9 @@ class ImportEventParticipants extends Component {
         this.participantCount = this.participantCount.bind(this)
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({ participants: '' })
+    }
 
     participantCount() {
         const originalForm = this.state.participants.trim()

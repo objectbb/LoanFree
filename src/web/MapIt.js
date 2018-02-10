@@ -9,6 +9,7 @@ import { Map, Marker, TileLayer, Popup, Tooltip } from 'react-leaflet'
 import { divIcon, point } from "leaflet"
 import CaptureMoments from "./CaptureMoments"
 import FullScreenDialog from "./components/FullScreenDialog"
+import isEqual from 'lodash'
 
 import "./styles/app.css"
 
@@ -24,6 +25,31 @@ class MapIt extends Component {
         this.closeIndicator = this.closeIndicator.bind(this);
         this.handleCamera = this.handleCamera.bind(this)
         this.handleClose = this.handleClose.bind(this)
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+        this.props.participants &&
+            this.props.participants.map((item, index) => {
+
+                console.log("MapIt --> componentWillReceiveProps item ", item)
+
+                const closemarker = this.withinRangeMarkerIndicator(item)
+                let newmarkers = []
+                if (item.markers.length === 0)
+                    newmarkers = closemarker
+                else
+                    newmarkers = closemarker ? closemarker.filter(
+                        (marker) =>
+                        item.markers.find((item) => {
+                            return marker.marker.guid !== item.marker.guid
+                        })
+                    ) : []
+
+                if (newmarkers && newmarkers.length > 0)
+                    this.props.addParticipantMarker(item, newmarkers)
+
+            })
     }
 
     closeIndicator(coords) {
@@ -88,8 +114,9 @@ class MapIt extends Component {
               this.props.participants &&
                 this.props.participants.map((item, index) => {
 
-                const closemarker = this.withinRangeMarkerIndicator(item)
-
+                  const isClose = this.closeIndicator(item.coords);
+/*
+ const closemarker = this.withinRangeMarkerIndicator(item)
                 let newmarkers = []
                 if( item.markers.length === 0)
                    newmarkers = closemarker
@@ -105,8 +132,9 @@ class MapIt extends Component {
 
                 if(newmarkers && newmarkers.length > 0)
                     this.props.addParticipantMarker(item,newmarkers)
+                  */
 
-                const icon = divIcon({ className: 'marker ' + (closemarker && closemarker.length === 0 ? 'bus' : 'bus mark'), html: `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})
+                const icon = divIcon({ className: 'marker ' + (!isClose ? 'bus' : 'bus mark'), html: `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})
 
                 return (
                   <Marker key={index}
@@ -116,7 +144,7 @@ class MapIt extends Component {
                        ref="marker">
                       <Popup>
                         <span>
-                        {closemarker  && closemarker.length > 0 &&
+                        {isClose &&
                           <Icon onClick={this.handleCamera}  className="tool-bar-items" color="action">camera</Icon>}
 
                         <div>

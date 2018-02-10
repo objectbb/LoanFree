@@ -25,8 +25,9 @@ function* fetchParticipant(action) {
 function* fetchAccountUpsert(action) {
     let item;
     try {
-        console.log("eventparticipants --> fetchAccountUpsert ", action.payload)
         item = yield accountApi.upsert(action)
+        yield put({ type: "EVENT_PARTICIPANT_UPSERT_ACCOUNT", payload: item });
+
     } catch (e) {
         yield put({ type: "APP_ERROR", message: e.message });
     }
@@ -46,8 +47,6 @@ function* fetchUpsert(action) {
 
 function* fetchBatchUpsert(action) {
     try {
-
-        console.log("sagas --> eventparticipants --> fetchBatchUpsert --> action ", action.payload)
 
         const { accounts, participant } = action.payload
 

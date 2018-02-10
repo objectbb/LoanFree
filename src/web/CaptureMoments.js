@@ -1,32 +1,25 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux";
+import * as actions from "../actions"
+import firebase from 'firebase'
 import Grid from 'material-ui/Grid';
 import Camera from 'react-camera';
-import Gallery from 'react-photo-gallery';
-import SelectedImage from './SelectedImage';
+import Button from "material-ui/Button"
+import Icon from 'material-ui/Icon'
 import camera from "./styles/app.css"
 
-export default class CaptureMoments extends Component {
+class CaptureMoments extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = { photos: [] }
-        this.selectPhoto = this.selectPhoto.bind(this);
-        this.toggleSelect = this.toggleSelect.bind(this);
+        this.state = { photo: '' }
 
-        this.takePicture = this.takePicture.bind(this);
+        this.takePicture = this.takePicture.bind(this)
+        this.uploadImagetoFirebase = this.uploadImagetoFirebase.bind(this)
     }
 
-    selectPhoto(event, obj) {
-        let photos = this.state.photos;
-        photos[obj.index].selected = !photos[obj.index].selected;
-        this.setState({ photos: photos });
-    }
-
-    toggleSelect() {
-        let photos = this.state.photos.map((photo, index) => { return { ...photo, selected: !this.state.selectAll } });
-        this.setState({ photos: photos, selectAll: !this.state.selectAll });
-    }
 
     takePicture() {
         this.camera.capture()
@@ -38,7 +31,7 @@ export default class CaptureMoments extends Component {
                     URL.revokeObjectURL(this.src);
 
                     this.setState((state) => {
-                        state.photos = state.photos.concat({ src: URL.createObjectURL(blob), height: 3, width: 3 });
+                        state.photo = blob
                         return state;
                     });
 
@@ -46,16 +39,18 @@ export default class CaptureMoments extends Component {
             })
     }
 
+    uploadImagetoFirebase() {
+        const { email, lastname, firstname } = this.props.participant.item.account
+
+        this.props.actions.uploadImagetoFirebase(`${email}_${lastname}_${firstname}.jpg`, this.state.photo)
+
+    }
+
     render() {
 
         return (
             <div style={style.container}>
-                <img
-                style={style.captureImage}
-                ref={(img) => {
-                this.img = img;
-                }}
-                />
+                <br />
                 <Grid container spacing={8}>
                     <Grid item xs={1} md={1} lg={1}>
                     </Grid>
@@ -76,8 +71,18 @@ export default class CaptureMoments extends Component {
                     </Grid>
                     <Grid item xs={5} md={4} lg={4}>
                         <div>
-                            <Gallery photos={this.state.photos} onClick={this.selectPhoto} ImageComponent={SelectedImage} />
+                        <img
+                            style={style.captureImage}
+                            ref={(img) => {
+                            this.img = img;
+                            }}
+                            />
+
                         </div>
+
+                      <Button disabled={!this.state.photo} onClick={this.uploadImagetoFirebase}  fab color="secondary" aria-label="save" >
+                    <Icon>save</Icon>
+                    </Button>
                     </Grid>
                 </Grid>
             </div>
@@ -106,7 +111,25 @@ const style = {
         margin: 20
     },
     captureImage: {
-        visibility: 'hidden',
-        width: '5%',
+        width: '100%',
     }
 };
+
+
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        dispatch,
+        actions: bindActionCreators(actions, dispatch)
+    }
+}
+
+function mapStateToProps(state) {
+
+    const { participant } = state
+
+    return {
+        participant
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CaptureMoments)

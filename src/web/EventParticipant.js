@@ -34,7 +34,22 @@ class EventParticipant extends Component {
         e.preventDefault()
 
         console.log("EventParticipant --> handleSubmit --> state", this.state)
-        this.props.dispatch({ type: 'EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED', payload: { ...this.state, authorization: 'PARTICIPANT' } })
+
+        const account = { ...this.state, authorization: 'PARTICIPANT' }
+
+        const newEP = { ...this.props.eventparticipant }
+        newEP.item.account = { ...account }
+
+        this.props.dispatch({
+            type: 'EVENT_PARTICIPANTS_UPSERT',
+            payload: { ...newEP }
+        })
+
+        this.props.dispatch({
+            type: 'EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED',
+            payload: account
+        })
+
     }
 
     handleChange(e) {

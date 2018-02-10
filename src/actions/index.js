@@ -1,6 +1,8 @@
 import * as config from "../config/config"
 import * as api from "../api/restful"
-import io from 'socket.io-client';
+import * as localForage from "localforage"
+import firebase from 'firebase'
+import io from 'socket.io-client'
 
 export const REQUEST_GEOCODE_FAILED = "REQUEST_GEOCODE_FAILED"
 export const REQUEST_GEOCODE_SUCCEEDED = "REQUEST_GEOCODE_SUCCEEDED"
@@ -40,6 +42,7 @@ export const PARTICIPANT_FETCH_FAILED = "PARTICIPANT_FETCH_FAILED"
 export const PARTICIPANT_UPSERT_SUCCEEDED = "PARTICIPANT_UPSERT_SUCCEEDED"
 export const PARTICIPANT_UPSERT_FAILED = "PARTICIPANT_UPSERT_FAILED"
 export const PARTICIPANT_ACCOUNT_UPSERT_REQUESTED = "PARTICIPANT_ACCOUNT_UPSERT_REQUESTED"
+export const EVENT_PARTICIPANT_UPSERT_ACCOUNT = "EVENT_PARTICIPANT_UPSERT_ACCOUNT"
 
 export const EVENT_PARTICIPANT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_UPSERT_REQUESTED"
 export const EVENT_PARTICIPANT_FETCH_REQUESTED = "EVENT_PARTICIPANT_FETCH_REQUESTED"
@@ -72,6 +75,10 @@ export const PROFILE_FETCH_REQUESTED = "PROFILE_FETCH_REQUESTED"
 export const PROFILE_UPSERT_REQUESTED = "PROFILE_UPSERT_REQUESTED"
 export const PROFILE_FETCH_SUCCEEDED = "PROFILE_FETCH_SUCCEEDED"
 export const PROFILE_UPSERT_SUCCEEDED = "PROFILE_UPSERT_SUCCEEDED"
+
+export const PHOTO_UPSERT_FAILED = "PHOTO_UPSERT_FAILED"
+export const PHOTO_UPSERT_SUCCEEDED = "PHOTO_UPSERT_SUCCEEDED"
+export const PHOTO_UPSERT_REQUESTED = "PHOTO_UPSERT_REQUESTED"
 
 export const currLocation = coords => ({
     type: CURR_LOCATION,
@@ -125,27 +132,33 @@ export const stopWatchPosition = (id) => dispatch => {
 
 export const watchPosition = (participant) => dispatch => {
 
+    console.log("index --> watchPosition --> participant ", participant)
+
     return navigator.geolocation.watchPosition(position => {
 
-        const coords = [position.coords.latitude, position.coords.longitude]
+        const newcoords = [position.coords.latitude, position.coords.longitude]
         this.setCurrLocation(coords)
 
-        console.log("index --> geolocation.watchPosition --> coords", coords)
+        console.log("index --> geolocation.watchPosition --> coords ", newcoords)
+        console.log("index --> geolocation.watchPosition --> participant ", participant)
 
         if (Object.getOwnPropertyNames(participant.item).length === 0) return
-        console.log("index --> geolocation.watchPosition --> participant.item", participant.item)
 
         const prtCoords = { ...participant.item }
-        prtCoords.coords = coords
+        prtCoords.coords = newcoords
 
         console.log("index --> geolocation.watchPosition --> prtCoords", prtCoords)
 
-        this.updateParticipantCurrLocation(prtCoords)
-    }, function error(msg) {
+        const { _id, markers, _accountId, _eventId, coords } = prtCoords
 
-        alert('Please enable your GPS position future.');
+        const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
-    }, { maximumAge: 600000000, timeout: 5000, enableHighAccuracy: true });
+        socket.on('connect', function () {
+            socket.emit('eventparticipant_upsert', { _id, markers, _accountId, _eventId, coords }, (data) =>
+                api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
+        });
+
+    }, function error(msg) {}, { maximumAge: 600000000, timeout: 5000, enableHighAccuracy: true });
 }
 
 export const stopLoadParticipants = (id) => dispatch => {
@@ -159,39 +172,12 @@ export const intervalLoadParticipants = (payload) => dispatch => {
 
     return setInterval(() => {
         dispatch(retrieveParticipants(payload));
-    }, 30 * SECOND)
-
-
-    /*
-    // repeat with the interval of 2 seconds
-let timerId = setInterval(() => alert('tick'), 2000);
-
-// after 5 seconds stop
-setTimeout(() => { clearInterval(timerId); alert('stop'); }, 5000);
-
-
-        setInterval(() => dispatch({
-            type: 'EVENT_FETCH_REQUESTED',
-            payload: { _id: payload._eventId }
-        }), 15 * 60 * SECOND)
-    */
-
-
-    /*
-        const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
-
-        socket.on('connect', function () {
-            setInterval(() => socket.emit('eventparticipants_get',
-                    payload, (data) =>
-                    api.resultHandler(data, 'EVENT_PARTICIPANTS_FETCH_')),
-                10 * SECOND
-            )
-        })
-    */
+    }, 15 * SECOND)
 
 }
 
 export const logoutUser = () => dispatch => {
+    localForage.clear()
     dispatch({ type: 'ACCOUNT_LOGOFF' })
 }
 
@@ -201,10 +187,49 @@ export const setCurrentRegionAddress = (address) => dispatch => {
 
 export const setRouteMarkers = (payload) => dispatch => {
     dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: payload });
+    dispatch({ type: 'EVENTS_UPSERT', payload: payload });
 }
 
 export const setParticipantMarkers = (payload) => dispatch => {
-    dispatch({ type: 'EVENT_PARTICIPANTS_UPSERT', payload: payload });
+    //dispatch({ type: 'EVENT_PARTICIPANTS_UPSERT', payload: payload });
+    /*
+    dispatch({
+        type: 'EVENT_PARTICIPANTS_UPSERT',
+        payload: payload
+    })
+
+
+        dispatch({
+            type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED',
+            payload: payload
+        })
+    */
+
+}
+
+
+export const uploadImagetoFirebase = (fileName, payload) => dispatch => {
+
+    const storageRef = firebase.storage().ref(fileName);
+    const task = storageRef.put(payload);
+
+    task.on('state_changed',
+        (snapshot) => {
+            dispatch({ type: 'PHOTO_UPSERT_REQUESTED', payload: snapshot.downloadURL });
+            console.log('index -->  uploadImagetoFirebase requested', snapshot.downloadURL);
+            console.log((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        },
+        (error) => {
+            dispatch({ type: 'PHOTO_UPSERT_FAILED', payload: error })
+            console.log("index --> uploadImagetoFirebase  --> error ", error)
+
+        },
+        () => {
+            dispatch({ type: 'PHOTO_UPSERT_SUCCEEDED', payload: task.snapshot.downloadURL });
+            console.log('index -->  uploadImagetoFirebase --> succeed', task.snapshot.downloadURL);
+        }
+    )
+
 }
 
 export const setCurrLocation = (coords) => dispatch => {
@@ -215,6 +240,8 @@ export const updateParticipantCurrLocation = (payload) => dispatch => {
 
     const { _id, markers, _accountId, _eventId, coords } = payload
 
+    console.log("index --> updateParticipantCurrLocation--> payload", payload)
+
     const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
     socket.on('connect', function () {
@@ -222,6 +249,12 @@ export const updateParticipantCurrLocation = (payload) => dispatch => {
             api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
     });
 
+    /*
+        dispatch({
+            type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED',
+            payload: { _id, markers, _accountId, _eventId, coords },
+        })
+    */
 }
 
 export const registerUser = (payload) => dispatch => {

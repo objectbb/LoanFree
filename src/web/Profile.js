@@ -97,7 +97,7 @@ class Profile extends Component {
         let isEnabled = this.isEnabled()
 
         return (
-            <div className="card">
+            <div className="profile">
 
               <TextInput
                 uniquename="email"
@@ -138,6 +138,7 @@ class Profile extends Component {
               />
               <br />
 
+{/*
           <Select
           native
             name="authorization"
@@ -148,6 +149,7 @@ class Profile extends Component {
             <option value="ROUTEMAKER">ROUTE MAKER</option>
             <option value="ROUTEMANAGER">ROUTE MANAGER</option>
           </Select>
+      */}
 
                   <br />
         {message &&

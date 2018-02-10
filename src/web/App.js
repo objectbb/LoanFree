@@ -9,8 +9,11 @@ import Error from "./Error"
 
 class App extends Component {
 
-    componentWillMount() {
-        const { dispatch, account, event } = this.props
+    componentWillReceiveProps(nextProps) {
+        const { dispatch, account } = nextProps
+
+        console.log("App --> componentWillReceiveProps --> props ", this.props)
+        console.log("App --> componentWillReceiveProps --> nextProps ", nextProps)
 
         if (account.authenticated) {
             dispatch({
@@ -45,8 +48,7 @@ function mapStateToProps(state) {
     console.log("App --> mapStateToProps --> account", account)
 
     return {
-        account,
-        event
+        account
     }
 }
 

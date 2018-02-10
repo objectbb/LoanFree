@@ -57,9 +57,6 @@ class FullScreenDialog extends React.Component {
               <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
-              <Button color="inherit" onClick={this.handleClose}>
-                save
-              </Button>
             </Toolbar>
           </AppBar>
             {this.props.children}
