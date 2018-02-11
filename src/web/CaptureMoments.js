@@ -40,9 +40,9 @@ class CaptureMoments extends Component {
     }
 
     uploadImagetoFirebase() {
-        const { email, lastname, firstname } = this.props.participant.item.account
 
-        this.props.actions.uploadImagetoFirebase(`${email}_${lastname}_${firstname}.jpg`, this.state.photo)
+        this.props.actions.uploadImagetoFirebase(this.props.participant,
+            this.state.photo)
 
     }
 
@@ -81,7 +81,7 @@ class CaptureMoments extends Component {
                         </div>
 
                       <Button disabled={!this.state.photo} onClick={this.uploadImagetoFirebase}  fab color="secondary" aria-label="save" >
-                    <Icon>save</Icon>
+                    <Icon>add_a_photo</Icon>
                     </Button>
                     </Grid>
                 </Grid>

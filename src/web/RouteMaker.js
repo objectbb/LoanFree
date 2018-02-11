@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux"
 import Icon from 'material-ui/Icon'
 import TextInput from "./components/TextInput"
 import Dialog from "./components/Dialog"
-
+import FullScreenDialog from "./components/FullScreenDialog"
 import AddressGeocode from './AddressGeocode'
 import MapIt from './MapIt'
 import EditMarkerForm from './EditMarkerForm'
@@ -20,14 +20,15 @@ class RouteMaker extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { isEditMarker: false, marker: {} }
+        this.state = { isEditMarker: false, marker: {}, isPhoto: false, photoGallery: [] }
 
-        this.addMarker = this.addMarker.bind(this);
-        this.openEditMarker = this.openEditMarker.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.updatePosition = this.updatePosition.bind(this);
-        this.removeMarker = this.removeMarker.bind(this);
-        this.setCurrentRegionAddress = this.setCurrentRegionAddress.bind(this);
+        this.addMarker = this.addMarker.bind(this)
+        this.viewPhotos = this.viewPhotos.bind(this)
+        this.openEditMarker = this.openEditMarker.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.updatePosition = this.updatePosition.bind(this)
+        this.removeMarker = this.removeMarker.bind(this)
+        this.setCurrentRegionAddress = this.setCurrentRegionAddress.bind(this)
         this.addParticipantMarker = this.addParticipantMarker.bind(this)
     }
 
@@ -54,6 +55,11 @@ class RouteMaker extends Component {
         console.log("RouteMaker --> addMarker --> event ", event)
 
         this.props.actions.setRouteMarkers(event)
+    }
+
+    viewPhotos(photogallery) {
+        this.setState({ isPhoto: !this.state.isPhoto })
+        this.setState({ photoGallery: [...photogallery] })
     }
 
     removeMarker(item) {
@@ -147,11 +153,19 @@ class RouteMaker extends Component {
                    draggable={true}
                    updatePosition={this.updatePosition}
                    addParticipantMarker= {this.addParticipantMarker}
+                   viewPhotos = {this.viewPhotos}
+                   photos={this.props.photo}
                 />
 
                 <Dialog open={this.state.isEditMarker} header={""}>
                     <EditMarkerForm marker={this.state.marker}  handleSubmit={this.handleSubmit}  />
                 </Dialog>
+
+                <FullScreenDialog open={this.state.isPhoto} header={""}>
+                    <div className="photogallery">
+                        {this.state.photoGallery}
+                    </div>
+              </FullScreenDialog>
 
                 {Object.getOwnPropertyNames(event.item).length > 0 &&
                 <div className="tool-bar bottom">
@@ -172,11 +186,12 @@ class RouteMaker extends Component {
 }
 
 function mapStateToProps(state) {
-    const { location, region, eventparticipants, event } = state
+    const { location, region, eventparticipants, event, photo } = state
 
     console.log("RouteMaker --> mapStateToProps --> eventparticipants", eventparticipants)
 
     return {
+        photo,
         event,
         participant: eventparticipants.item,
         region: region.coords,

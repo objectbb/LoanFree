@@ -14,6 +14,7 @@ import { participant } from "./participant"
 import { eventparticipants } from "./eventparticipants"
 import { eventparticipant } from "./eventparticipant"
 import { profile } from "./profile"
+import { photo } from "./photo"
 
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
@@ -26,6 +27,7 @@ import eventsSaga from '../sagas/events'
 import participantSaga from '../sagas/participant'
 import eventParticipantsSaga from '../sagas/eventparticipants'
 import profileSaga from '../sagas/profile'
+import photoSaga from '../sagas/photo'
 
 const sagaMiddleware = createSagaMiddleware()
 const loggerMiddleware = createLogger()
@@ -41,7 +43,8 @@ const rootReducer = combineReducers({
     error,
     event,
     events,
-    profile
+    profile,
+    photo
 })
 
 const persistConfig = {
@@ -69,6 +72,7 @@ sagaMiddleware.run(participantSaga)
 sagaMiddleware.run(eventParticipantsSaga)
 sagaMiddleware.run(eventsSaga)
 sagaMiddleware.run(profileSaga)
+sagaMiddleware.run(photoSaga)
 
 export default () => {
     let persistor = persistStore(store)

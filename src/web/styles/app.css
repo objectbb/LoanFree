@@ -8,6 +8,16 @@
     color: #FF5252;
 }
 
+.photogallery {
+    width: 30%;
+    padding: 3px;
+}
+
+.photogallery-item {
+    width: 100%;
+    border: 1px dotted gray;
+}
+
 .error {
     font-size: 10px;
     color: #FF5252;

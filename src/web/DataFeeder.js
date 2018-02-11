@@ -12,13 +12,11 @@ class DataFeeder extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-
+        const { participant, participants } = this.props
         console.log("DataFeeder --> componentDidMount --> props ", this.props)
 
-        if (!this.props.participant) return
+        if (!(participant && participants.length > 1)) return
         // if (this.props.participant.item._id === nextProps.participant.item._id) return
-
-        const { participant } = this.props
 
         let timerId;
         let watchPositionId;
@@ -32,7 +30,6 @@ class DataFeeder extends Component {
         console.log("DataFeeder --> componentDidMount --> participant ", participant)
 
         timerId = this.props.actions.intervalLoadParticipants({ _eventId: participant.item._eventId })
-
         this.setState({ timerId: timerId })
 
         watchPositionId = this.props.actions.watchPosition(participant)
@@ -48,10 +45,11 @@ class DataFeeder extends Component {
 
 function mapStateToProps(state) {
 
-    const { participant } = state
+    const { participant, eventparticipants } = state
 
     return {
-        participant
+        participant,
+        participants: eventparticipants.item,
     }
 }
 const mapDispatchToProps = (dispatch, props) => {

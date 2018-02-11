@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import classnames from "classnames"
 import { connect } from "react-redux"
+import Dialog from "./components/Dialog"
+
 import moment from 'moment'
 import geolib from "geolib"
 import Icon from 'material-ui/Icon'
@@ -18,7 +20,7 @@ class MapIt extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { isCamera: false }
+        this.state = { isCamera: false, isPhoto: false }
 
         this.updatePosition = this.updatePosition.bind(this);
         this.removeMarker = this.removeMarker.bind(this);
@@ -31,8 +33,6 @@ class MapIt extends Component {
 
         this.props.participants &&
             this.props.participants.map((item, index) => {
-
-                console.log("MapIt --> componentWillReceiveProps item ", item)
 
                 const closemarker = this.withinRangeMarkerIndicator(item)
                 let newmarkers = []
@@ -58,6 +58,22 @@ class MapIt extends Component {
             let distance = geolib.getDistance({ latitude: coords[0], longitude: coords[1] }, { latitude: marker.coords[0], longitude: marker.coords[1] })
             return distance < marker.range
         });
+    }
+
+    photoCloseIndicator(marker) {
+        return this.props.photos.item ?
+            this.props.photos.item.map((photo) => {
+                let distance = geolib.getDistance({
+                    latitude: marker.coords[0],
+                    longitude: marker.coords[1]
+                }, { latitude: photo.participant.coords[0], longitude: photo.participant.coords[1] })
+
+                if (distance < marker.range) {
+                    console.log("MapIt --> photoCloseIndicator --> photo ", photo)
+                    return photo
+                }
+            }).filter((item) => item)
+            : []
     }
 
     withinRangeMarkerIndicator(prt) {
@@ -91,6 +107,11 @@ class MapIt extends Component {
     editMarker(item, e) {
         e.preventDefault()
         this.props.editMarker(item);
+    }
+
+    viewPhotos(photogallery, e) {
+        e.preventDefault()
+        this.props.viewPhotos(photogallery)
     }
 
     handleCamera() {
@@ -188,6 +209,10 @@ class MapIt extends Component {
                 let center = "display:table-cell;vertical-align:middle;height:" + item.range + "px;width:" + item.range + "px;text-align:right;";
 
                 const icon = divIcon({ html: `<div style="${circlerange}"><span style="${center}"> <div class="routemarker rail290">${item.name}</div></span></div>`});
+
+                const inRangePhotos = this.photoCloseIndicator(item)
+                const photoGallery = inRangePhotos.map((item,idx) => <div>#{idx + 1}<img className="photogallery-item" src={item.photoURLFirebase} /></div>)
+
                 return (
                   <Marker key={index}
 
@@ -198,6 +223,13 @@ class MapIt extends Component {
                        ref="marker">
                           <Popup>
                           <span>
+
+                          {inRangePhotos.length > 0 &&
+                          <div>
+                                <button onClick={(e) => this.viewPhotos(photoGallery,e)}>
+                                    <i className="material-icons">photo_album</i>
+                                </button>
+                          </div>}
                             <div><b>{item.name}</b> range: {item.range}m</div>
                             <div>{item.coords} </div>
 
@@ -221,7 +253,9 @@ class MapIt extends Component {
               })
             }
 
+
           </Map>
+
         )
     }
 }

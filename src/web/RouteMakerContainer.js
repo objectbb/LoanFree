@@ -35,9 +35,7 @@ class RouteMakerContainer extends Component {
 
         const { account, event, events, eventparticipant, eventparticipants, participant } = this.props
 
-
         console.log("RouteMakerContainer --> render --> event.item._id ", event.item._id)
-
 
         return (
             <div>

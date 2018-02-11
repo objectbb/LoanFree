@@ -18,7 +18,7 @@ class App extends Component {
         if (account.authenticated) {
             dispatch({
                 type: 'EVENTS_FETCH_REQUESTED',
-                payload: { _accountId: account._id }
+                payload: { _accountId: account.item._id }
             })
         }
     }

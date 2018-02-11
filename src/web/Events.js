@@ -18,15 +18,17 @@ class Events extends Component {
         this.clearSelectedEvent = this.clearSelectedEvent.bind(this)
     }
 
-    componentDidMount() {
+    /*
+        componentDidMount() {
 
-        console.log("Events --> componentWillUpdate --> ", this.props.account)
+            console.log("Events --> componentWillUpdate --> ", this.props.account)
 
-        this.props.dispatch({
-            type: 'EVENTS_FETCH_REQUESTED',
-            payload: { _accountId: this.props.account._id }
-        })
-    }
+            this.props.dispatch({
+                type: 'EVENTS_FETCH_REQUESTED',
+                payload: { _accountId: this.props.account._id }
+            })
+        }
+    */
 
     clearSelectedEvent() {
         const { dispatch } = this.props
@@ -47,8 +49,11 @@ class Events extends Component {
         dispatch({ type: 'EVENT_FETCH_SUCCEEDED', payload: item.value })
         dispatch({ type: 'PARTICIPANT_FETCH_REQUESTED', payload: { _eventId: item.value._id, _accountId: account.item._id } })
 
-        if (item.value._id)
+
+        if (item.value._id) {
             dispatch({ type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED', payload: { _eventId: item.value._id } })
+            dispatch({ type: 'PHOTO_FETCH_REQUESTED', payload: { _eventId: item.value._id } })
+        }
 
         dispatch({ type: 'SET_CURRENT_REGION', coords: [item.value.coords[0], item.value.coords[1]] })
 

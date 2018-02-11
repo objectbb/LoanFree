@@ -69,16 +69,25 @@ export const EVENTS_FETCH_FAILED = "EVENTS_FETCH_FAILED"
 export const EVENTS_UPSERT = "EVENTS_UPSERT"
 export const ACCOUNT_LOGOFF = "ACCOUNT_LOGOFF"
 
-export const PROFILE_UPSERT_FAILED = "PROFILE_UPSERT_FAILED"
 export const PROFILE_FETCH_FAILED = "PROFILE_FETCH_FAILED"
 export const PROFILE_FETCH_REQUESTED = "PROFILE_FETCH_REQUESTED"
-export const PROFILE_UPSERT_REQUESTED = "PROFILE_UPSERT_REQUESTED"
 export const PROFILE_FETCH_SUCCEEDED = "PROFILE_FETCH_SUCCEEDED"
+export const PROFILE_UPSERT_REQUESTED = "PROFILE_UPSERT_REQUESTED"
+export const PROFILE_UPSERT_FAILED = "PROFILE_UPSERT_FAILED"
 export const PROFILE_UPSERT_SUCCEEDED = "PROFILE_UPSERT_SUCCEEDED"
 
 export const PHOTO_UPSERT_FAILED = "PHOTO_UPSERT_FAILED"
 export const PHOTO_UPSERT_SUCCEEDED = "PHOTO_UPSERT_SUCCEEDED"
 export const PHOTO_UPSERT_REQUESTED = "PHOTO_UPSERT_REQUESTED"
+
+export const PHOTO_FETCH_FAILED = "PHOTO_FETCH_FAILED"
+export const PHOTO_FETCH_SUCCEEDED = "PHOTO_FETCH_SUCCEEDED"
+export const PHOTO_FETCH_REQUESTED = "PHOTO_FETCH_REQUESTED"
+export const PHOTO_UPSERT = "PHOTO_UPSERT"
+
+export const PHOTO_FIREBASE_UPSERT_FAILED = "PHOTO_FIREBASE_UPSERT_FAILED"
+export const PHOTO_FIREBASE_UPSERT_SUCCEEDED = "PHOTO_FIREBASE_UPSERT_SUCCEEDED"
+export const PHOTO_FIREBASE_UPSERT_REQUESTED = "PHOTO_FIREBASE_UPSERT_REQUESTED"
 
 export const currLocation = coords => ({
     type: CURR_LOCATION,
@@ -178,6 +187,7 @@ export const intervalLoadParticipants = (payload) => dispatch => {
 
 export const logoutUser = () => dispatch => {
     localForage.clear()
+    localStorage.clear()
     dispatch({ type: 'ACCOUNT_LOGOFF' })
 }
 
@@ -208,27 +218,53 @@ export const setParticipantMarkers = (payload) => dispatch => {
 }
 
 
-export const uploadImagetoFirebase = (fileName, payload) => dispatch => {
+export const uploadImagetoFirebase = (participant, payload) => dispatch => {
 
+    const { email, lastname, firstname } = participant.item.account
+    const { name, startdate } = participant.item.event
+    const { coords } = participant.item
+
+    const fileName = `${email}_${name}_${startdate}_${coords}.jpg`
     const storageRef = firebase.storage().ref(fileName);
-    const task = storageRef.put(payload);
+
+    const metadata = {
+        email,
+        lastname,
+        firstname,
+        eventName: name,
+        startdate,
+        coords: String(coords)
+    }
+
+    const task = storageRef.put(payload, metadata);
 
     task.on('state_changed',
         (snapshot) => {
-            dispatch({ type: 'PHOTO_UPSERT_REQUESTED', payload: snapshot.downloadURL });
+            dispatch({ type: 'PHOTO_FIREBASE_UPSERT_REQUESTED', payload: snapshot.downloadURL });
             console.log('index -->  uploadImagetoFirebase requested', snapshot.downloadURL);
             console.log((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
         },
         (error) => {
-            dispatch({ type: 'PHOTO_UPSERT_FAILED', payload: error })
+            dispatch({ type: 'PHOTO_FIREBASE_UPSERT_FAILED', payload: error })
             console.log("index --> uploadImagetoFirebase  --> error ", error)
 
         },
         () => {
-            dispatch({ type: 'PHOTO_UPSERT_SUCCEEDED', payload: task.snapshot.downloadURL });
+            dispatch({ type: 'PHOTO_FIREBASE_UPSERT_SUCCEEDED', payload: task.snapshot.downloadURL });
+            dispatch({
+                type: 'PHOTO_UPSERT_REQUESTED',
+                payload: {
+                    _eventId: participant.item.event._id,
+                    _participantId: participant.item._id,
+                    photoURLFirebase: task.snapshot.downloadURL
+                }
+            });
+            dispatch({
+                type: 'PHOTO_FETCH_REQUESTED',
+                payload: { _eventId: participant.item.event._id }
+            });
             console.log('index -->  uploadImagetoFirebase --> succeed', task.snapshot.downloadURL);
-        }
-    )
+        })
 
 }
 
