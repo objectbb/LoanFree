@@ -59,13 +59,13 @@ class PopOverIt extends React.Component {
         } = this.state;
 
         return (
-            <div>
+            <span>
         <Button
+          mini
           ref={node => {
             this.button = node;
           }}
-          variant="raised"
-          className={classes.button}
+          variant="fab"
           onClick={this.handleClickButton}
         >
             <Icon>account_circle</Icon>
@@ -87,7 +87,7 @@ class PopOverIt extends React.Component {
         >
           {this.props.children}
         </Popover>
-</div>
+</span>
         );
     }
 }

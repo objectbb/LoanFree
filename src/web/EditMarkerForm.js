@@ -86,7 +86,7 @@ class EditMarkerForm extends Component {
                   margin="normal"
                 />
 
-                <Button fab mini disabled={!isEnabled} onClick={this.handleSubmit} color="primary" aria-label="save">
+                <Button variant="fab" mini disabled={!isEnabled} onClick={this.handleSubmit} color="primary" aria-label="save">
                   <Icon>save</Icon>
                 </Button>
             </form>

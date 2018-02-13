@@ -6,6 +6,7 @@ import ParticipantContainer from "./ParticipantContainer"
 import Typography from 'material-ui/Typography';
 import Login from "./Login"
 import Error from "./Error"
+import BackgroundProcess from "./BackgroundProcess"
 
 class App extends Component {
 
@@ -15,9 +16,16 @@ class App extends Component {
         console.log("App --> componentWillReceiveProps --> props ", this.props)
         console.log("App --> componentWillReceiveProps --> nextProps ", nextProps)
 
-        if (account.authenticated) {
+        if (account.authenticated && account.item.authorization === "ROUTEMAKER") {
             dispatch({
                 type: 'EVENTS_FETCH_REQUESTED',
+                payload: { _accountId: account.item._id }
+            })
+        }
+
+        if (account.authenticated && account.item.authorization === "PARTICIPANT") {
+            dispatch({
+                type: 'EVENTS_PARTICIPANT_FETCH_REQUESTED',
                 payload: { _accountId: account.item._id }
             })
         }
@@ -32,7 +40,7 @@ class App extends Component {
              {account.authenticated &&  account.item.authorization === "ROUTEMAKER"  && <RouteMakerContainer />}
             {account.authenticated &&  account.item.authorization === "PARTICIPANT"  && <ParticipantContainer />}
             <Error />
-
+            <BackgroundProcess />
             </div>
         );
     }

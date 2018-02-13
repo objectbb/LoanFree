@@ -15,6 +15,18 @@ function* setCurrentRegionAddress(action) {
     }
 }
 
+function* stopIntervals(action) {
+
+    console.log("index --> stopIntervals --> watchPositionId", action.watchPositionId)
+    if (action.watchPositionId)
+           navigator.geolocation.clearWatch(action.watchPositionId)
+
+
+    console.log("index --> stopIntervals --> timerId ",action.timerId)
+    if (action.timerId)
+            navigator.geolocation.clearInterval(action.timerId)
+}
+
 function* requestGeocode(action) {
     try {
 
@@ -36,6 +48,7 @@ function* requestGeocode(action) {
 function* rootSaga() {
     yield takeLatest('SET_START_ADDRESS', setCurrentRegionAddress);
     yield takeLatest('REQUEST_GEOCODE', requestGeocode);
+    yield takeEvery('STOP_INTERVALS', stopIntervals);
 }
 
 export default rootSaga;

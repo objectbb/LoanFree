@@ -159,13 +159,13 @@ class Profile extends Component {
         <br />
 
         <Tooltip id="tooltip-icon" title="Save">
-            <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} fab color="primary" aria-label="add">
+            <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} variant="fab" color="primary" aria-label="add">
                  {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
               </Button>
             </Tooltip>
 
         <Tooltip id="tooltip-icon" title="Clear" style={{float:'right'}}>
-              <Button onClick={this.clearState}  fab color="secondary" aria-label="edit" >
+              <Button onClick={this.clearState}  variant="fab" color="secondary" aria-label="edit" >
                 <Icon>clear</Icon>
               </Button>
         </Tooltip>

@@ -137,7 +137,7 @@ class EventParticipant extends Component {
                     {error}
                   </p>}
                   <Tooltip id="tooltip-icon" title="Save">
-                    <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} fab color="primary">
+                    <Button mini disabled={!isEnabled} onClick={item => this.handleSubmit(item)} variant="fab" color="primary">
                         {isFetching && <CircularProgress size={25} />}  <Icon>edit</Icon>
                       </Button>
                   </Tooltip>

@@ -20,7 +20,6 @@ import PopOverIt from './components/PopOverIt'
 import Logout from './Logout'
 
 import moment from 'moment'
-
 import "./styles/app.css"
 
 import * as actions from "../actions"
@@ -38,22 +37,23 @@ class RouteMakerContainer extends Component {
         console.log("RouteMakerContainer --> render --> event.item._id ", event.item._id)
 
         return (
-            <div>
-                    <Layout
-                        header={
+            <Layout
+                    header={
                         <Grid container spacing={0}>
-                            <Grid item xs={8} sm={10} md={10} lg={10}>
+                            <Grid item xs={7} sm={8} md={10} lg={10}>
                                 {event.item.name &&  `${event.item.name} -- ${moment(event.item.startdate).format('llll')}`}
                             </Grid>
-                            <Grid item xs sm={1} md={1} lg={1}>
-                                <Logout />
+                            <Grid item xs={1} sm={2} md={1} lg={1}>
                                 <PopOverIt>
                                     <Profile />
                                 </PopOverIt>
                             </Grid>
+                            <Grid item xs={1} sm={2} md={1} lg={1}>
+                                <Logout />
+                            </Grid>
                         </Grid>
                         }
-                      drawerheader={event.item.name && `${event.item.name} -- ${moment(event.item.startdate).format('llll')}`}
+
                         body={
                                 <div>
                                     <DataFeeder>
@@ -77,15 +77,15 @@ class RouteMakerContainer extends Component {
                                </FullWidthTabs>
 
                 </Layout>
-            </div>
         )
     }
 }
 
 function mapStateToProps(state) {
-    const { account, event, events, eventparticipant, eventparticipants, participant } = state
+    const { account, event, events, eventparticipant, eventparticipants, participant,interval } = state
 
     return {
+        interval,
         account,
         event,
         events,
@@ -97,6 +97,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch, props) => {
     return {
+        dispatch,
         actions: bindActionCreators(actions, dispatch)
     }
 }

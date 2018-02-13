@@ -32,11 +32,11 @@ class Logout extends Component {
         const { error, isFetching } = this.props.account
 
         return (
-            <div>
-                  <Button onClick={this.handleLogout} color="inherit">
+
+            <Button onClick={this.handleLogout} color="inherit">
                            <Icon>exit_to_app</Icon>
                   </Button>
-          </div>
+
         )
     }
 }

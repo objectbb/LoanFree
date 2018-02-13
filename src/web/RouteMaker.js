@@ -8,12 +8,15 @@ import FullScreenDialog from "./components/FullScreenDialog"
 import AddressGeocode from './AddressGeocode'
 import MapIt from './MapIt'
 import EditMarkerForm from './EditMarkerForm'
-import style from "./styles/app.css"
+
 import * as actions from "../actions"
 import uuid from 'uuid'
-import Grid from 'material-ui/Grid';
-import { uniqWith, isEqual } from 'lodash'
+import Grid from 'material-ui/Grid'
+import Button from "material-ui/Button"
+import { uniqWith, isEqual, debounce, throttle } from 'lodash'
+//import { debounce } from 'throttle-debounce'
 
+import "./styles/app.css"
 
 class RouteMaker extends Component {
 
@@ -30,6 +33,7 @@ class RouteMaker extends Component {
         this.removeMarker = this.removeMarker.bind(this)
         this.setCurrentRegionAddress = this.setCurrentRegionAddress.bind(this)
         this.addParticipantMarker = this.addParticipantMarker.bind(this)
+        this.handleClose = this.handleClose.bind(this)
     }
 
     setCurrentRegionAddress(address) {
@@ -57,8 +61,10 @@ class RouteMaker extends Component {
         this.props.actions.setRouteMarkers(event)
     }
 
-    viewPhotos(photogallery) {
-        this.setState({ isPhoto: !this.state.isPhoto })
+    viewPhotos(photogallery, e) {
+        e.preventDefault()
+
+        this.setState({ isPhoto: true })
         this.setState({ photoGallery: [...photogallery] })
     }
 
@@ -80,14 +86,15 @@ class RouteMaker extends Component {
 
         const { _id, markers, _accountId, _eventId, coords } = participant
 
-        let unqMarkers = origmarkers.concat(newmarkers)
+        const mergemarkers = origmarkers.concat(newmarkers)
 
-        unqMarkers = uniqWith(unqMarkers, function (item) {
-            return item.marker.name
+        unqMarkers = uniqWith(mergemarkers, function (item1, item2) {
+            return item1.marker.name === item2.marker.name
         })
 
-        console.log("RouteMaker --> addParticipantMarker ", unqMarkers)
+        console.log("RouteMaker --> addParticipantMarker unqMarkers", unqMarkers)
 
+        /*
         this.props.actions.setParticipantMarkers({
             _id,
             markers: unqMarkers,
@@ -95,14 +102,7 @@ class RouteMaker extends Component {
             _eventId,
             coords
         })
-        /*
-                this.props.actions.updateParticipantCurrLocation({
-                    _id,
-                    markers: unqMarkers,
-                    _accountId,
-                    _eventId,
-                    coords
-                })*/
+        */
 
     }
 
@@ -115,6 +115,10 @@ class RouteMaker extends Component {
         this.updatePosition({ ...item })
         this.setState({ isEditMarker: false })
     }
+
+    handleClose() {
+        this.setState({ isPhoto: false });
+    };
 
     updatePosition(item) {
         let { markers } = this.props.event.item
@@ -139,10 +143,10 @@ class RouteMaker extends Component {
 
     render() {
 
-            const { event } = this.props
+        const { event } = this.props
 
-            return (
-                    <div>
+        return (
+            <span>
                 <MapIt
                   routeMarkers = {event.item.markers}
                   participants={this.props.participant}
@@ -161,10 +165,8 @@ class RouteMaker extends Component {
                     <EditMarkerForm marker={this.state.marker}  handleSubmit={this.handleSubmit}  />
                 </Dialog>
 
-                <FullScreenDialog open={this.state.isPhoto} header={""}>
-                    <div className="photogallery">
-                        {this.state.photoGallery}
-                    </div>
+                <FullScreenDialog open={this.state.isPhoto} onHandleClose={this.handleClose}   header={""}>
+                        <ul className="photogallery">{this.state.photoGallery}</ul>
               </FullScreenDialog>
 
                 {Object.getOwnPropertyNames(event.item).length > 0 &&
@@ -174,15 +176,18 @@ class RouteMaker extends Component {
                          <AddressGeocode />
                     </Grid>
                     <Grid item xs>
-                        <Icon onClick={this.addMarker}  className="tool-bar-items" color="action">add_location</Icon>
+
+                        <Button mini className="tool-bar-items" onClick={this.addMarker}  variant="fab" color="primary" aria-label="add">
+                           <Icon  color="action">add_location</Icon>
+                        </Button>
                     </Grid>
 
                     </Grid>
                 </div>
             }
-            < /div>
-    )
-}
+            </span>
+        )
+    }
 }
 
 function mapStateToProps(state) {

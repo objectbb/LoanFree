@@ -70,8 +70,9 @@ class Login extends Component {
                   errorMessage="Email is invalid"
                   emptyMessage="Email is required"
                 />
+
                 <Button
-                  raised
+                  variant="raised"
                   disabled={!isEnabled}
                   fullWidth={true}
                   onClick={event => this.handleSubmit(event)}

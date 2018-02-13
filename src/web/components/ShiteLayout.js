@@ -157,7 +157,12 @@ class PersistentDrawer extends React.Component {
                 open={open}
               >
                 <div className={classes.drawerInner}>
+
                   <div className={classes.drawerHeader}>
+
+                    <Typography type="title" color="inherit">
+                        "{this.props.drawerheader}"
+                    </Typography>
                     <IconButton onClick={this.handleDrawerClose}>
                       {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>
@@ -196,8 +201,8 @@ class PersistentDrawer extends React.Component {
               </IconButton>
 
               <Typography type="title" color="inherit" className={classes.flex}>
-                {this.props.header}
-            </Typography>
+             {this.props.header}
+          </Typography>
 
             </Toolbar>
           </AppBar>

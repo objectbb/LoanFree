@@ -318,13 +318,19 @@ class Event extends Component {
                     {error}
                   </p>}
                 <Tooltip id="tooltip-icon" title="Save">
-                    <Button  disabled={!isEnabled} onClick={this.handleSubmit} fab color="primary" aria-label="save">
+                    <Button
+                    mini
+                    disabled={!isEnabled}
+                    onClick={this.handleSubmit}
+                    variant="fab"
+                    color="primary"
+                     aria-label="save">
                     {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
                     </Button>
                 </Tooltip>
 
                 <Tooltip id="tooltip-icon" title="Clear" style={{float:'right'}}>
-                    <Button onClick={this.clearState}  fab color="secondary" aria-label="edit" >
+                    <Button mini onClick={this.clearState} variant="fab" color="secondary" aria-label="edit" >
                     <Icon>clear</Icon>
                     </Button>
                 </Tooltip>

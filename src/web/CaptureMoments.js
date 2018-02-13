@@ -49,9 +49,8 @@ class CaptureMoments extends Component {
     render() {
 
         return (
-            <div style={style.container}>
-                <br />
-                <Grid container spacing={8}>
+
+            <Grid container spacing={8}>
                     <Grid item xs={1} md={1} lg={1}>
                     </Grid>
                     <Grid item xs={5} md={4} lg={4}>
@@ -80,12 +79,12 @@ class CaptureMoments extends Component {
 
                         </div>
 
-                      <Button disabled={!this.state.photo} onClick={this.uploadImagetoFirebase}  fab color="secondary" aria-label="save" >
+                      <Button disabled={!this.state.photo} onClick={this.uploadImagetoFirebase}  variant="fab" color="secondary" aria-label="save" >
                     <Icon>add_a_photo</Icon>
                     </Button>
                     </Grid>
                 </Grid>
-            </div>
+
         );
     }
 }

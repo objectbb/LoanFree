@@ -4,18 +4,29 @@
     height: 500px;
 }
 
+.toolbar {
+    height: 100px;
+}
+
 .error-input {
     color: #FF5252;
 }
 
 .photogallery {
-    width: 30%;
-    padding: 3px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
 .photogallery-item {
+    margin: 2px;
+    width: 45%;
+    float: left;
+}
+
+.photogallery-item img {
     width: 100%;
-    border: 1px dotted gray;
 }
 
 .error {
@@ -24,6 +35,14 @@
     position: absolute;
     right: 5%;
     bottom: 20%;
+}
+
+.onoff-interval{
+    font-size: 10px;
+    color: #FF5252;
+    position: absolute;
+    right: 5%;
+    top: 10%;
 }
 
 .profile {
@@ -35,7 +54,7 @@
 }
 
 .icon {
-    margin: 15px;
+    margin: 0px;
     width: 75px;
     height: 75px; //background-color: #f5f5f5;
     //border: 1px solid #ccc;
@@ -154,7 +173,21 @@
 }
 
 .participant {
-    background-color: #795548;
+    list-style: none;
+    width: 80%;
+    height: 90px;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.childWrapper {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
 .bottom {
@@ -165,6 +198,20 @@
     height: auto;
 }
 
+.top {
+    height: 10%;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: inline;
+}
+
+.top-left {
+    display: inline;
+}
+
+.top-right {}
 
 .map {
     position: absolute;
@@ -189,12 +236,8 @@
 }
 
 .tool-bar {
-    border-style: solid;
-    border-width: 1px;
-    color: #FFFFFF;
     padding: 5px;
     height: 10%;
-    background-color: #BDBDBD;
 }
 
 .tool-bar-items {

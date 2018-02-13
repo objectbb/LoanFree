@@ -1,5 +1,7 @@
 import React, { Component } from "react"
 import classnames from "classnames"
+import Typography from 'material-ui/Typography';
+
 import { connect } from "react-redux"
 import Dialog from "./components/Dialog"
 
@@ -8,10 +10,11 @@ import geolib from "geolib"
 import Icon from 'material-ui/Icon'
 
 import { Map, Marker, TileLayer, Popup, Tooltip } from 'react-leaflet'
+import Grid from 'material-ui/Grid'
 import { divIcon, point } from "leaflet"
 import CaptureMoments from "./CaptureMoments"
 import FullScreenDialog from "./components/FullScreenDialog"
-import isEqual from 'lodash'
+import { isEqual, debounce } from 'lodash'
 
 import "./styles/app.css"
 
@@ -29,9 +32,10 @@ class MapIt extends Component {
         this.handleClose = this.handleClose.bind(this)
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate() {
 
-        this.props.participants &&
+        debounce(() =>
+            this.props.participants &&
             this.props.participants.map((item, index) => {
 
                 const closemarker = this.withinRangeMarkerIndicator(item)
@@ -48,8 +52,7 @@ class MapIt extends Component {
 
                 if (newmarkers && newmarkers.length > 0)
                     this.props.addParticipantMarker(item, newmarkers)
-
-            })
+            }), 20000)()
     }
 
     closeIndicator(coords) {
@@ -69,8 +72,7 @@ class MapIt extends Component {
                 }, { latitude: photo.participant.coords[0], longitude: photo.participant.coords[1] })
 
                 if (distance < marker.range) {
-                    console.log("MapIt --> photoCloseIndicator --> photo ", photo)
-                    return photo
+                    return Object.assign({}, { range: distance }, { ...photo })
                 }
             }).filter((item) => item)
             : []
@@ -111,7 +113,8 @@ class MapIt extends Component {
 
     viewPhotos(photogallery, e) {
         e.preventDefault()
-        this.props.viewPhotos(photogallery)
+
+        this.props.viewPhotos(photogallery, e)
     }
 
     handleCamera() {
@@ -136,24 +139,7 @@ class MapIt extends Component {
                 this.props.participants.map((item, index) => {
 
                   const isClose = this.closeIndicator(item.coords);
-/*
- const closemarker = this.withinRangeMarkerIndicator(item)
-                let newmarkers = []
-                if( item.markers.length === 0)
-                   newmarkers = closemarker
-                 else
-                   newmarkers = closemarker ? closemarker.filter(
-                    (marker) =>
-                    item.markers.find((item) =>
-                    {
-                     return marker.marker.guid !== item.marker.guid
-                   }
-                     )
-                   ) : []
 
-                if(newmarkers && newmarkers.length > 0)
-                    this.props.addParticipantMarker(item,newmarkers)
-                  */
 
                 const icon = divIcon({ className: 'marker ' + (!isClose ? 'bus' : 'bus mark'), html: `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})
 
@@ -208,41 +194,66 @@ class MapIt extends Component {
                 let circlerange = "border: 1px solid #000;border-radius: 50%;height:" + item.range + "px;width:" + item.range + "px;";
                 let center = "display:table-cell;vertical-align:middle;height:" + item.range + "px;width:" + item.range + "px;text-align:right;";
 
-                const icon = divIcon({ html: `<div style="${circlerange}"><span style="${center}"> <div class="routemarker rail290">${item.name}</div></span></div>`});
-
                 const inRangePhotos = this.photoCloseIndicator(item)
-                const photoGallery = inRangePhotos.map((item,idx) => <div>#{idx + 1}<img className="photogallery-item" src={item.photoURLFirebase} /></div>)
+                const photoGallery = inRangePhotos.map((item,idx) =>
+                 <li key={idx} className="photogallery-item">
+                  <Typography type="caption" color="inherit">
+                  #{idx + 1} --
+                  {item.participant.account.email} --
+                  {item.participant.event.name} --
+                  {moment(item.participant.event.startdate).format('llll')} --
+                  range: {item.range}m --
+                  coords: {item.participant.coords}
+                 </Typography>
+                 <img src={item.photoURLFirebase} />
+                 </li>)
+
+                const icon =
+                  (inRangePhotos.length > 0) ?
+                  divIcon({html:'<div class="icon"><div class="camera3"><span></span></div>',     })
+                  :  divIcon({html:'<img src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png" id="image">',     })
 
                 return (
                   <Marker key={index}
-
                     name={item}
+                    icon={icon}
                     position={item.coords}
                     draggable={this.props.draggable}
                       onDragend={this.updatePosition}
                        ref="marker">
                           <Popup>
                           <span>
-
-                          {inRangePhotos.length > 0 &&
-                          <div>
-                                <button onClick={(e) => this.viewPhotos(photoGallery,e)}>
-                                    <i className="material-icons">photo_album</i>
-                                </button>
-                          </div>}
                             <div><b>{item.name}</b> range: {item.range}m</div>
                             <div>{item.coords} </div>
-
-                            {this.props.removeMarker  &&  this.props.updatePosition &&
                             <div>
+
+                            <Grid container spacing={40}>
+                           {this.props.removeMarker  &&  this.props.updatePosition &&
+                            <Grid item>
                                 <button onClick={(e) => this.editMarker(item,e)}>
                                     <i className="material-icons">edit_location</i>
                                 </button>
-                                <button style={{float:'right'}} onClick={(e) => this.removeMarker(item,e)}>
+                            </Grid>}
+                            <Grid item>
+
+                              {inRangePhotos.length > 0 &&
+                                <button onClick={(e) => this.viewPhotos(photoGallery,e)}>
+                                    <i className="material-icons">photo_album</i>
+                                </button>
+                              }
+                              </Grid>
+
+
+                             {this.props.removeMarker  &&  this.props.updatePosition && <Grid item>
+                                <button onClick={(e) => this.removeMarker(item,e)}>
                                     <i className="material-icons">delete</i>
                                 </button>
+                            </Grid>}
+                        </Grid>
+
                               </div>
-                              }
+
+
                           </span>
                         </Popup>
 

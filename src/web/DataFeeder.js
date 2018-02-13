@@ -8,34 +8,6 @@ class DataFeeder extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { timerId: '', watchPositionId: '' }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        const { participant, participants } = this.props
-        console.log("DataFeeder --> componentDidMount --> props ", this.props)
-
-        if (!(participant && participants.length > 1)) return
-        // if (this.props.participant.item._id === nextProps.participant.item._id) return
-
-        let timerId;
-        let watchPositionId;
-
-        if (this.state.timerId)
-            this.props.actions.stopLoadParticipants(this.state.timerId)
-
-        if (this.state.watchPositionId)
-            this.props.actions.stopWatchPosition(this.state.watchPositionId)
-
-        console.log("DataFeeder --> componentDidMount --> participant ", participant)
-
-        timerId = this.props.actions.intervalLoadParticipants({ _eventId: participant.item._eventId })
-        this.setState({ timerId: timerId })
-
-        watchPositionId = this.props.actions.watchPosition(participant)
-
-        this.setState({ watchPositionId: watchPositionId })
-
     }
 
     render() {
@@ -45,15 +17,17 @@ class DataFeeder extends Component {
 
 function mapStateToProps(state) {
 
-    const { participant, eventparticipants } = state
+    const { participant, eventparticipants, event } = state
 
     return {
         participant,
         participants: eventparticipants.item,
+        event
     }
 }
 const mapDispatchToProps = (dispatch, props) => {
     return {
+        dispatch,
         actions: bindActionCreators(actions, dispatch)
     }
 }
