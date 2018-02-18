@@ -14,7 +14,6 @@ import uuid from 'uuid'
 import Grid from 'material-ui/Grid'
 import Button from "material-ui/Button"
 import { uniqWith, isEqual, debounce, throttle } from 'lodash'
-//import { debounce } from 'throttle-debounce'
 
 import "./styles/app.css"
 
@@ -41,7 +40,7 @@ class RouteMaker extends Component {
     }
 
     addMarker() {
-        let offset = .001
+        let offset = .0006
         let length = this.props.event.item.markers.length;
 
         let lastcoords = this.props.region;
@@ -64,16 +63,18 @@ class RouteMaker extends Component {
     viewPhotos(photogallery, e) {
         e.preventDefault()
 
-        this.setState({ isPhoto: true })
-        this.setState({ photoGallery: [...photogallery] })
+        this.setState({ isPhoto: true, photoGallery: [...photogallery] })
     }
 
     removeMarker(item) {
 
-        let newmarkers = this.props.event.item.markers.filter((marker) => marker.guid !== item.guid);
+        let newmarkers = this.props.event.item.markers.
+        filter((marker) => marker.guid !== item.guid);
+
+        console.log("RouteMaker --> removeMarker newmarkers ", newmarkers)
 
         let event = { ...this.props.event.item }
-        event.markers = newmarkers;
+        event.markers = [...newmarkers];
 
         event.__v = undefined
         this.props.actions.setRouteMarkers(event)
@@ -94,7 +95,6 @@ class RouteMaker extends Component {
 
         console.log("RouteMaker --> addParticipantMarker unqMarkers", unqMarkers)
 
-        /*
         this.props.actions.setParticipantMarkers({
             _id,
             markers: unqMarkers,
@@ -102,8 +102,6 @@ class RouteMaker extends Component {
             _eventId,
             coords
         })
-        */
-
     }
 
     openEditMarker(item) {
@@ -121,12 +119,15 @@ class RouteMaker extends Component {
     };
 
     updatePosition(item) {
-        let { markers } = this.props.event.item
+        console.log("RouteMaker --> updatePosition --> match", item)
+        console.log("RouteMaker --> updatePosition --> markers", markers)
+        let { markers, _id, _accountId, _eventId, coords } = this.props.event.item
 
-        markers = markers.map(
+        const newmarkers = markers.map(
             (marker) => {
                 if (marker.guid === item.guid) {
 
+                    console.log("RouteMaker --> updatePosition --> match", marker)
                     marker = item;
                 }
 
@@ -134,10 +135,9 @@ class RouteMaker extends Component {
             }
         );
 
-        console.log("RouteMaker --> updatePosition --> event", this.props.event.item)
+        console.log("RouteMaker --> updatePosition --> markers ", markers)
 
-        const { _id, _accountId, _eventId, coords } = this.props.event.item
-        this.props.actions.setRouteMarkers({ _id, markers, _accountId, coords })
+        this.props.actions.setRouteMarkers({ _id, markers: newmarkers, _accountId, coords })
     }
 
 
@@ -148,17 +148,18 @@ class RouteMaker extends Component {
         return (
             <span>
                 <MapIt
-                  routeMarkers = {event.item.markers}
-                  participants={this.props.participant}
-                  removeMarker={this.removeMarker}
-                  editMarker={this.openEditMarker}
-                  region={this.props.region}
-                  currLocation={this.props.location}
-                   draggable={true}
-                   updatePosition={this.updatePosition}
-                   addParticipantMarker= {this.addParticipantMarker}
-                   viewPhotos = {this.viewPhotos}
-                   photos={this.props.photo}
+                    routeMarkers = {event.item.markers}
+                    participants={this.props.participants}
+                    participant={this.props.participant}
+                    removeMarker={this.removeMarker}
+                    editMarker={this.openEditMarker}
+                    region={this.props.region}
+                    currLocation={this.props.location}
+                    draggable={true}
+                    updatePosition={this.updatePosition}
+                    addParticipantMarker= {this.addParticipantMarker}
+                    viewPhotos = {this.viewPhotos}
+                    photos={this.props.photo}
                 />
 
                 <Dialog open={this.state.isEditMarker} header={""}>
@@ -166,22 +167,20 @@ class RouteMaker extends Component {
                 </Dialog>
 
                 <FullScreenDialog open={this.state.isPhoto} onHandleClose={this.handleClose}   header={""}>
-                        <ul className="photogallery">{this.state.photoGallery}</ul>
-              </FullScreenDialog>
+                    <ul className="photogallery">{this.state.photoGallery}</ul>
+                </FullScreenDialog>
 
                 {Object.getOwnPropertyNames(event.item).length > 0 &&
-                <div className="tool-bar bottom">
+                <div className="toolbar bottom">
                     <Grid container spacing={24}>
-                    <Grid item xs={9}>
-                         <AddressGeocode />
-                    </Grid>
-                    <Grid item xs>
-
-                        <Button mini className="tool-bar-items" onClick={this.addMarker}  variant="fab" color="primary" aria-label="add">
-                           <Icon  color="action">add_location</Icon>
-                        </Button>
-                    </Grid>
-
+                        <Grid item xs={9}>
+                             <AddressGeocode />
+                        </Grid>
+                        <Grid item xs>
+                            <Button mini className="tool-bar-items" onClick={this.addMarker}  variant="fab" color="primary" aria-label="add">
+                               <Icon  color="action">add_location</Icon>
+                            </Button>
+                        </Grid>
                     </Grid>
                 </div>
             }
@@ -191,14 +190,15 @@ class RouteMaker extends Component {
 }
 
 function mapStateToProps(state) {
-    const { location, region, eventparticipants, event, photo } = state
+    const { location, region, eventparticipants, event, photo, participant } = state
 
     console.log("RouteMaker --> mapStateToProps --> eventparticipants", eventparticipants)
 
     return {
+        participant,
         photo,
         event,
-        participant: eventparticipants.item,
+        participants: eventparticipants.item,
         region: region.coords,
         location
     }

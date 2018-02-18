@@ -21,7 +21,7 @@ class AddressGeocode extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log(this.state.address)
+        console.log(" handleSubmit ---> ", this.state.address)
 
         if (this.state.address && this.state.address.length > 4)
             this.props.actions.setCurrentRegionAddress(this.state.address)
@@ -46,6 +46,7 @@ class AddressGeocode extends Component {
                 onChange={this.handleChange}
                 onBlur={this.handleSubmit}
                 placeholder="Enter Start Address"
+                style={{backgroundColor: '#ffffff'}}
                 endAdornment={<InputAdornment  onClick={this.onClear} position="end">X</InputAdornment>}
           />
             </form>

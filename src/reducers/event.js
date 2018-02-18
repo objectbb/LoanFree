@@ -1,4 +1,4 @@
-import { REQUEST_GEOCODE_FAILED, REQUEST_GEOCODE_SUCCEEDED, EVENT_CLEAR, EVENT_PARTICIPANT_UPSERT_REQUESTED, EVENT_UPSERT_REQUESTED, EVENT_FETCH_REQUESTED, EVENT_FETCH_SUCCEEDED, EVENT_FETCH_FAILED, EVENT_UPSERT_SUCCEEDED, EVENT_UPSERT_FAILED } from "../actions";
+import { EVENT_CLEAR_VIEW, REQUEST_GEOCODE_FAILED, REQUEST_GEOCODE_SUCCEEDED, EVENT_CLEAR, EVENT_PARTICIPANT_UPSERT_REQUESTED, EVENT_UPSERT_REQUESTED, EVENT_FETCH_REQUESTED, EVENT_FETCH_SUCCEEDED, EVENT_FETCH_FAILED, EVENT_UPSERT_SUCCEEDED, EVENT_UPSERT_FAILED } from "../actions";
 
 export const event = (
     state = { item: {}, isFetching: false, message: "", error: "" },
@@ -29,8 +29,10 @@ export const event = (
             error: action.message,
             isFetching: false
         }
-    case EVENT_CLEAR:
+    case EVENT_CLEAR_VIEW:
         return {
+            error: "",
+            isFetching: false,
             item: {
                 name: '',
                 displayname: '',
@@ -43,9 +45,13 @@ export const event = (
                 city: '',
                 state: '',
                 zipcode: ''
-
             }
-        };
+        }
+    case EVENT_CLEAR:
+        return {
+            ...state,
+            item: {}
+        }
     default:
         return state;
     }

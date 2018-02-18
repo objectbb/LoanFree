@@ -53,14 +53,13 @@ class ParticipantTracking extends Component {
 
         console.log("RouteMaker --> addParticipantMarker --> unqMarkers", unqMarkers)
 
-        /*
         this.props.actions.setParticipantMarkers({
             _id,
             markers: unqMarkers,
             _accountId,
             _eventId,
             coords
-        })*/
+        })
     }
 
     viewPhotos(photogallery, e) {
@@ -70,7 +69,9 @@ class ParticipantTracking extends Component {
         this.setState({ photoGallery: [...photogallery] })
     }
 
-    handleClose() {}
+    handleClose() {
+        this.setState({ isPhoto: false });
+    }
     addMarker() {}
 
     removeMarker(item) {}
@@ -83,42 +84,43 @@ class ParticipantTracking extends Component {
 
     render() {
 
-            const { event } = this.props
+        const { event } = this.props
 
-            return (
-                    <div>
-                <MapIt
-                  routeMarkers = {event.item.markers}
-                  participants={this.props.participant}
-                  region={this.props.region}
-                  currLocation={this.props.location}
-                   draggable={false}
-                addParticipantMarker= {this.addParticipantMarker}
-                photos={this.props.photo}
-                viewPhotos = {this.viewPhotos}
-                />
-            <FullScreenDialog open={this.state.isPhoto} onHandleClose={this.handleClose}   header={""}>
+        return (
+            <div>
+                    <MapIt
+                        routeMarkers = {event.item.markers}
+                        participants={this.props.participants}
+                        participant={this.props.participant}
+                        region={this.props.region}
+                        currLocation={this.props.location}
+                        draggable={false}
+                        addParticipantMarker= {this.addParticipantMarker}
+                        photos={this.props.photo}
+                        viewPhotos = {this.viewPhotos}
+                    />
+                    <FullScreenDialog open={this.state.isPhoto} onHandleClose={this.handleClose}   header={""}>
                         <ul className="photogallery">{this.state.photoGallery}</ul>
-              </FullScreenDialog>
+                    </FullScreenDialog>
 
-                <div className="tool-bar bottom">
-                    <AddressGeocode geocode={this.setCurrentRegionAddress} />
+                        <div className="toolbar bottom">
+                            <AddressGeocode geocode={this.setCurrentRegionAddress} />
+                        </div>
                 </div>
-            }
-            < /div>
-    )
-}
+        )
+    }
 }
 
 function mapStateToProps(state) {
-    const { location, region, eventparticipants, event, photo } = state
+    const { participant, location, region, eventparticipants, event, photo } = state
 
     console.log("ParticipantTracking --> mapStateToProps --> eventparticipants", eventparticipants)
 
     return {
         photo,
         event,
-        participant: eventparticipants.item,
+        participants: eventparticipants.item,
+        participant: participant,
         region: region.coords,
         location: location.coords
     }

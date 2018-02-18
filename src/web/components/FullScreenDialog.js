@@ -30,7 +30,6 @@ class FullScreenDialog extends React.Component {
         open: false
     };
 
-
     componentWillReceiveProps(nextProps) {
         this.setState({
             open: nextProps.open

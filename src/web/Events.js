@@ -15,26 +15,23 @@ class Events extends Component {
         this.state = { watchPositionId: '', timerId: '', event: '' }
         this.handleUpdateInput = this.handleUpdateInput.bind(this)
         this.clearSelectedEvent = this.clearSelectedEvent.bind(this)
-        //this.stopIntervals = this.stopIntervals.bind(this)
     }
 
     clearSelectedEvent() {
-        const { dispatch } = this.props
-
-        dispatch({ type: 'EVENT_CLEAR' })
-        dispatch({ type: 'EVENT_PARTICIPANTS_CLEAR' })
-        dispatch({ type: 'EVENT_PARTICIPANT_CLEAR' })
+        this.props.actions.clearApp()
     }
 
     handleUpdateInput(event) {
 
         const { dispatch, account, participant, interval } = this.props
 
+        if (!event) {
+            this.clearSelectedEvent()
+            return
+        }
+
         const value = event.value
         console.log("Events --> handleUpdateInput ", value)
-
-        //dispatch({ type: 'STOP_INTERVALS', watchPositionId: interval.watchPositionId, timerId:interval.timerId })
-        //this.stopIntervals()
 
         if (value === 0) {
             this.clearSelectedEvent()
@@ -51,7 +48,7 @@ class Events extends Component {
         }
 
         dispatch({ type: 'SET_CURRENT_REGION', coords: [value.coords[0], value.coords[1]] })
-       // this.startIntervals()
+
     };
 
 
@@ -61,7 +58,7 @@ class Events extends Component {
 
         console.log("Events --> render --> ", events.item)
 
-        if (Object.getOwnPropertyNames(events.item).length === 0) return (<div/>)
+        //if (Object.getOwnPropertyNames(events.item).length === 0) return (<div/>)
 
         let menuitems = (account.item.authorization === "ROUTEMAKER") ? [{
             label: "[Start New Event]",
@@ -80,7 +77,7 @@ class Events extends Component {
                 <IntegrationReactSelect
                  options={menuitems}
                   value={event.item}
-                  placeholder={`${account.item.firstname}'s Events (${menuitems.length})`}
+                  placeholder={`${account.item.firstname}'s Events (${menuitems.length - ((account.item.authorization === "ROUTEMAKER") && 1)})`}
                 onChange={this.handleUpdateInput}
                  />
             </Typography>

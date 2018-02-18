@@ -8,7 +8,9 @@ import Typography from 'material-ui/Typography'
 import Icon from 'material-ui/Icon'
 import Button from "material-ui/Button"
 import Badge from "material-ui/Badge"
+import classnames from "classnames"
 import "./styles/app.css"
+import "./styles/animate.css"
 
 class BackgroundProcess extends Component {
     constructor(props) {
@@ -30,13 +32,18 @@ class BackgroundProcess extends Component {
         timerId = this.props.actions.intervalLoadParticipants({ _eventId: participant.item._eventId })
         watchPositionId = this.props.actions.watchPosition(participant)
 
-        dispatch({ type: 'UPDATE_INTERVAL_IDS', timerId: timerId, watchPositionId: watchPositionId })
+        dispatch({
+            type: 'UPDATE_INTERVAL_IDS',
+            timerId: timerId,
+            watchPositionId: watchPositionId,
+            onOff: true
+        })
 
         console.log("Events --> startIntervals --> state ", this.state)
     }
 
     stopIntervals() {
-        const { interval } = this.props
+        const { dispatch, interval } = this.props
 
         console.log("Events --> stopIntervals ---> interval ", interval)
 
@@ -44,13 +51,24 @@ class BackgroundProcess extends Component {
             this.props.actions.stopWatchPosition(interval.watchPositionId)
 
         if (interval.timerId)
-            this.props.actions.stopLoadParticipants(interval.timerId)
+            this.props.actions.stopInterval(interval.timerId)
+
+        if (interval.timerMarkersVisitedId)
+            this.props.actions.stopInterval(interval.timerMarkersVisitedId)
+
+        dispatch({
+            type: 'UPDATE_INTERVAL_IDS',
+            timerId: interval.timerId,
+            watchPositionId: interval.watchPositionId,
+            onOff: false
+        })
+
     }
 
-    toggle(){
-        this.setState({onOff: !this.state.onOff})
+    toggle() {
+        this.setState({ onOff: !this.state.onOff })
 
-        if(!this.state.onOff)
+        if (!this.state.onOff)
             this.startIntervals()
         else
             this.stopIntervals()
@@ -58,16 +76,22 @@ class BackgroundProcess extends Component {
 
     render() {
 
-       const { eventparticipants } = this.props
+        const { eventparticipants } = this.props
+
+        const bounceClass = classnames({
+            'onoff-interval': true,
+            'flash indicator-settings': !this.state.onOff
+        });
+
         return (
             eventparticipants && eventparticipants.item.length > 0 &&
-                <div className="onoff-interval">
-                    <Badge style={{ float: 'right' }}  badgeContent={eventparticipants.item.length} color="secondary">
+            <div className={bounceClass}>
+                    <Badge style={{ float: 'right'}}  badgeContent={eventparticipants.item.length} color="primary">
                         <Button
                         mini
                         onClick={this.toggle}
                         variant="fab"
-                        color="primary"
+                        color="secondary"
                          aria-label="save">
                          <Icon>{this.state.onOff ? "update" : "stop"}</Icon>
                         </Button>
@@ -80,7 +104,7 @@ class BackgroundProcess extends Component {
 
 function mapStateToProps(state) {
 
-    const {eventparticipants, participant, interval } = state
+    const { eventparticipants, participant, interval } = state
 
     return {
         eventparticipants,

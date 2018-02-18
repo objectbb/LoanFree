@@ -7,9 +7,10 @@ import { CircularProgress } from "material-ui/Progress"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 import Icon from 'material-ui/Icon'
 
-import AddIcon from 'material-ui-icons/Add';
-import DeleteIcon from 'material-ui-icons/Delete';
-import Tooltip from 'material-ui/Tooltip';
+import AddIcon from 'material-ui-icons/Add'
+import DeleteIcon from 'material-ui-icons/Delete'
+import Tooltip from 'material-ui/Tooltip'
+import "./styles/animate.css"
 import "./styles/app.css"
 
 class EventParticipant extends Component {
@@ -63,8 +64,6 @@ class EventParticipant extends Component {
             [name]: value
         })
 
-        console.log("EventParticipant --> handleChange --> state", this.state)
-
     }
 
     isEnabled() {
@@ -96,7 +95,7 @@ class EventParticipant extends Component {
         let isEnabled = this.isEnabled()
 
         return (
-            <div className="card">
+            <div className="card infinite fadeIn fadeIn-selection">
                 <br />
                 <TextInput
                   uniquename="email"

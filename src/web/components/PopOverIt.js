@@ -20,13 +20,13 @@ class PopOverIt extends React.Component {
     state = {
         open: false,
         anchorEl: null,
-        anchorOriginVertical: 'bottom',
+        anchorOriginVertical: 'center',
         anchorOriginHorizontal: 'center',
-        transformOriginVertical: 'top',
-        transformOriginHorizontal: 'center',
+        transformOriginVertical: 'bottom',
+        transformOriginHorizontal: 'bottom',
         positionTop: 200, // Just so the popover can be spotted more easily
-        positionLeft: 400, // Same as above
-        anchorReference: 'anchorEl'
+        positionLeft: 50, // Same as above
+        anchorReference: 'anchorPosition'
     };
 
     handleClickButton = () => {
@@ -60,34 +60,36 @@ class PopOverIt extends React.Component {
 
         return (
             <span>
-        <Button
-          mini
-          ref={node => {
-            this.button = node;
-          }}
-          variant="fab"
-          onClick={this.handleClickButton}
-        >
-            <Icon>account_circle</Icon>
-        </Button>
-        <Popover
-          open={open}
-          anchorEl={anchorEl}
-          anchorReference={anchorReference}
-          anchorPosition={{ top: positionTop, left: positionLeft }}
-          onClose={this.handleClose}
-          anchorOrigin={{
-            vertical: anchorOriginVertical,
-            horizontal: anchorOriginHorizontal,
-          }}
-          transformOrigin={{
-            vertical: transformOriginVertical,
-            horizontal: transformOriginHorizontal,
-          }}
-        >
-          {this.props.children}
-        </Popover>
-</span>
+              <Button
+                mini
+                ref={node => {
+                this.button = node;
+                }}
+                variant="fab"
+                disabled = {this.props.disabled}
+                onClick={this.handleClickButton}
+              >
+                {this.props.icon}
+              </Button>
+
+              <Popover
+                open={open}
+                anchorEl={anchorEl}
+                anchorReference={anchorReference}
+                anchorPosition={{ top: positionTop, left: positionLeft }}
+                onClose={this.handleClose}
+                anchorOrigin={{
+                vertical: anchorOriginVertical,
+                horizontal: anchorOriginHorizontal,
+                }}
+                transformOrigin={{
+                vertical: transformOriginVertical,
+                horizontal: transformOriginHorizontal,
+              }}
+              >
+                {this.props.children}
+              </Popover>
+          </span>
         );
     }
 }

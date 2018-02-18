@@ -5,16 +5,12 @@ import RouteMakerContainer from "./RouteMakerContainer"
 import ParticipantContainer from "./ParticipantContainer"
 import Typography from 'material-ui/Typography';
 import Login from "./Login"
-import Error from "./Error"
-import BackgroundProcess from "./BackgroundProcess"
+
 
 class App extends Component {
 
     componentWillReceiveProps(nextProps) {
         const { dispatch, account } = nextProps
-
-        console.log("App --> componentWillReceiveProps --> props ", this.props)
-        console.log("App --> componentWillReceiveProps --> nextProps ", nextProps)
 
         if (account.authenticated && account.item.authorization === "ROUTEMAKER") {
             dispatch({
@@ -39,8 +35,7 @@ class App extends Component {
             {!account.authenticated && <Login />}
              {account.authenticated &&  account.item.authorization === "ROUTEMAKER"  && <RouteMakerContainer />}
             {account.authenticated &&  account.item.authorization === "PARTICIPANT"  && <ParticipantContainer />}
-            <Error />
-            <BackgroundProcess />
+
             </div>
         );
     }

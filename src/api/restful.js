@@ -15,6 +15,7 @@ export function callget(path, payload) {
 
 export function* resultHandler(result, entityAction) {
 
+    console.log("restful --> resultHandler  result.data ", result.data)
     if (result.data.errors)
         yield put({ type: `${entityAction}FAILED`, message: JSON.stringify(result.data.errors) });
     else if (!result.data)

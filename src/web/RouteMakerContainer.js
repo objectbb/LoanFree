@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component } from "react"
 import { connect } from "react-redux"
-import { bindActionCreators } from "redux";
+import { bindActionCreators } from "redux"
 
 import RouteMaker from "./RouteMaker"
 import DataFeeder from "./DataFeeder"
@@ -8,7 +8,9 @@ import DataFeeder from "./DataFeeder"
 import Profile from "./Profile"
 import Event from "./Event"
 import EventParticipant from "./EventParticipant"
-import Grid from 'material-ui/Grid';
+import Grid from 'material-ui/Grid'
+import Typography from 'material-ui/Typography'
+import moment from 'moment'
 
 import EventsContainer from './EventsContainer'
 import EventParticipants from './EventParticipants'
@@ -18,11 +20,13 @@ import CollapsibleCard from './components/CollapsibleCard'
 import FullWidthTabs from './components/FullWidthTabs'
 import PopOverIt from './components/PopOverIt'
 import Logout from './Logout'
+import Icon from 'material-ui/Icon'
 
-import moment from 'moment'
-import "./styles/app.css"
-
+import Error from "./Error"
+import BackgroundProcess from "./BackgroundProcess"
 import * as actions from "../actions"
+
+import "./styles/app.css"
 
 class RouteMakerContainer extends Component {
 
@@ -32,49 +36,70 @@ class RouteMakerContainer extends Component {
 
     render() {
 
-        const { account, event, events, eventparticipant, eventparticipants, participant } = this.props
+        const { account, event, events, eventparticipant, eventparticipants, participant, interval } = this.props
 
         console.log("RouteMakerContainer --> render --> event.item._id ", event.item._id)
+        console.log("RouteMakerContainer --> render --> interval ", interval.onOff)
 
         return (
             <Layout
                     header={
-                        <Grid container spacing={0}>
-                            <Grid item xs={7} sm={8} md={10} lg={10}>
-                                {event.item.name &&  `${event.item.name} -- ${moment(event.item.startdate).format('llll')}`}
-                            </Grid>
-                            <Grid item xs={1} sm={2} md={1} lg={1}>
-                                <PopOverIt>
+                            <span>
+                            <ul className="topbar-list">
+                                <li style={{width: '50px'}}>
+                                    <PopOverIt disabled={interval.onOff} icon={<Icon>more_vert</Icon>}>
+
+                                        {events.item.length > 0 && <EventsContainer />}
+                                        <FullWidthTabs>
+                                            <Event header= "Event"/>
+                                            <div header={`Participants ${eventparticipants.item.length}`}
+                                            disable={participant.item._id ? false : true}>
+                                            <br />
+                                            {eventparticipants.item.length > 1 &&  <EventParticipants />}
+                                            <br />
+                                            <EventParticipant />
+                                            <ImportEventParticipants />
+                                            </div>
+                                        </FullWidthTabs>
+                                    </PopOverIt>
+                                </li>
+                                <li style={{width: '50px'}}>
+                                    <BackgroundProcess />
+                                </li>
+                                <li style={{width: '20px'}}>&nbsp;</li>
+                                <li style={{width: '50%'}}>
+
+                                        <div className="toolbar-background">
+                                         <Typography type="title" >
+                                            {event.item.name &&  `${event.item.name} -- ${moment(event.item.startdate).format('llll')}`}
+                                          </Typography>
+                                        </div>
+
+                                </li>
+                             </ul>
+
+                                <div className="top-right">
+                                    <Logout />
+                                </div>
+                        </span>
+
+                        }
+                    >
+                    <div id='profile'>
+                        <div className="toolbar bottom-right  toolbar-background">
+                            <div className="toolbar-item">
+                                <PopOverIt icon={<Icon>account_circle</Icon>}>
                                     <Profile />
                                 </PopOverIt>
-                            </Grid>
-                            <Grid item xs={1} sm={2} md={1} lg={1}>
-                                <Logout />
-                            </Grid>
-                        </Grid>
-                        }
-
-                        body={
-                                <div>
-                                    <DataFeeder>
-                                        <RouteMaker />
-                                    </DataFeeder>
-                                </div>
-                            }
-                    >
-
-                    {events.item.length > 0 && <EventsContainer />}
-                         <FullWidthTabs>
-                                <Event header= "Event"/>
-                                    <div header={`Participants ${eventparticipants.item.length}`}
-                                    disable={participant.item._id ? false : true}>
-                                    <br />
-                                    {eventparticipants.item.length > 1 &&  <EventParticipants />}
-                                    <br />
-                                    <EventParticipant />
-                                   <ImportEventParticipants />
-                                    </div>
-                               </FullWidthTabs>
+                            </div>
+                            <div className="toolbar-item">
+                                <Error />
+                            </div>
+                        </div>
+                        <DataFeeder>
+                            <RouteMaker />
+                        </DataFeeder>
+                    </div>
 
                 </Layout>
         )
@@ -82,7 +107,7 @@ class RouteMakerContainer extends Component {
 }
 
 function mapStateToProps(state) {
-    const { account, event, events, eventparticipant, eventparticipants, participant,interval } = state
+    const { account, event, events, eventparticipant, eventparticipants, participant, interval } = state
 
     return {
         interval,

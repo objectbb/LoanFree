@@ -1,4 +1,4 @@
-import {PARTICIPANT_ACCOUNT_UPSERT_REQUESTED,PARTICIPANT_UPSERT_REQUESTED, PARTICIPANT_FETCH_REQUESTED, PARTICIPANT_FETCH_SUCCEEDED, PARTICIPANT_FETCH_FAILED, PARTICIPANT_UPSERT_SUCCEEDED, PARTICIPANT_UPSERT_FAILED } from "../actions";
+import { PARTICIPANT_CLEAR, PARTICIPANT_ACCOUNT_UPSERT_REQUESTED, PARTICIPANT_UPSERT_REQUESTED, PARTICIPANT_FETCH_REQUESTED, PARTICIPANT_FETCH_SUCCEEDED, PARTICIPANT_FETCH_FAILED, PARTICIPANT_UPSERT_SUCCEEDED, PARTICIPANT_UPSERT_FAILED } from "../actions";
 
 export const participant = (
     state = { item: {}, isFetching: false, message: "", error: "" },
@@ -11,7 +11,8 @@ export const participant = (
         return {
             ...state,
             payload: action.payload,
-            isFetching: true
+            isFetching: true,
+            error: ""
         };
     case PARTICIPANT_FETCH_SUCCEEDED:
     case PARTICIPANT_UPSERT_SUCCEEDED:
@@ -19,7 +20,8 @@ export const participant = (
             ...state,
             item: action.payload,
             authenticated: true,
-            isFetching: false
+            isFetching: false,
+            error: ""
         };
     case PARTICIPANT_UPSERT_FAILED:
     case PARTICIPANT_FETCH_FAILED:
@@ -27,6 +29,13 @@ export const participant = (
             ...state,
             error: action.message,
             isFetching: false
+        }
+    case PARTICIPANT_CLEAR:
+        return {
+            ...state,
+            item: {},
+            isFetching: false,
+            error: ""
         }
     default:
         return state;

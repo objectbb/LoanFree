@@ -41,6 +41,8 @@ export const eventparticipant = (
         return {
             ...state,
             item: {},
+            isFetching: false,
+            error: ""
         }
     default:
         return state;

@@ -21,7 +21,8 @@ import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import * as localForage from "localforage";
 
-import rootSaga from '../sagas'
+import intervalSaga from '../sagas/interval'
+import locationSaga from '../sagas/location'
 import accountSaga from '../sagas/account'
 import eventSaga from '../sagas/event'
 import eventsSaga from '../sagas/events'
@@ -49,6 +50,7 @@ const rootReducer = combineReducers({
     interval
 })
 
+/*
 const persistConfig = {
     key: 'root3',
     storage: localForage
@@ -66,8 +68,21 @@ let store = createStore(
         )
     )
 )
+*/
+let store = createStore(
+    rootReducer,
+    compose(
+        applyMiddleware(
+            sagaMiddleware,
+            thunkMiddleware,
+            loggerMiddleware
+        )
+    )
+)
 
-sagaMiddleware.run(rootSaga)
+
+sagaMiddleware.run(locationSaga)
+sagaMiddleware.run(intervalSaga)
 sagaMiddleware.run(accountSaga)
 sagaMiddleware.run(eventSaga)
 sagaMiddleware.run(participantSaga)
@@ -76,7 +91,10 @@ sagaMiddleware.run(eventsSaga)
 sagaMiddleware.run(profileSaga)
 sagaMiddleware.run(photoSaga)
 
+/*
 export default () => {
     let persistor = persistStore(store)
     return { store, persistor }
-}
+}*/
+
+export default store

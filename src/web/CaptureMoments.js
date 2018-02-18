@@ -49,7 +49,8 @@ class CaptureMoments extends Component {
     render() {
 
         return (
-
+                <div>
+                <br />
             <Grid container spacing={8}>
                     <Grid item xs={1} md={1} lg={1}>
                     </Grid>
@@ -60,13 +61,11 @@ class CaptureMoments extends Component {
                         this.camera = cam;
                         }}
                         >
-                            <div style={style.captureContainer} onClick={this.takePicture}>
-                                <div className="icon">
-                                    <div className="camera3"><span></span></div>
-                                </div>
-                            </div>
-                        </Camera>
 
+                        </Camera>
+                            <Button mini onClick={this.takePicture}  variant="fab" color="primary" aria-label="camera" >
+                            <Icon>camera</Icon>
+                            </Button>
                     </Grid>
                     <Grid item xs={5} md={4} lg={4}>
                         <div>
@@ -79,12 +78,12 @@ class CaptureMoments extends Component {
 
                         </div>
 
-                      <Button disabled={!this.state.photo} onClick={this.uploadImagetoFirebase}  variant="fab" color="secondary" aria-label="save" >
+                      <Button mini disabled={!this.state.photo} onClick={this.uploadImagetoFirebase}  variant="fab" color="secondary" aria-label="save" >
                     <Icon>add_a_photo</Icon>
                     </Button>
                     </Grid>
                 </Grid>
-
+                </div>
         );
     }
 }

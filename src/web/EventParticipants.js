@@ -23,7 +23,14 @@ class EventParticipants extends Component {
     }
 
     handleUpdateInput(item) {
-        console.log("EventParticipants --> handleUpdateInput ", item.value)
+            const { dispatch } = this.props
+        console.log("EventParticipants --> handleUpdateInput ", item)
+
+        if(!item){
+         dispatch({ type: 'EVENT_PARTICIPANT_CLEAR' })
+         return
+        }
+
         this.setState({ event: item.label })
         this.props.dispatch({ type: 'EVENT_PARTICIPANT_FETCH_SUCCEEDED', payload: item.value })
     };

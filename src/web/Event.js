@@ -222,8 +222,6 @@ class Event extends Component {
                 errorMessage="Name is invalid"
                 emptyMessage="Name is required"
               />
-              <br />
-
 
               <TextInput
                 uniquename="displayname"
@@ -235,7 +233,6 @@ class Event extends Component {
                 errorMessage="Display Name is invalid"
                 emptyMessage="Display Name  is required"
               />
-              <br />
              <TextField
                  name="startdate"
                 label="Start Date"
@@ -259,7 +256,6 @@ class Event extends Component {
                 errorMessage="Description is invalid"
                 emptyMessage="Description is required"
               />
-              <br />
                  <TextInput
                 uniquename="address"
                 text="Address"
@@ -272,9 +268,7 @@ class Event extends Component {
                 errorMessage="Address is invalid"
                 emptyMessage="Address is required"
               />
-              <br />
               {<div className="coords">{coords}</div>}
-              <br />
                  <TextInput
                 uniquename="city"
                 text="City"
@@ -287,7 +281,6 @@ class Event extends Component {
                 errorMessage="City is invalid"
                 emptyMessage="City is required"
               />
-              <br />
 
           <Select
           native
@@ -299,8 +292,6 @@ class Event extends Component {
           >
             {states}
           </Select>
-
-                  <br />
 
             <TextInput
                 uniquename="zipcode"
@@ -317,7 +308,7 @@ class Event extends Component {
                   <p style={{ color: "red" }}>
                     {error}
                   </p>}
-                <Tooltip id="tooltip-icon" title="Save">
+
                     <Button
                     mini
                     disabled={!isEnabled}
@@ -327,15 +318,12 @@ class Event extends Component {
                      aria-label="save">
                     {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
                     </Button>
-                </Tooltip>
 
-                <Tooltip id="tooltip-icon" title="Clear" style={{float:'right'}}>
-                    <Button mini onClick={this.clearState} variant="fab" color="secondary" aria-label="edit" >
+                    <Button style={{float:'right'}} mini onClick={this.clearState} variant="fab" color="secondary" aria-label="edit" >
                     <Icon>clear</Icon>
                     </Button>
-                </Tooltip>
-
-      </div>
+                <br/> <br/> <br/>
+            </div>
         )
     }
 }

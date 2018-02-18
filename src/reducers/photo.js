@@ -31,7 +31,8 @@ export const photo = (
                 }
                 return item
             }) : [...state.item, action.payload],
-            isFetching: false
+            isFetching: false,
+            error: ""
         };
     case PHOTO_UPSERT_FAILED:
     case PHOTO_FETCH_FAILED:

@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { PropTypes } from "prop-types"
 import Button from "material-ui/Button"
@@ -6,6 +7,7 @@ import TextInput from "./components/TextInput"
 import { CircularProgress } from "material-ui/Progress"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 import "./styles/app.css"
+import * as actions from "../actions"
 
 class Login extends Component {
     constructor(props) {
@@ -23,8 +25,14 @@ class Login extends Component {
 
     handleSubmit(e) {
         e.preventDefault()
+
+        this.props.actions.logoutUser()
+
         const username = this.state.username
-        this.props.dispatch({ type: 'ACCOUNT_AUTHENTICATE_REQUESTED', payload: { 'email': username } })
+        this.props.dispatch({
+            type: 'ACCOUNT_AUTHENTICATE_REQUESTED',
+            payload: { 'email': username }
+        })
     }
 
     handleChange(e) {
@@ -95,5 +103,12 @@ function mapStateToProps(state) {
         account
     }
 }
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        dispatch,
+        actions: bindActionCreators(actions, dispatch)
+    }
+}
 
-export default connect(mapStateToProps)(Login)
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

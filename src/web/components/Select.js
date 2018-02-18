@@ -219,15 +219,13 @@ class IntegrationReactSelect extends React.Component {
         });
     };
 
-
-
     render() {
         const { classes } = this.props;
         const { single, multi } = this.state;
         const options = this.props.options
 
         return (
-            <div className={classes.root}>
+            <span className={classes.root}>
         <Input
           fullWidth
           inputComponent={SelectWrapped}
@@ -244,7 +242,7 @@ class IntegrationReactSelect extends React.Component {
           }}
         />
 
-      </div>
+      </span>
         );
     }
 }

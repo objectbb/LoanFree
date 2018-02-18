@@ -7,13 +7,18 @@ import Events from './Events'
 class EventsContainer extends Component {
     constructor(props) {
         super(props)
+        this.state = { account: this.props.account }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({ account: nextProps.account })
     }
 
     render() {
-
+        console.log("EventsContainer --> render --> ", this.props)
         return (
             <div>
-               {this.props.account && <Events account={this.props.account.item} />}
+               {this.state.account && <Events account={this.state.account.item} />}
             </div>
         )
     }
@@ -21,11 +26,11 @@ class EventsContainer extends Component {
 
 function mapStateToProps(state) {
 
-    const { account, event } = state
+    const { account, events } = state
 
     return {
         account,
-        event
+        events
     }
 }
 

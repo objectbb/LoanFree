@@ -10,7 +10,8 @@ export const events = (
             ...state,
             payload: action.payload,
             error: action.message,
-            isFetching: true
+            isFetching: true,
+            error: ""
         }
     case EVENTS_UPSERT:
         return {
@@ -20,12 +21,14 @@ export const events = (
                 }
                 return item
             }) : [...state.item, action.payload],
-            isFetching: false
+            isFetching: false,
+            error: ""
         };
     case EVENTS_FETCH_SUCCEEDED:
         return {
             item: action.payload,
-            isFetching: false
+            isFetching: false,
+            error: ""
         };
     case EVENTS_FETCH_FAILED:
         return {

@@ -26,6 +26,8 @@ export const ACCOUNT_UPSERT_SUCCEEDED = "ACCOUNT_UPSERT_SUCCEEDED"
 export const ACCOUNT_AUTHENTICATE_FAILED = "ACCOUNT_AUTHENTICATE_FAILED"
 export const ACCOUNT_UPSERT_FAILED = "ACCOUNT_UPSERT_FAILED"
 export const ACCOUNT_FETCH_FAILED = "ACCOUNT_FETCH_FAILED"
+export const ACCOUNT_LOGOFF = "ACCOUNT_LOGOFF"
+export const ACCOUNT_CLEAR = "ACCOUNT_CLEAR"
 
 export const EVENT_UPSERT_REQUESTED = "EVENT_UPSERT_REQUESTED"
 export const EVENT_FETCH_REQUESTED = "EVENT_FETCH_REQUESTED"
@@ -34,7 +36,10 @@ export const EVENT_FETCH_FAILED = "EVENT_FETCH_FAILED"
 export const EVENT_UPSERT_SUCCEEDED = "EVENT_UPSERT_SUCCEEDED"
 export const EVENT_UPSERT_FAILED = "EVENT_UPSERT_FAILED"
 export const EVENT_CLEAR = "EVENT_CLEAR"
+export const EVENT_CLEAR_VIEW = "EVENT_CLEAR_VIEW"
 
+
+export const PARTICIPANT_CLEAR = "PARTICIPANT_CLEAR"
 export const PARTICIPANT_UPSERT_REQUESTED = "PARTICIPANT_UPSERT_REQUESTED"
 export const PARTICIPANT_FETCH_REQUESTED = "PARTICIPANT_FETCH_REQUESTED"
 export const PARTICIPANT_FETCH_SUCCEEDED = "PARTICIPANT_FETCH_SUCCEEDED"
@@ -42,8 +47,8 @@ export const PARTICIPANT_FETCH_FAILED = "PARTICIPANT_FETCH_FAILED"
 export const PARTICIPANT_UPSERT_SUCCEEDED = "PARTICIPANT_UPSERT_SUCCEEDED"
 export const PARTICIPANT_UPSERT_FAILED = "PARTICIPANT_UPSERT_FAILED"
 export const PARTICIPANT_ACCOUNT_UPSERT_REQUESTED = "PARTICIPANT_ACCOUNT_UPSERT_REQUESTED"
-export const EVENT_PARTICIPANT_UPSERT_ACCOUNT = "EVENT_PARTICIPANT_UPSERT_ACCOUNT"
 
+export const EVENT_PARTICIPANT_UPSERT_ACCOUNT = "EVENT_PARTICIPANT_UPSERT_ACCOUNT"
 export const EVENT_PARTICIPANT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_UPSERT_REQUESTED"
 export const EVENT_PARTICIPANT_FETCH_REQUESTED = "EVENT_PARTICIPANT_FETCH_REQUESTED"
 export const EVENT_PARTICIPANT_FETCH_SUCCEEDED = "EVENT_PARTICIPANT_FETCH_SUCCEEDED"
@@ -52,6 +57,7 @@ export const EVENT_PARTICIPANT_UPSERT_SUCCEEDED = "EVENT_PARTICIPANT_UPSERT_SUCC
 export const EVENT_PARTICIPANT_UPSERT_FAILED = "EVENT_PARTICIPANT_UPSERT_FAILED"
 export const EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED"
 export const EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED"
+
 
 export const EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED = "EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED"
 export const EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED = "EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED"
@@ -69,7 +75,6 @@ export const EVENTS_FETCH_REQUESTED = "EVENTS_FETCH_REQUESTED"
 export const EVENTS_FETCH_SUCCEEDED = "EVENTS_FETCH_SUCCEEDED"
 export const EVENTS_FETCH_FAILED = "EVENTS_FETCH_FAILED"
 export const EVENTS_UPSERT = "EVENTS_UPSERT"
-export const ACCOUNT_LOGOFF = "ACCOUNT_LOGOFF"
 
 export const PROFILE_FETCH_FAILED = "PROFILE_FETCH_FAILED"
 export const PROFILE_FETCH_REQUESTED = "PROFILE_FETCH_REQUESTED"
@@ -175,8 +180,10 @@ export const watchPosition = (participant) => dispatch => {
     }, function error(msg) {}, { maximumAge: 600000000, timeout: 5000, enableHighAccuracy: true });
 }
 
-export const stopLoadParticipants = (id) => dispatch => {
-    clearInterval(id);
+export const stopInterval = (id) => dispatch => {
+    console.log("index clearInterval -->", id)
+    clearInterval(id)
+    id = undefined
 }
 
 export const intervalLoadParticipants = (payload) => dispatch => {
@@ -190,10 +197,15 @@ export const intervalLoadParticipants = (payload) => dispatch => {
             type: 'PHOTO_FETCH_REQUESTED',
             payload: payload
         });
-    }, 15 * SECOND)
+    }, 10 * SECOND)
 }
 
 export const logoutUser = () => dispatch => {
+
+    this.clearApp()
+
+    dispatch({ type: 'ACCOUNT_LOGOFF' })
+
     localForage.clear()
 
     if (typeof (Storage) !== "undefined") {
@@ -201,8 +213,6 @@ export const logoutUser = () => dispatch => {
         localStorage.clear()
         sessionStorage.clear()
     }
-
-    dispatch({ type: 'ACCOUNT_LOGOFF' })
 }
 
 export const setCurrentRegionAddress = (address) => dispatch => {
@@ -210,17 +220,18 @@ export const setCurrentRegionAddress = (address) => dispatch => {
 }
 
 export const setRouteMarkers = (payload) => dispatch => {
-    dispatch({ type: 'EVENTS_FETCH_SUCCEEDED', payload: payload });
     dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: payload });
+    // dispatch({ type: 'EVENT_FETCH_SUCCEEDED', payload: payload })
 }
 
 export const setParticipantMarkers = (payload) => dispatch => {
 
-    dispatch({
-        type: 'EVENT_PARTICIPANTS_UPSERT',
-        payload: payload
-    })
-
+    /*
+        dispatch({
+            type: 'EVENT_PARTICIPANTS_UPSERT',
+            payload: payload
+        })
+    */
     dispatch({
         type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED',
         payload: payload
@@ -281,6 +292,13 @@ export const uploadImagetoFirebase = (participant, payload) => dispatch => {
 
 export const setCurrLocation = (coords) => dispatch => {
     dispatch(currLocation(coords))
+}
+
+export const clearApp = () => dispatch => {
+    dispatch({ type: EVENT_CLEAR })
+    dispatch({ type: EVENT_PARTICIPANTS_CLEAR })
+    dispatch({ type: EVENT_PARTICIPANT_CLEAR })
+    dispatch({ type: PARTICIPANT_CLEAR })
 }
 
 export const updateParticipantCurrLocation = (payload) => dispatch => {

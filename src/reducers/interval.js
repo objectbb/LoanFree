@@ -3,7 +3,9 @@ import { STOP_INTERVALS, UPDATE_INTERVAL_IDS } from "../actions";
 export const interval = (
     state = {
         timerId: '',
-        watchPositionId: ''
+        watchPositionId: '',
+        timerMarkersVisitedId:'',
+        onOff: false
     },
     action
 ) => {
@@ -13,8 +15,15 @@ export const interval = (
         return {
             ...state,
             timerId: action.timerId,
-            watchPositionId: action.watchPositionId
+            watchPositionId: action.watchPositionId,
+            onOff: action.onOff
         }
+        case 'UPDATE_INTERVAL_ADDMARKER_ID':
+        return {
+            ...state,
+            timerMarkersVisitedId: action.timerMarkersVisitedId
+        }
+
     default:
         return state;
     }

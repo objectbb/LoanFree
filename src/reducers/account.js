@@ -1,4 +1,4 @@
-import { ACCOUNT_LOGOFF, ACCOUNT_AUTHENTICATE_REQUESTED, ACCOUNT_UPSERT_REQUESTED, ACCOUNT_FETCH_REQUESTED, ACCOUNT_AUTHENTICATE_FAILED, ACCOUNT_AUTHENTICATE_SUCCEEDED, ACCOUNT_FETCH_SUCCEEDED, ACCOUNT_FETCH_FAILED, ACCOUNT_UPSERT_SUCCEEDED, ACCOUNT_UPSERT_FAILED } from "../actions";
+import { ACCOUNT_CLEAR, ACCOUNT_LOGOFF, ACCOUNT_AUTHENTICATE_REQUESTED, ACCOUNT_UPSERT_REQUESTED, ACCOUNT_FETCH_REQUESTED, ACCOUNT_AUTHENTICATE_FAILED, ACCOUNT_AUTHENTICATE_SUCCEEDED, ACCOUNT_FETCH_SUCCEEDED, ACCOUNT_FETCH_FAILED, ACCOUNT_UPSERT_SUCCEEDED, ACCOUNT_UPSERT_FAILED } from "../actions";
 
 export const account = (
     state = { item: {}, authenticated: false, isFetching: false, error: "" },
@@ -40,6 +40,11 @@ export const account = (
             ...state,
             error: action.message,
             isFetching: false
+        };
+    case ACCOUNT_CLEAR:
+        return {
+            ...state,
+            item: {}
         };
     default:
         return state;

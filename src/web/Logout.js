@@ -34,8 +34,8 @@ class Logout extends Component {
         return (
 
             <Button onClick={this.handleLogout} color="inherit">
-                           <Icon>exit_to_app</Icon>
-                  </Button>
+                <Icon className="logout" >exit_to_app</Icon>
+            </Button>
 
         )
     }

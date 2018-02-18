@@ -7,10 +7,11 @@ import { PersistGate } from 'redux-persist/lib/integration/react'
 import injectTapEventPlugin from "react-tap-event-plugin"
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 
-import configureStore from "../reducers/combine"
+import store from "../reducers/combine"
 import App from './App';
 
-let { store, persistor } = configureStore()
+//let { store, persistor } = configureStore()
+//let { store } = configureStore()
 
 let rootElement = document.getElementById("root")
 
@@ -42,9 +43,12 @@ render(
     <Provider store={store}>
 
         <MuiThemeProvider theme={theme}>
+               <App />
+        {/*
           <PersistGate loading={null} persistor={persistor}>
             <App />
           </PersistGate>
+          */}
         </MuiThemeProvider>
     </Provider>,
     rootElement

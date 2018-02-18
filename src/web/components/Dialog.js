@@ -48,22 +48,25 @@ class SimpleModal extends React.Component {
 
         return (
             <div>
-        <Modal
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-          open={this.props.open}
-          onClose={this.handleClose}
-        >
-          <div style={getModalStyle()} className={classes.paper}>
-            <Typography type="title" id="modal-title">
-            </Typography>
-            <Typography type="subheading" id="simple-modal-description">
-              {this.props.children}
-            </Typography>
-            <Dialog open={this.state.open} />
-          </div>
-        </Modal>
-      </div>
+                <Modal
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                    open={this.props.open}
+                    onClose={this.handleClose}
+                >
+                    <div style={getModalStyle()} className={classes.paper}>
+                        {this.props.title &&
+                            <Typography type="title" id="modal-title">
+                            {this.props.title }
+                            </Typography>
+                        }
+                        <Typography type="subheading" id="simple-modal-description">
+                            {this.props.children}
+                        </Typography>
+                        <Dialog open={this.state.open} />
+                    </div>
+                </Modal>
+            </div>
         );
     }
 }

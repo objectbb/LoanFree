@@ -5,15 +5,9 @@ import Button from "material-ui/Button"
 import Badge from 'material-ui/Badge';
 import { flash } from 'react-animations'
 import { StyleSheet, css } from 'aphrodite';
+import PopOverIt from './components/PopOverIt'
 
 import "./styles/app.css"
-
-const styles = StyleSheet.create({
-    bounce: {
-        animationName: flash,
-        animationDuration: '30s'
-    }
-})
 
 class Error extends Component {
 
@@ -36,17 +30,27 @@ class Error extends Component {
 
         const errorList = error.history.
         filter((item) => item).
-        map((item, idx) => <div className="error-list" key={idx}>{item.error} {item.timeStamp}</div>)
+        map((item, idx) => <div className="error-list-item" key={idx}>{item.error} {item.timeStamp}</div>)
 
-        return (<div className="error">
-         {this.state.isOpen && errorList}
-                {errorList.length > 0 &&
-                <Badge style={{ float: 'right' }}  badgeContent={errorList.length} color="primary">
-                    <Icon style={{ fontSize: 40 }} onClick={this.openErrors}>error</Icon>
-                    </Badge>
-                }
+        return (
+            <div>
 
-        </div>);
+                         <div className="error">
+                            {errorList.length > 0 &&
+                            <PopOverIt icon={
+                                    <Badge style={{ float: 'right' }}  badgeContent={errorList.length} color="primary">
+                                            <Icon style={{ fontSize: 40 }} >error</Icon>
+                                            </Badge>
+
+                            }>
+                                <div className="error-list error">
+                                    {errorList}
+                                 </div>
+                            </PopOverIt>
+                        }
+                        </div>
+                    </div>
+        );
     }
 }
 
