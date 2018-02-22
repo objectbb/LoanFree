@@ -5,7 +5,7 @@ import Button from "material-ui/Button"
 import Icon from 'material-ui/Icon'
 import TextField from 'material-ui/TextField'
 import TextInput from "./components/TextInput"
-import style from "./styles/app.css"
+import "./styles/app.css"
 
 
 class EditMarkerForm extends Component {
@@ -17,6 +17,7 @@ class EditMarkerForm extends Component {
 
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleCancel = this.handleCancel.bind(this)
         this.isEnabled = this.isEnabled.bind(this)
     }
 
@@ -37,6 +38,10 @@ class EditMarkerForm extends Component {
         this.props.handleSubmit(this.state)
     }
 
+    handleCancel(e) {
+        e.preventDefault()
+        this.props.handleCancel()
+    }
 
     isEnabled() {
 
@@ -71,6 +76,7 @@ class EditMarkerForm extends Component {
                     required={true}
                     errorMessage="Name is invalid"
                     emptyMessage="Name is required"
+                    minMessage="Minimum characters"
                   />
 
                   <TextField
@@ -85,9 +91,13 @@ class EditMarkerForm extends Component {
                   }}
                   margin="normal"
                 />
+                <br />
+                <Button variant="fab" mini color="primary" disabled={!isEnabled} onClick={this.handleSubmit} >
+                  <div className='action-button'>SAVE</div>
+                </Button>
 
-                <Button variant="fab" mini disabled={!isEnabled} onClick={this.handleSubmit} color="primary" aria-label="save">
-                  <Icon>save</Icon>
+                <Button style={{float:'right'}} variant="fab" mini color="secondary" onClick={this.handleCancel} >
+                  <div className='action-button'>CANCEL</div>
                 </Button>
             </form>
         )

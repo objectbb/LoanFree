@@ -26,39 +26,39 @@ class Error extends Component {
     }
 
     render() {
-        const { error } = this.props
+        const { activity } = this.props
 
-        const errorList = error.history.
-        filter((item) => item).
-        map((item, idx) => <div className="error-list-item" key={idx}>{item.error} {item.timeStamp}</div>)
+        if(! activity) return(<div />)
+
+        const errorList = activity.history.
+        filter((item) => item.failed).
+        map((item, idx) => <div className="error-list-item" key={idx}>{item.failed.message} {item.timeStamp}</div>)
 
         return (
             <div>
-
-                         <div className="error">
-                            {errorList.length > 0 &&
-                            <PopOverIt icon={
-                                    <Badge style={{ float: 'right' }}  badgeContent={errorList.length} color="primary">
-                                            <Icon style={{ fontSize: 40 }} >error</Icon>
-                                            </Badge>
-
-                            }>
-                                <div className="error-list error">
-                                    {errorList}
-                                 </div>
-                            </PopOverIt>
-                        }
-                        </div>
-                    </div>
+                 <div className="error">
+                    {errorList.length > 0 &&
+                    <PopOverIt icon={
+                        <Badge style={{ float: 'right' }}  badgeContent={errorList.length} color="primary">
+                            <Icon style={{ fontSize: 40 }} >error</Icon>
+                        </Badge>
+                    }>
+                        <div className="error-list error">
+                            {errorList}
+                         </div>
+                    </PopOverIt>
+                }
+                </div>
+            </div>
         );
     }
 }
 
 function mapStateToProps(state) {
-    const { error } = state
+    const { activity } = state
 
     return {
-        error
+        activity
     }
 }
 

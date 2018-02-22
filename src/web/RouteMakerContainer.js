@@ -3,11 +3,11 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 
 import RouteMaker from "./RouteMaker"
-import DataFeeder from "./DataFeeder"
-
-import Profile from "./Profile"
 import Event from "./Event"
+import Error from "./Error"
+import BackgroundProcess from "./BackgroundProcess"
 import EventParticipant from "./EventParticipant"
+
 import Grid from 'material-ui/Grid'
 import Typography from 'material-ui/Typography'
 import moment from 'moment'
@@ -21,9 +21,9 @@ import FullWidthTabs from './components/FullWidthTabs'
 import PopOverIt from './components/PopOverIt'
 import Logout from './Logout'
 import Icon from 'material-ui/Icon'
+import Badge from "material-ui/Badge"
 
-import Error from "./Error"
-import BackgroundProcess from "./BackgroundProcess"
+
 import * as actions from "../actions"
 
 import "./styles/app.css"
@@ -36,7 +36,16 @@ class RouteMakerContainer extends Component {
 
     render() {
 
-        const { account, event, events, eventparticipant, eventparticipants, participant, interval } = this.props
+        const {
+            account,
+            event,
+            events,
+            eventparticipant,
+            eventparticipants,
+            participant,
+            interval,
+            activity
+        } = this.props
 
         console.log("RouteMakerContainer --> render --> event.item._id ", event.item._id)
         console.log("RouteMakerContainer --> render --> interval ", interval.onOff)
@@ -47,20 +56,24 @@ class RouteMakerContainer extends Component {
                             <span>
                             <ul className="topbar-list">
                                 <li style={{width: '50px'}}>
-                                    <PopOverIt disabled={interval.onOff} icon={<Icon>more_vert</Icon>}>
-
-                                        {events.item.length > 0 && <EventsContainer />}
-                                        <FullWidthTabs>
-                                            <Event header= "Event"/>
-                                            <div header={`Participants ${eventparticipants.item.length}`}
-                                            disable={participant.item._id ? false : true}>
-                                            <br />
-                                            {eventparticipants.item.length > 1 &&  <EventParticipants />}
-                                            <br />
-                                            <EventParticipant />
-                                            <ImportEventParticipants />
-                                            </div>
-                                        </FullWidthTabs>
+                                    <PopOverIt anchorReference='anchorPosition' disabled={interval.onOff}
+                                     icon={
+                                        <Badge style={{ float: 'right'}}  badgeContent={events && events.item.length} color="primary">
+                                            <div className='action-button marker-tooltip'>EVENTS</div>
+                                        </Badge>
+                                    }>
+                                            {events.item.length > 0 && <EventsContainer />}
+                                            <FullWidthTabs>
+                                                <Event header= "Event"/>
+                                                <div header={`Participants ${eventparticipants.item.length}`}
+                                                disable={participant.item._id ? false : true}>
+                                                <br />
+                                                {eventparticipants.item.length > 1 &&  <EventParticipants />}
+                                                <br />
+                                                <EventParticipant />
+                                                <ImportEventParticipants />
+                                                </div>
+                                            </FullWidthTabs>
                                     </PopOverIt>
                                 </li>
                                 <li style={{width: '50px'}}>
@@ -85,20 +98,12 @@ class RouteMakerContainer extends Component {
 
                         }
                     >
+
                     <div id='profile'>
-                        <div className="toolbar bottom-right  toolbar-background">
-                            <div className="toolbar-item">
-                                <PopOverIt icon={<Icon>account_circle</Icon>}>
-                                    <Profile />
-                                </PopOverIt>
-                            </div>
-                            <div className="toolbar-item">
-                                <Error />
-                            </div>
+                        <div className="toolbar bottom-right">
+                            <Error />
                         </div>
-                        <DataFeeder>
-                            <RouteMaker />
-                        </DataFeeder>
+                        <RouteMaker />
                     </div>
 
                 </Layout>
@@ -107,7 +112,16 @@ class RouteMakerContainer extends Component {
 }
 
 function mapStateToProps(state) {
-    const { account, event, events, eventparticipant, eventparticipants, participant, interval } = state
+    const {
+        account,
+        event,
+        events,
+        eventparticipant,
+        eventparticipants,
+        participant,
+        interval,
+        activity
+    } = state
 
     return {
         interval,
@@ -116,7 +130,8 @@ function mapStateToProps(state) {
         events,
         eventparticipant,
         eventparticipants,
-        participant
+        participant,
+        activity
     }
 }
 

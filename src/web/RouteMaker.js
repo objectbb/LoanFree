@@ -2,18 +2,26 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import Icon from 'material-ui/Icon'
+import Badge from "material-ui/Badge"
 import TextInput from "./components/TextInput"
 import Dialog from "./components/Dialog"
 import FullScreenDialog from "./components/FullScreenDialog"
 import AddressGeocode from './AddressGeocode'
 import MapIt from './MapIt'
+
 import EditMarkerForm from './EditMarkerForm'
+
+import Profile from "./Profile"
+import RefreshProcess from "./RefreshProcess"
+import Error from "./Error"
+
+import PopOverIt from './components/PopOverIt'
 
 import * as actions from "../actions"
 import uuid from 'uuid'
 import Grid from 'material-ui/Grid'
 import Button from "material-ui/Button"
-import { uniqWith, isEqual, debounce, throttle } from 'lodash'
+import { uniqWith, isEqual, debounce, throttle, remove } from 'lodash'
 
 import "./styles/app.css"
 
@@ -25,6 +33,7 @@ class RouteMaker extends Component {
         this.state = { isEditMarker: false, marker: {}, isPhoto: false, photoGallery: [] }
 
         this.addMarker = this.addMarker.bind(this)
+        this.updateMarker = this.updateMarker.bind(this)
         this.viewPhotos = this.viewPhotos.bind(this)
         this.openEditMarker = this.openEditMarker.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -33,6 +42,7 @@ class RouteMaker extends Component {
         this.setCurrentRegionAddress = this.setCurrentRegionAddress.bind(this)
         this.addParticipantMarker = this.addParticipantMarker.bind(this)
         this.handleClose = this.handleClose.bind(this)
+        this.handleCancel = this.handleCancel.bind(this)
     }
 
     setCurrentRegionAddress(address) {
@@ -68,7 +78,8 @@ class RouteMaker extends Component {
 
     removeMarker(item) {
 
-        let newmarkers = this.props.event.item.markers.
+        let newmarkers = this.props.event
+            .item.markers.
         filter((marker) => marker.guid !== item.guid);
 
         console.log("RouteMaker --> removeMarker newmarkers ", newmarkers)
@@ -78,6 +89,7 @@ class RouteMaker extends Component {
 
         event.__v = undefined
         this.props.actions.setRouteMarkers(event)
+        this.props.actions.refreshEvent(this.props.participant)
     }
 
     addParticipantMarker(participant, newmarkers) {
@@ -110,7 +122,11 @@ class RouteMaker extends Component {
 
     handleSubmit(item) {
 
-        this.updatePosition({ ...item })
+        this.updateMarker({ ...item })
+        this.setState({ isEditMarker: false })
+    }
+
+    handleCancel() {
         this.setState({ isEditMarker: false })
     }
 
@@ -118,16 +134,13 @@ class RouteMaker extends Component {
         this.setState({ isPhoto: false });
     };
 
-    updatePosition(item) {
-        console.log("RouteMaker --> updatePosition --> match", item)
-        console.log("RouteMaker --> updatePosition --> markers", markers)
+    updateMarker(item) {
+
         let { markers, _id, _accountId, _eventId, coords } = this.props.event.item
 
         const newmarkers = markers.map(
             (marker) => {
                 if (marker.guid === item.guid) {
-
-                    console.log("RouteMaker --> updatePosition --> match", marker)
                     marker = item;
                 }
 
@@ -135,7 +148,23 @@ class RouteMaker extends Component {
             }
         );
 
-        console.log("RouteMaker --> updatePosition --> markers ", markers)
+        this.props.actions.setRouteMarkers({ _id, markers: newmarkers, _accountId, coords })
+    }
+
+
+    updatePosition(item) {
+
+        let { markers, _id, _accountId, _eventId, coords } = this.props.event.item
+
+        const newmarkers = markers.map(
+            (marker) => {
+                if (marker.guid === item.guid) {
+                    marker.coords = item.coords;
+                }
+
+                return marker;
+            }
+        );
 
         this.props.actions.setRouteMarkers({ _id, markers: newmarkers, _accountId, coords })
     }
@@ -147,6 +176,7 @@ class RouteMaker extends Component {
 
         return (
             <span>
+
                 <MapIt
                     routeMarkers = {event.item.markers}
                     participants={this.props.participants}
@@ -163,7 +193,7 @@ class RouteMaker extends Component {
                 />
 
                 <Dialog open={this.state.isEditMarker} header={""}>
-                    <EditMarkerForm marker={this.state.marker}  handleSubmit={this.handleSubmit}  />
+                    <EditMarkerForm marker={this.state.marker}  handleSubmit={this.handleSubmit} handleCancel={this.handleCancel} />
                 </Dialog>
 
                 <FullScreenDialog open={this.state.isPhoto} onHandleClose={this.handleClose}   header={""}>
@@ -171,17 +201,32 @@ class RouteMaker extends Component {
                 </FullScreenDialog>
 
                 {Object.getOwnPropertyNames(event.item).length > 0 &&
-                <div className="toolbar bottom">
-                    <Grid container spacing={24}>
-                        <Grid item xs={9}>
+                <div className="toolbar bottom toolbar-background">
+                    <ul className="topbar-list">
+                        <li style={{width: '50%'}}>
                              <AddressGeocode />
-                        </Grid>
-                        <Grid item xs>
-                            <Button mini className="tool-bar-items" onClick={this.addMarker}  variant="fab" color="primary" aria-label="add">
-                               <Icon  color="action">add_location</Icon>
-                            </Button>
-                        </Grid>
-                    </Grid>
+                        </li>
+                        <li style={{width: '10px'}}>&nbsp;</li>
+
+                        {event.item._id &&
+                            <li style={{width: '50px'}}>
+                                <Badge style={{ float: 'right'}}  badgeContent={event && event.item.markers.length} color="primary">
+                                    <Button mini onClick={this.addMarker}  variant="fab" color="secondary" aria-label="add">
+                                       <div className='action-button'>+ MRKR</div>
+                                    </Button>
+                                </Badge>
+                            </li>
+                        }
+                         <li style={{width: '10px'}}>&nbsp;</li>
+                        <li style={{width: '50px'}}>
+                           <RefreshProcess />
+                        </li>
+                        <li style={{width: '50px'}}>
+                           <PopOverIt anchorReference='anchorEl' icon={<Icon>account_circle</Icon>}>
+                                <Profile />
+                            </PopOverIt>
+                        </li>
+                    </ul>
                 </div>
             }
             </span>

@@ -6,6 +6,8 @@ import Button from "material-ui/Button"
 import TextInput from "./components/TextInput"
 import { CircularProgress } from "material-ui/Progress"
 import { Card, CardHeader, CardText } from "material-ui/Card"
+import BlockUi from 'react-block-ui'
+import 'react-block-ui/style.css'
 import "./styles/app.css"
 import * as actions from "../actions"
 
@@ -50,7 +52,8 @@ class Login extends Component {
         const { username } = this.state
         return (
             username &&
-            username.trim().length > 5
+            username.trim().length > 5 &&
+            !this.validateEmail(username)
         )
     }
 
@@ -62,6 +65,7 @@ class Login extends Component {
 
     render() {
         const { error, isFetching } = this.props.account
+        const { activity } = this.props
 
         let isEnabled = this.isEnabled()
 
@@ -71,17 +75,18 @@ class Login extends Component {
                   uniquename="username"
                   text="Email Address"
                   required={true}
-                  minCharacters={6}
+                  minCharacters={5}
                   validate={this.validateEmail}
                   onChange={this.handleChange}
                   content={this.state.username}
                   errorMessage="Email is invalid"
                   emptyMessage="Email is required"
+                  minMessage="Minimum characters"
                 />
 
                 <Button
                   variant="raised"
-                  disabled={!isEnabled}
+                  disabled={(!isEnabled || isFetching) ? true : false}
                   fullWidth={true}
                   onClick={event => this.handleSubmit(event)}
                 >
@@ -91,16 +96,17 @@ class Login extends Component {
                   <p style={{ color: "red" }}>
                     {(error === "No data") && "Email not found...Please register or contact your local administrator."}
                   </p> }
-          </div>
+            </div>
         )
     }
 }
 
 function mapStateToProps(state) {
-    const { account } = state
+    const { account, activity } = state
 
     return {
-        account
+        account,
+        activity
     }
 }
 const mapDispatchToProps = (dispatch, props) => {

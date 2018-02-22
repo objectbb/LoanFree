@@ -66,18 +66,22 @@ function* fetchBatchUpsert(action) {
 
 function* fetchEventParticipantUpsert(action) {
 
-    const { event, newParticipant } = action.payload
+    try {
+        const { event, newParticipant } = action.payload
 
-    const evt = yield eventApi.upsert({ payload: event })
-    yield api.resultHandler(evt, 'EVENT_UPSERT_')
+        const evt = yield eventApi.upsert({ payload: event })
+        yield api.resultHandler(evt, 'EVENT_UPSERT_')
 
-    yield put({ type: "EVENTS_UPSERT", payload: evt.data });
+        yield put({ type: "EVENTS_UPSERT", payload: evt.data });
 
-    newParticipant._eventId = evt.data._id;
+        newParticipant._eventId = evt.data._id;
 
-    const prt = yield participantApi.upsert({ payload: { ...newParticipant } })
-    yield api.resultHandler(prt, 'PARTICIPANT_UPSERT_')
+        const prt = yield participantApi.upsert({ payload: { ...newParticipant } })
+        yield api.resultHandler(prt, 'PARTICIPANT_UPSERT_')
 
+    } catch (err) {
+        yield put({ type: "EVENT_UPSERT_FAILED", message: err.message });
+    }
 }
 
 function* eventParticipantsSaga() {

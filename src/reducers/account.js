@@ -24,9 +24,7 @@ export const account = (
             authenticated: true,
             isFetching: false,
             error: ""
-        };
-    case ACCOUNT_LOGOFF:
-        return { ...state, authenticated: false };
+        }
     case ACCOUNT_AUTHENTICATE_FAILED:
         return {
             ...state,
@@ -40,11 +38,14 @@ export const account = (
             ...state,
             error: action.message,
             isFetching: false
-        };
+        }
+    case ACCOUNT_LOGOFF:
     case ACCOUNT_CLEAR:
         return {
             ...state,
-            item: {}
+            item: {},
+            authenticated: false,
+            error: ""
         };
     default:
         return state;

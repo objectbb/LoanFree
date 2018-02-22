@@ -17,12 +17,13 @@ class TextInput extends Component {
 
         this.handleChange = this.handleChange.bind(this)
         this.handleBlur = this.handleBlur.bind(this)
+        this.handleClear = this.handleClear.bind(this)
         this.validation = this.validation.bind(this)
     }
 
     handleChange(event) {
         //validate the field locally
-        this.validation(event.target.value)
+
 
         //Call onChange method on the parent component for updating it's state
         //If saving this field for final form submission, it gets passed
@@ -33,9 +34,22 @@ class TextInput extends Component {
     }
 
     handleBlur(event) {
+
+        this.validation(event.target.value)
+
         if (this.props.onBlur) {
             this.props.onBlur(event)
         }
+    }
+
+    handleClear() {
+        this.setState({
+            value: '',
+            isEmpty: true,
+            valid: true,
+            errorMessage: '',
+            errorVisible: false
+        })
     }
 
     validation(value, valid) {
@@ -61,10 +75,10 @@ class TextInput extends Component {
             message = this.props.emptyMessage
             valid = false
             errorVisible = true
-        } else if (value.length < this.props.minCharacters) {
+        } else if (this.props.minCharacters && value.length < this.props.minCharacters) {
             //This happens when the text entered is not the required length,
             //in which case we show the regular error message
-            message = this.props.errorMessage
+            message = `${this.props.minMessage} ${this.props.minCharacters}`
             valid = false
             errorVisible = true
         }
@@ -94,42 +108,25 @@ class TextInput extends Component {
         return (
             <div className={this.props.uniqueName}>
 
-{/*}
-          <input
-            name= {this.props.uniqueName}
-            placeholder={this.props.text}
-            className={'form-input input input-' + this.props.uniqueName}
-            onChange={this.handleChange}
-            onBlur={this.handleBlur}
-            value={this.props.content} />
+                <TextField
+                    name={this.props.uniquename}
+                    value={this.props.content}
+                    onChange={this.handleChange}
+                    onBlur={this.handleBlur}
+                    onFocus={this.handleClear}
+                    label={this.props.text}
+                    placeholder={this.props.text}
+                    fullWidth={true}
+                    rows={this.props.rows}
+                    errormessage={this.props.errorMessage}
+                    emptymessage={this.props.emptyMessage}
+                    minmessage={this.props.minMessage}
+                />
+                <InputError
+                    visible={this.state.errorVisible}
+                    errorMessage={this.state.errorMessage} />
 
-          <InputError
-            visible={this.state.errorVisible}
-            errorMessage={this.state.errorMessage} />
-
-          hintText={this.props.text}
-          floatingLabelText={this.props.floatingLabelText}
-          floatingLabelFixed={true}
-          errorText={this.state.errorMessage}
-          multiLine={this.props.multiLine}
-
-          */}
-
-        <TextField
-          name={this.props.uniquename}
-          value={this.props.content}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur}
-          label={this.props.text}
-          placeholder={this.props.text}
-          fullWidth={true}
-          rows={this.props.rows}
-        />
-        <InputError
-            visible={this.state.errorVisible}
-            errorMessage={this.state.errorMessage} />
-
-      </div>
+            </div>
         )
     }
 }
@@ -144,6 +141,7 @@ TextInput.propTypes = {
     onBlur: PropTypes.func,
     errorMessage: PropTypes.string,
     emptyMessage: PropTypes.string,
+    minMessage: PropTypes.string,
     multiLine: PropTypes.bool,
     rows: PropTypes.number,
     floatingLabelText: PropTypes.string,

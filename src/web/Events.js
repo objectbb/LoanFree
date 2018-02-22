@@ -31,7 +31,6 @@ class Events extends Component {
         }
 
         const value = event.value
-        console.log("Events --> handleUpdateInput ", value)
 
         if (value === 0) {
             this.clearSelectedEvent()

@@ -1,0 +1,87 @@
+import {
+    APP_ERROR,
+    PROFILE_FETCH_REQUESTED, PROFILE_UPSERT_REQUESTED, PARTICIPANT_FETCH_REQUESTED, PARTICIPANT_UPSERT_REQUESTED, EVENTS_FETCH_REQUESTED, EVENT_PARTICIPANTS_FETCH_REQUESTED, EVENT_PARTICIPANT_FETCH_REQUESTED, EVENT_PARTICIPANT_UPSERT_REQUESTED, ACCOUNT_AUTHENTICATE_REQUESTED, ACCOUNT_FETCH_REQUESTED, ACCOUNT_UPSERT_REQUESTED, EVENT_FETCH_REQUESTED, EVENT_UPSERT_REQUESTED,
+    PROFILE_FETCH_FAILED, PROFILE_UPSERT_FAILED, PARTICIPANT_FETCH_FAILED, PARTICIPANT_UPSERT_FAILED, EVENTS_FETCH_FAILED, EVENT_PARTICIPANTS_FETCH_FAILED, EVENT_PARTICIPANT_FETCH_FAILED, EVENT_PARTICIPANT_UPSERT_FAILED, ACCOUNT_AUTHENTICATE_FAILED, ACCOUNT_FETCH_FAILED, ACCOUNT_UPSERT_FAILED, EVENT_FETCH_FAILED, EVENT_UPSERT_FAILED,
+    PROFILE_FETCH_SUCCEEDED, PROFILE_UPSERT_SUCCEEDED, PARTICIPANT_FETCH_SUCCEEDED, PARTICIPANT_UPSERT_SUCCEEDED, EVENTS_FETCH_SUCCEEDED, EVENT_PARTICIPANTS_FETCH_SUCCEEDED, EVENT_PARTICIPANT_FETCH_SUCCEEDED, EVENT_PARTICIPANT_UPSERT_SUCCEEDED, ACCOUNT_AUTHENTICATE_SUCCEEDED, ACCOUNT_FETCH_SUCCEEDED, ACCOUNT_UPSERT_SUCCEEDED, EVENT_FETCH_SUCCEEDED, EVENT_UPSERT_SUCCEEDED
+} from "../actions"
+
+import moment from 'moment'
+
+export const activity = (
+    state = {
+        succeeded: undefined,
+        requested: undefined,
+        failed: undefined,
+        activity: undefined,
+        blockui: false,
+        history: []
+    },
+    action
+) => {
+    switch (action.type) {
+    case PROFILE_UPSERT_SUCCEEDED:
+    case PROFILE_FETCH_SUCCEEDED:
+    case PARTICIPANT_UPSERT_SUCCEEDED:
+    case PARTICIPANT_FETCH_SUCCEEDED:
+    case EVENTS_FETCH_SUCCEEDED:
+    case EVENT_PARTICIPANTS_FETCH_SUCCEEDED:
+    case EVENT_PARTICIPANT_UPSERT_SUCCEEDED:
+    case EVENT_PARTICIPANT_FETCH_SUCCEEDED:
+    case ACCOUNT_AUTHENTICATE_SUCCEEDED:
+    case ACCOUNT_UPSERT_SUCCEEDED:
+    case ACCOUNT_FETCH_SUCCEEDED:
+    case EVENT_UPSERT_SUCCEEDED:
+    case EVENT_FETCH_SUCCEEDED:
+        return {
+            ...state,
+            blockui: false,
+            succeeded: action,
+            history: [...state.history, { succeeded: action, timeStamp: moment().format('llll') }],
+            timeStamp: moment().format('llll')
+        }
+
+    case PROFILE_UPSERT_REQUESTED:
+    case PROFILE_FETCH_REQUESTED:
+    case PARTICIPANT_UPSERT_REQUESTED:
+    case PARTICIPANT_FETCH_REQUESTED:
+    case EVENTS_FETCH_REQUESTED:
+    case EVENT_PARTICIPANTS_FETCH_REQUESTED:
+    case EVENT_PARTICIPANT_UPSERT_REQUESTED:
+    case EVENT_PARTICIPANT_FETCH_REQUESTED:
+    case ACCOUNT_AUTHENTICATE_REQUESTED:
+    case ACCOUNT_UPSERT_REQUESTED:
+    case ACCOUNT_FETCH_REQUESTED:
+    case EVENT_UPSERT_REQUESTED:
+    case EVENT_FETCH_REQUESTED:
+        return {
+            ...state,
+            blockui: true,
+            requested: action,
+            history: [...state.history, { requested: action, timeStamp: moment().format('llll') }],
+            timeStamp: moment().format('llll')
+        }
+    case PROFILE_UPSERT_FAILED:
+    case PROFILE_FETCH_FAILED:
+    case PARTICIPANT_UPSERT_FAILED:
+    case PARTICIPANT_FETCH_FAILED:
+    case EVENTS_FETCH_FAILED:
+    case EVENT_PARTICIPANTS_FETCH_FAILED:
+    case EVENT_PARTICIPANT_UPSERT_FAILED:
+    case EVENT_PARTICIPANT_FETCH_FAILED:
+    case ACCOUNT_AUTHENTICATE_FAILED:
+    case ACCOUNT_UPSERT_FAILED:
+    case ACCOUNT_FETCH_FAILED:
+    case EVENT_UPSERT_FAILED:
+    case EVENT_FETCH_FAILED:
+    case APP_ERROR:
+        return {
+            ...state,
+            blockui: false,
+            failed: action,
+            history: [...state.history, { failed: action, timeStamp: moment().format('llll') }],
+            timeStamp: moment().format('llll')
+        }
+    default:
+        return state;
+    }
+};

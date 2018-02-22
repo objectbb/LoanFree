@@ -23,12 +23,12 @@ class EventParticipants extends Component {
     }
 
     handleUpdateInput(item) {
-            const { dispatch } = this.props
+        const { dispatch } = this.props
         console.log("EventParticipants --> handleUpdateInput ", item)
 
-        if(!item){
-         dispatch({ type: 'EVENT_PARTICIPANT_CLEAR' })
-         return
+        if (!item) {
+            dispatch({ type: 'EVENT_PARTICIPANT_CLEAR' })
+            return
         }
 
         this.setState({ event: item.label })

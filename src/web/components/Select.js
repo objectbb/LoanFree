@@ -31,7 +31,7 @@ class Option extends React.Component {
         component="div"
         style={{
           fontWeight: isSelected ? 500 : 400,
-          fontSize: '10px',
+          fontSize: '12px',
           whiteSpace: '-moz-pre-wrap', /* Firefox */
             whiteSpace: '-o-pre-wrap', /* Opera */
             whiteSpace: 'pre-wrap', /* Chrome */
@@ -131,7 +131,7 @@ const styles = theme => ({
             display: 'inline-flex !important',
             padding: 0,
             height: 'auto',
-            fontSize: '10px'
+            fontSize: '12px'
         },
         '.Select-input input': {
             background: 'transparent',

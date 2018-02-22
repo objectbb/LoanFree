@@ -33,7 +33,7 @@ export const participant = (
     case PARTICIPANT_CLEAR:
         return {
             ...state,
-            item: {},
+            item: {id: undefined},
             isFetching: false,
             error: ""
         }

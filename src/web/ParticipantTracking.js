@@ -88,25 +88,25 @@ class ParticipantTracking extends Component {
 
         return (
             <div>
-                    <MapIt
-                        routeMarkers = {event.item.markers}
-                        participants={this.props.participants}
-                        participant={this.props.participant}
-                        region={this.props.region}
-                        currLocation={this.props.location}
-                        draggable={false}
-                        addParticipantMarker= {this.addParticipantMarker}
-                        photos={this.props.photo}
-                        viewPhotos = {this.viewPhotos}
-                    />
-                    <FullScreenDialog open={this.state.isPhoto} onHandleClose={this.handleClose}   header={""}>
-                        <ul className="photogallery">{this.state.photoGallery}</ul>
-                    </FullScreenDialog>
+                <MapIt
+                    routeMarkers = {event.item.markers}
+                    participants={this.props.participants}
+                    participant={this.props.participant}
+                    region={this.props.region}
+                    currLocation={this.props.location}
+                    draggable={false}
+                    addParticipantMarker= {this.addParticipantMarker}
+                    photos={this.props.photo}
+                    viewPhotos = {this.viewPhotos}
+                />
+                <FullScreenDialog open={this.state.isPhoto} onHandleClose={this.handleClose}   header={""}>
+                    <ul className="photogallery">{this.state.photoGallery}</ul>
+                </FullScreenDialog>
 
-                        <div className="toolbar bottom">
-                            <AddressGeocode geocode={this.setCurrentRegionAddress} />
-                        </div>
+                <div className="toolbar bottom">
+                    <AddressGeocode geocode={this.setCurrentRegionAddress} />
                 </div>
+            </div>
         )
     }
 }

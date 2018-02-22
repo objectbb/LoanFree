@@ -6,7 +6,6 @@ import AppBar from 'material-ui/AppBar';
 import Icon from 'material-ui/Icon'
 
 import RouteMaker from "./RouteMaker"
-import DataFeeder from "./DataFeeder"
 import ParticipantTracking from "./ParticipantTracking"
 import EventsContainer from './EventsContainer'
 import PopOverIt from './components/PopOverIt'
@@ -30,22 +29,22 @@ class ParticipantContainer extends Component {
         const { account } = this.props
         return (
             <div>
+                    <ul className="topbar-list">
+                        <li style={{width: '75%'}}>
+                            <div className="toolbar-background">
+                                <EventsContainer />
+                            </div>
+                        </li>
+                    </ul>
 
-                    <Grid container spacing={0}>
-                        <Grid item xs={10} sm={11}>
-                        <div className="toolbar-background">
-                          <EventsContainer />
-                          </div>
-                        </Grid>
-                        <Grid item xs={2} sm={1}>
-                               <Logout />
-                        </Grid>
-                    </Grid>
+                <div className="top-right">
+                    <Logout />
+                </div>
 
                 <div>
-                    <div className="toolbar right toolbar-background">
+                    <div className="toolbar bottom-right toolbar-background">
                             <div className="toolbar-item">
-                                <PopOverIt icon={<Icon>account_circle</Icon>}>
+                                <PopOverIt PopOverIt anchorReference='anchorEl' icon={<Icon>account_circle</Icon>}>
                                     <Profile />
                                 </PopOverIt>
                             </div>
@@ -56,10 +55,7 @@ class ParticipantContainer extends Component {
                                 <BackgroundProcess />
                             </div>
                         </div>
-                    <DataFeeder>
                         <ParticipantTracking />
-                    </DataFeeder>
-
                 </div>
 
             </div>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Typography from 'material-ui/Typography';
 import classnames from 'classnames';
 import "../styles/app.css"
 
@@ -22,9 +23,9 @@ class InputError extends Component {
         });
 
         return (
-            <div className={errorClass}>
-              <span>{this.props.errorMessage}</span>
-            </div>
+            <Typography variant="body1">
+                <span className={errorClass}>{this.props.errorMessage}</span>
+             </Typography>
         )
     }
 

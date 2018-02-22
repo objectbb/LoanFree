@@ -7,7 +7,7 @@ export const get = (action) => {
 }
 
 export const getByParticipant = (action) => {
-    return call(api.call, '/events_participant_get', action.payload)
+    return call(api.call, '/eventparticipants_get', action.payload)
 }
 
 function* fetchEvents(action) {

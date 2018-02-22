@@ -5,9 +5,17 @@ import RouteMakerContainer from "./RouteMakerContainer"
 import ParticipantContainer from "./ParticipantContainer"
 import Typography from 'material-ui/Typography';
 import Login from "./Login"
-
+import Profile from "./Profile"
+import "./styles/animate.css"
+import "./styles/app.css"
 
 class App extends Component {
+
+    constructor(props) {
+      super(props);
+
+      this.state = {shouldRegister: false};
+    }
 
     componentWillReceiveProps(nextProps) {
         const { dispatch, account } = nextProps
@@ -32,9 +40,26 @@ class App extends Component {
         return (
             <div>
 
-            {!account.authenticated && <Login />}
-             {account.authenticated &&  account.item.authorization === "ROUTEMAKER"  && <RouteMakerContainer />}
-            {account.authenticated &&  account.item.authorization === "PARTICIPANT"  && <ParticipantContainer />}
+            {!account.authenticated &&
+                <div className="infinite fadeIn fadeIn-selection">
+                    <Login />
+                    <br/>
+                   <Typography>...or just register to create...</Typography>
+                    <Profile authorization='ROUTEMAKER' />
+                </div>
+
+            }
+             {account.authenticated &&  account.item.authorization === "ROUTEMAKER"  &&
+                <div className="infinite fadeIn fadeIn-selection">
+                    <RouteMakerContainer />
+                </div>
+
+          }
+            {account.authenticated &&  account.item.authorization === "PARTICIPANT"  &&
+             <div className="infinite fadeIn fadeIn-selection">
+                <ParticipantContainer />
+             </div>
+         }
 
             </div>
         );

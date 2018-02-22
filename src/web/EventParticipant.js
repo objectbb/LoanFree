@@ -13,6 +13,9 @@ import Tooltip from 'material-ui/Tooltip'
 import "./styles/animate.css"
 import "./styles/app.css"
 
+import BlockUi from 'react-block-ui'
+import 'react-block-ui/style.css'
+
 class EventParticipant extends Component {
     constructor(props) {
         super(props)
@@ -50,7 +53,6 @@ class EventParticipant extends Component {
             type: 'EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED',
             payload: account
         })
-
     }
 
     handleChange(e) {
@@ -75,7 +77,8 @@ class EventParticipant extends Component {
             firstname &&
             firstname.trim().length > 1 &&
             lastname &&
-            lastname.trim().length > 1
+            lastname.trim().length > 1 &&
+            !this.validateEmail(email)
         )
     }
 
@@ -95,52 +98,55 @@ class EventParticipant extends Component {
         let isEnabled = this.isEnabled()
 
         return (
-            <div className="card infinite fadeIn fadeIn-selection">
-                <br />
-                <TextInput
-                  uniquename="email"
-                  text="Email"
-                  required={true}
-                  minCharacters={6}
-                  validate={this.validateEmail}
-                  onChange={this.handleChange}
-                  content={email}
-                  errorMessage="Email is invalid"
-                  emptyMessage="Email is required"
-                />
-                <br />
-                <TextInput
-                  uniquename="firstname"
-                  text="First Name"
-                  required={true}
-                  minCharacters={2}
-                  onChange={this.handleChange}
-                  content={firstname}
-                  errorMessage="First Name is invalid"
-                  emptyMessage="First Name is required"
-                />
-                 <br />
 
-                <TextInput
-                  uniquename="lastname"
-                  text="Last Name"
-                  required={true}
-                  minCharacters={2}
-                  onChange={this.handleChange}
-                  content={lastname}
-                  errorMessage="Last Name is invalid"
-                  emptyMessage="Last Name is required"
-                />
-                {error &&
-                  <p style={{ color: "red" }}>
-                    {error}
-                  </p>}
-                  <Tooltip id="tooltip-icon" title="Save">
-                    <Button mini disabled={!isEnabled} onClick={item => this.handleSubmit(item)} variant="fab" color="primary">
-                        {isFetching && <CircularProgress size={25} />}  <Icon>edit</Icon>
-                      </Button>
-                  </Tooltip>
-                  </div>
+            <div className="card infinite fadeIn fadeIn-selection">
+              <br />
+              <TextInput
+                uniquename="email"
+                text="Email"
+                required={true}
+                minCharacters={6}
+                validate={this.validateEmail}
+                onChange={this.handleChange}
+                content={email}
+                errorMessage="Email is invalid"
+                emptyMessage="Email is required"
+                minMessage="Minimum characters"
+              />
+              <br />
+              <TextInput
+                uniquename="firstname"
+                text="First Name"
+                required={true}
+                minCharacters={2}
+                onChange={this.handleChange}
+                content={firstname}
+                errorMessage="First Name is invalid"
+                emptyMessage="First Name is required"
+                minMessage="Minimum characters"
+              />
+               <br />
+
+              <TextInput
+                uniquename="lastname"
+                text="Last Name"
+                required={true}
+                minCharacters={2}
+                onChange={this.handleChange}
+                content={lastname}
+                errorMessage="Last Name is invalid"
+                emptyMessage="Last Name is required"
+                minMessage="Minimum characters"
+              />
+              {error &&
+                <p style={{ color: "red" }}>
+                  {error}
+                </p>}
+                  <Button mini disabled={!isEnabled} onClick={item => this.handleSubmit(item)} variant="fab" color="primary">
+                      {isFetching && <CircularProgress size={25} />}  <div className='action-button'>SAVE</div>
+                    </Button>
+            </div>
+
         )
     }
 }

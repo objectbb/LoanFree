@@ -1,7 +1,7 @@
-import { PHOTO_UPSERT, PHOTO_UPSERT_FAILED, PHOTO_FETCH_FAILED, PHOTO_FETCH_REQUESTED, PHOTO_UPSERT_REQUESTED, PHOTO_FETCH_SUCCEEDED, PHOTO_UPSERT_SUCCEEDED } from "../actions";
+import { PHOTO_FIREBASE_UPSERT_FAILED, PHOTO_FIREBASE_UPSERT_SUCCEEDED, PHOTO_UPSERT, PHOTO_UPSERT_FAILED, PHOTO_FETCH_FAILED, PHOTO_FETCH_REQUESTED, PHOTO_UPSERT_REQUESTED, PHOTO_FETCH_SUCCEEDED, PHOTO_UPSERT_SUCCEEDED } from "../actions";
 
 export const photo = (
-    state = { item: [], authenticated: false, isFetching: false, error: "" },
+    state = { item: [], authenticated: false, isFetching: false, error: "", firebase: false },
     action
 ) => {
     switch (action.type) {
@@ -17,13 +17,25 @@ export const photo = (
     case PHOTO_FETCH_SUCCEEDED:
     case PHOTO_UPSERT_SUCCEEDED:
         return {
+            ...state,
             item: action.payload,
             authenticated: true,
             isFetching: false,
             error: ""
         };
+    case PHOTO_FIREBASE_UPSERT_SUCCEEDED:
+        return {
+            ...state,
+            firebase: true
+        }
+    case PHOTO_FIREBASE_UPSERT_FAILED:
+        return {
+            ...state,
+            firebase: false
+        }
     case PHOTO_UPSERT:
         return {
+            ...state,
             item: state.item.
             find((item) => (item._id === action.payload._id)) ? state.item.map(item => {
                 if (item._id === action.payload._id) {

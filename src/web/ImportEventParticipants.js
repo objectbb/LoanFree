@@ -12,6 +12,8 @@ import Icon from 'material-ui/Icon'
 import { withStyles } from 'material-ui/styles'
 import TextField from 'material-ui/TextField'
 import "./styles/app.css"
+import BlockUi from 'react-block-ui'
+import 'react-block-ui/style.css'
 
 
 class ImportEventParticipants extends Component {
@@ -92,31 +94,29 @@ class ImportEventParticipants extends Component {
 
         return (
             <div className="card">
-              <div className="coords"> Copy/Paste a list of comma delimited -- email, firstname, lastname </div>
-               <textarea name="participants"
-                  onChange={this.handleChange}
-                  placeholder=""
-                  className="participants-list"
-                  value={this.state.participants}/>
-                  <br />
+                <div className="coords"> Copy/Paste a list of comma delimited -- email, firstname, lastname </div>
+                <textarea name="participants"
+                    onChange={this.handleChange}
+                    placeholder=""
+                    className="participants-list"
+                value={this.state.participants} />
+                <br />
                 { this.participantCount()}
 
                 {error &&
-                  <p style={{ color: "red" }}>
-                    {error}
-                  </p>}
-                  <br />
-              <Tooltip id="tooltip-icon" title="Save">
-                  <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} variant="fab" mini color="primary" aria-label="add">
-                      {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
-                    </Button>
-                  </Tooltip>
-                  <Tooltip id="tooltip-icon" title="Clear" style={{float:'right'}}>
-                      <Button onClick={this.clearState}   variant="fab" mini color="secondary" aria-label="edit" >
-                        <Icon>clear</Icon>
-                      </Button>
-                </Tooltip>
-                  </div>
+                    <p style={{ color: "red" }}>
+                {error}
+                </p>}
+                <br />
+
+                <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} variant="fab" mini color="primary" aria-label="add">
+                    {isFetching && <CircularProgress size={25} />}  <div className='action-button'>SAVE</div>
+                </Button>
+
+                <Button style={{float: 'right'}} onClick={this.clearState}   variant="fab" mini color="secondary" aria-label="edit" >
+                    <div className='action-button'>CLEAR</div>
+                </Button>
+            </div>
         )
     }
 }

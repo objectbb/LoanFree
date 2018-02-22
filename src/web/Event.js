@@ -17,6 +17,9 @@ import TextField from 'material-ui/TextField'
 import Grid from 'material-ui/Grid';
 import Icon from 'material-ui/Icon'
 
+import BlockUi from 'react-block-ui'
+import 'react-block-ui/style.css'
+
 import AddIcon from 'material-ui-icons/Add';
 import DeleteIcon from 'material-ui-icons/Delete';
 import Tooltip from 'material-ui/Tooltip';
@@ -74,6 +77,22 @@ class Event extends Component {
         const { coords } = this.props.event.item
 
         const { dispatch, account, participant } = this.props;
+
+        if (!account.item._id) {
+            dispatch({
+                type: 'EVENT_UPSERT_FAILED',
+                message: "Account has not been properly set, please press save button-again or logout and log back in."
+            })
+            return
+        }
+
+        if (!(coords && coords.length === 2)) {
+            dispatch({
+                type: 'EVENT_UPSERT_FAILED',
+                message: "Latitude/Longitude haven't been established. Please re-enter address and save."
+            })
+            return
+        }
 
         const newParticipant = {
             _id: participant.item._id,
@@ -147,7 +166,7 @@ class Event extends Component {
         return (
             (description && description.trim().length > 9) &&
             startdate &&
-            (coords.length == 2) &&
+            (coords && coords.length === 2) &&
             (name && name.trim().length > 5) &&
             (displayname && displayname.trim().length > 1) &&
             (address && address.trim().length > 5) &&
@@ -210,17 +229,19 @@ class Event extends Component {
         map((state, i) => <option value={state} key={i}>{state}</option>)
 
         return (
+
             <div className="card">
 
               <TextInput
                 uniquename="name"
-                text="Name"
+                text="Name of the Event"
                 minCharacters={6}
                 onChange={this.handleChange}
                 content={name}
                 required={true}
                 errorMessage="Name is invalid"
                 emptyMessage="Name is required"
+                minMessage="Minimum characters"
               />
 
               <TextInput
@@ -232,6 +253,7 @@ class Event extends Component {
                 content={displayname}
                 errorMessage="Display Name is invalid"
                 emptyMessage="Display Name  is required"
+                minMessage="Minimum characters"
               />
              <TextField
                  name="startdate"
@@ -255,6 +277,7 @@ class Event extends Component {
                 multiLine={true}
                 errorMessage="Description is invalid"
                 emptyMessage="Description is required"
+                minMessage="Minimum characters"
               />
                  <TextInput
                 uniquename="address"
@@ -267,6 +290,7 @@ class Event extends Component {
                 multiLine={true}
                 errorMessage="Address is invalid"
                 emptyMessage="Address is required"
+                 minMessage="Minimum characters"
               />
               {<div className="coords">{coords}</div>}
                  <TextInput
@@ -280,6 +304,7 @@ class Event extends Component {
                 multiLine={true}
                 errorMessage="City is invalid"
                 emptyMessage="City is required"
+                minMessage="Minimum characters"
               />
 
           <Select
@@ -303,6 +328,7 @@ class Event extends Component {
                 content={zipcode}
                 errorMessage="Zip Code is invalid"
                 emptyMessage="Zip Code is required"
+                minMessage="Minimum characters"
               />
               {error &&
                   <p style={{ color: "red" }}>
@@ -310,17 +336,18 @@ class Event extends Component {
                   </p>}
 
                     <Button
-                    mini
-                    disabled={!isEnabled}
-                    onClick={this.handleSubmit}
-                    variant="fab"
-                    color="primary"
-                     aria-label="save">
-                    {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
+                        mini
+                        disabled={!isEnabled }
+                        onClick={this.handleSubmit}
+                        variant="fab"
+                        color="primary"
+                         aria-label="save">
+                        {isFetching && <CircularProgress size={25} />}
+                         <div className='action-button'>SAVE</div>
                     </Button>
 
                     <Button style={{float:'right'}} mini onClick={this.clearState} variant="fab" color="secondary" aria-label="edit" >
-                    <Icon>clear</Icon>
+                        <div className='action-button'>CLEAR</div>
                     </Button>
                 <br/> <br/> <br/>
             </div>

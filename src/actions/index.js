@@ -58,7 +58,6 @@ export const EVENT_PARTICIPANT_UPSERT_FAILED = "EVENT_PARTICIPANT_UPSERT_FAILED"
 export const EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED"
 export const EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED"
 
-
 export const EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED = "EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED"
 export const EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED = "EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED"
 export const EVENT_PARTICIPANTS_CLEAR = "EVENT_PARTICIPANTS_CLEAR"
@@ -194,7 +193,7 @@ export const intervalLoadParticipants = (payload) => dispatch => {
     return setInterval(() => {
         dispatch(retrieveParticipants(payload))
         dispatch({
-            type: 'PHOTO_FETCH_REQUESTED',
+            type: PHOTO_FETCH_REQUESTED,
             payload: payload
         });
     }, 10 * SECOND)
@@ -202,9 +201,9 @@ export const intervalLoadParticipants = (payload) => dispatch => {
 
 export const logoutUser = () => dispatch => {
 
-    this.clearApp()
+    dispatch(this.clearApp())
 
-    dispatch({ type: 'ACCOUNT_LOGOFF' })
+    dispatch({ type: ACCOUNT_LOGOFF })
 
     localForage.clear()
 
@@ -221,7 +220,6 @@ export const setCurrentRegionAddress = (address) => dispatch => {
 
 export const setRouteMarkers = (payload) => dispatch => {
     dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: payload });
-    // dispatch({ type: 'EVENT_FETCH_SUCCEEDED', payload: payload })
 }
 
 export const setParticipantMarkers = (payload) => dispatch => {
@@ -262,28 +260,28 @@ export const uploadImagetoFirebase = (participant, payload) => dispatch => {
 
     task.on('state_changed',
         (snapshot) => {
-            dispatch({ type: 'PHOTO_FIREBASE_UPSERT_REQUESTED', payload: snapshot.downloadURL });
+            dispatch({ type: PHOTO_FIREBASE_UPSERT_REQUESTED, payload: snapshot.downloadURL });
             console.log('index -->  uploadImagetoFirebase requested', snapshot.downloadURL);
             console.log((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
         },
         (error) => {
-            dispatch({ type: 'PHOTO_FIREBASE_UPSERT_FAILED', payload: error })
+            dispatch({ type: PHOTO_FIREBASE_UPSERT_FAILED, payload: error })
             console.log("index --> uploadImagetoFirebase  --> error ", error)
 
         },
         () => {
-            dispatch({ type: 'PHOTO_FIREBASE_UPSERT_SUCCEEDED', payload: task.snapshot.downloadURL });
+            dispatch({ type: PHOTO_FIREBASE_UPSERT_SUCCEEDED, payload: task.snapshot.downloadURL });
             dispatch({
-                type: 'PHOTO_UPSERT_REQUESTED',
+                type: PHOTO_UPSERT_REQUESTED,
                 payload: {
-                    _eventId: participant.item.event._id,
+                    _eventId: participant.item._eventId,
                     participant: participant.item,
                     photoURLFirebase: task.snapshot.downloadURL
                 }
             });
             dispatch({
                 type: 'PHOTO_FETCH_REQUESTED',
-                payload: { _eventId: participant.item.event._id }
+                payload: { _eventId: participant.item._eventId }
             });
             console.log('index -->  uploadImagetoFirebase --> succeed', task.snapshot.downloadURL);
         })
@@ -296,9 +294,56 @@ export const setCurrLocation = (coords) => dispatch => {
 
 export const clearApp = () => dispatch => {
     dispatch({ type: EVENT_CLEAR })
+    dispatch({ type: EVENT_CLEAR_VIEW })
     dispatch({ type: EVENT_PARTICIPANTS_CLEAR })
     dispatch({ type: EVENT_PARTICIPANT_CLEAR })
     dispatch({ type: PARTICIPANT_CLEAR })
+}
+
+export const refreshHardEvent = (participant) => dispatch => {
+    dispatch({ type: EVENT_CLEAR })
+    dispatch({ type: EVENT_CLEAR_VIEW })
+    dispatch({ type: EVENT_PARTICIPANTS_CLEAR })
+    dispatch({ type: EVENT_PARTICIPANT_CLEAR })
+    dispatch({ type: PARTICIPANT_CLEAR })
+    dispatch({ type: UPDATE_INTERVAL_IDS, action: { onOff: false } })
+    /*
+        dispatch({
+            type: 'EVENTS_FETCH_REQUESTED',
+            payload: { _accountId: participant.item._accountId }
+        })
+
+        dispatch({
+            type: 'EVENTS_PARTICIPANT_FETCH_REQUESTED',
+            payload: { _accountId: participant.item._accountId }
+        })
+
+        dispatch({ type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED', payload: { _eventId: participant.item._eventId  } })
+        dispatch({ type: 'PHOTO_FETCH_REQUESTED', payload: { _eventId: participant.item._eventId } })
+    */
+}
+
+export const refreshEvent = (participant) => dispatch => {
+
+    dispatch({ type: EVENT_CLEAR })
+    dispatch({ type: EVENT_PARTICIPANTS_CLEAR })
+    dispatch({ type: EVENT_PARTICIPANT_CLEAR })
+
+    dispatch({
+        type: 'EVENTS_FETCH_REQUESTED',
+        payload: { _accountId: participant.item._accountId }
+    })
+
+    dispatch({
+        type: 'EVENTS_PARTICIPANT_FETCH_REQUESTED',
+        payload: { _accountId: participant.item._accountId }
+    })
+
+    dispatch({
+        type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED',
+        payload: { _eventId: participant.item._eventId }
+    })
+
 }
 
 export const updateParticipantCurrLocation = (payload) => dispatch => {

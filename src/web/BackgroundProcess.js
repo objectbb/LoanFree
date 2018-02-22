@@ -62,7 +62,6 @@ class BackgroundProcess extends Component {
             watchPositionId: interval.watchPositionId,
             onOff: false
         })
-
     }
 
     toggle() {
@@ -76,15 +75,17 @@ class BackgroundProcess extends Component {
 
     render() {
 
-        const { eventparticipants } = this.props
+        const { eventparticipants, participant } = this.props
 
         const bounceClass = classnames({
             'onoff-interval': true,
             'flash indicator-settings': !this.state.onOff
         });
 
+        const toAppear = (participant && participant.item._eventId && eventparticipants && eventparticipants.item.length > 0)
         return (
-            eventparticipants && eventparticipants.item.length > 0 &&
+
+            toAppear ?
             <div className={bounceClass}>
                     <Badge style={{ float: 'right'}}  badgeContent={eventparticipants.item.length} color="primary">
                         <Button
@@ -93,11 +94,12 @@ class BackgroundProcess extends Component {
                         variant="fab"
                         color="secondary"
                          aria-label="save">
-                         <Icon>{this.state.onOff ? "update" : "stop"}</Icon>
+                         <div className='action-button'>{this.state.onOff ? "GPS" : "OFF"}</div>
                         </Button>
                     </Badge>
 
-                </div>
+                </div> :
+            <div></div>
         )
     }
 }

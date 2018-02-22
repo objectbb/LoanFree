@@ -33,9 +33,13 @@ class Profile extends Component {
     handleSubmit(e) {
         e.preventDefault()
 
-        const { dispatch } = this.props
+        const { dispatch, authorization } = this.props
 
-        dispatch({ type: 'ACCOUNT_UPSERT_REQUESTED', payload: this.state })
+        if (authorization) {
+            this.setState({ authorization: authorization },
+                () => dispatch({ type: 'ACCOUNT_UPSERT_REQUESTED', payload: this.state }))
+        } else
+            dispatch({ type: 'ACCOUNT_UPSERT_REQUESTED', payload: this.state })
     }
 
     clearState() {
@@ -75,7 +79,7 @@ class Profile extends Component {
         } = this.state
 
         return (
-            authorization &&
+            (this.props.authorization || authorization) &&
             email &&
             email.trim().length > 5 &&
             (firstname && firstname.trim().length > 1) &&
@@ -85,7 +89,7 @@ class Profile extends Component {
 
     render() {
 
-        const { message, isFetching } = this.props
+        const { message, isFetching, account } = this.props
 
         const {
             firstname,
@@ -109,9 +113,9 @@ class Profile extends Component {
                 required={true}
                 errorMessage="Email is invalid"
                 emptyMessage="Email is required"
+                minMessage="Minimum characters"
               />
               <br />
-
 
               <TextInput
                 uniquename="firstname"
@@ -122,6 +126,7 @@ class Profile extends Component {
                 content={firstname}
                 errorMessage="First is invalid"
                 emptyMessage="First is required"
+                minMessage="Minimum characters"
               />
 
               <br />
@@ -135,40 +140,23 @@ class Profile extends Component {
                 content={lastname}
                 errorMessage="Last Name is invalid"
                 emptyMessage="Last Name is required"
+                minMessage="Minimum characters"
               />
-              <br />
 
-{/*
-          <Select
-          native
-            name="authorization"
-            value={authorization}
-             fullWidth={true}
-            onChange={this.handleChange}
-          >
-            <option value="ROUTEMAKER">ROUTE MAKER</option>
-            <option value="ROUTEMANAGER">ROUTE MANAGER</option>
-          </Select>
-      */}
-
-                  <br />
         {message &&
           <p style={{ color: "red" }}>
             {message}
           </p>}
         <br />
 
-        <Tooltip id="tooltip-icon" title="Save">
-            <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} variant="fab" color="primary" aria-label="add">
-                 {isFetching && <CircularProgress size={25} />}  <Icon>save</Icon>
-              </Button>
-            </Tooltip>
+        <Button mini disabled={!isEnabled} onClick={item => this.handleSubmit(item)} variant="fab" color="primary" aria-label="add">
+            {isFetching && <CircularProgress size={25} />}  <div className='action-button'> {account.item._id ? 'SAVE' : 'GO'}</div>
+        </Button>
 
-        <Tooltip id="tooltip-icon" title="Clear" style={{float:'right'}}>
-              <Button onClick={this.clearState}  variant="fab" color="secondary" aria-label="edit" >
-                <Icon>clear</Icon>
-              </Button>
-        </Tooltip>
+        <Button mini style={{float: 'right'}} onClick={this.clearState}  variant="fab" color="secondary" aria-label="edit" >
+            <div className='action-button'>CLEAR</div>
+        </Button>
+
       </div>
         )
     }

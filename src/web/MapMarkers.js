@@ -8,43 +8,97 @@ import Dialog from "./components/Dialog"
 
 import moment from 'moment'
 import geolib from "geolib"
+import Icon from 'material-ui/Icon'
 
 import * as actions from "../actions"
 
-import { Map, Marker, TileLayer, Popup, Tooltip } from 'react-leaflet'
+//import { Map, Marker, TileLayer, Popup, Tooltip } from 'react-leaflet'
+//import { divIcon, point } from "leaflet"
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from "react-google-maps"
+
 import Grid from 'material-ui/Grid'
-import { divIcon, point } from "leaflet"
+
 import CaptureMoments from "./CaptureMoments"
 import FullScreenDialog from "./components/FullScreenDialog"
-import Button from "material-ui/Button"
-import Icon from 'material-ui/Icon'
 import { isEqual, debounce } from 'lodash'
 import "./styles/animate.css"
 import "./styles/app.css"
 
-class MapIt extends Component {
+
+class ParticipantMarker extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = { toggleInfoWindow: false }
+
+        this.onToggleInfoWindow = this.onToggleInfoWindow.bind(this)
+    }
+
+    onToggleInfoWindow() {
+        console.log("MapMarker --> onToggleInfoWindow --> ", this)
+        this.setState({ toggleInfoWindow: !this.state.toggleInfoWindow })
+    }
+
+    render() {
+        const props = this.props
+
+        return (
+            <Marker key={`participant-${props.index}`}
+              position={{lat: props.item.coords[0], lng: props.item.coords[1] }}
+              onClick={this.onToggleInfoWindow}
+                 >
+
+                 {
+                  this.state.toggleInfoWindow &&
+                  <InfoWindow onCloseClick={this.onToggleInfoWindow}>
+                  <span>
+                  <Icon onClick={props.handleCamera}  className="toolbar-items" color="action">camera</Icon>
+                  <div>
+                  {props.item.account.firstname} {props.item.account.lastname}
+                  </div>
+                  <div>
+                    {props.item.coords}
+                  </div>
+                  {props.item.markers && props.item.markers.map((item, idx) => (<div key={idx}>
+                  <div>...</div>{item.marker.name} {item.details.range}m
+                  {item.details.coords && <div> {item.details.coords.join(', ')}
+                    </div>} <div>{moment(item.details.timeStamp).format(moment.HTML5_FMT.DATETIME_LOCAL)}
+                     </div> </div>)) }
+                  </span>
+               </InfoWindow>
+             }
+          </Marker>
+        )
+    }
+}
+
+
+class MapMarkers extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = { isCamera: false, isPhoto: false }
+        this.state = { isCamera: false, isPhoto: false, toggleInfoWindow: false }
 
         this.updatePosition = this.updatePosition.bind(this);
         this.removeMarker = this.removeMarker.bind(this);
         this.closeIndicator = this.closeIndicator.bind(this);
         this.handleCamera = this.handleCamera.bind(this)
         this.handleClose = this.handleClose.bind(this)
+        this.onToggleInfoWindow = this.onToggleInfoWindow.bind(this)
     }
 
     componentWillReceiveProps(nextProps) {
 
         const { dispatch, interval, participant } = this.props
 
-        if (!nextProps.interval.onOff ||
-            (nextProps.interval.watchPositionId === interval.watchPositionId &&
-                nextProps.participant.item._id === participant.item._id)) return
+        if (nextProps.interval.watchPositionId === interval.watchPositionId &&
+            nextProps.participant.item._id === participant.item._id
+        ) return
+
 
         console.log("MapIt --> componentWillReceiveProps --> participant ", nextProps.participant.item)
+
         console.log("MapIt --> componentWillReceiveProps --> interval.timerMarkersVisitedId ", interval)
         console.log("MapIt --> componentWillReceiveProps --> nextProps.interval.timerMarkersVisitedId ", nextProps)
 
@@ -153,73 +207,30 @@ class MapIt extends Component {
         this.setState({ isCamera: false });
     }
 
+    onToggleInfoWindow() {
+        this.setState({ toggleInfoWindow: !this.state.toggleInfoWindow });
+    }
+
     render() {
+
+            const pmarkers = this.props.participants &&
+                this.props.participants.map((item, index) => {
+                    const isClose = this.closeIndicator(item.coords)
+                    return <ParticipantMarker index={index}
+                          item={item}
+                          isClose={isClose}
+                          handleCamera={this.handleCamera}
+                           />
+                })
 
             return (
                     <div>
-               <FullScreenDialog  open={this.state.isCamera} onHandleClose={this.handleClose} onClick={this.handleClickOpen}  header={""} >
-                 <CaptureMoments />
-              </FullScreenDialog>
-              <Map center={this.props.region} zoom={17} className="map">
-              <TileLayer
-                url='https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}'
-                attribution='Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              />
+                       <FullScreenDialog  open={this.state.isCamera} onHandleClose={this.handleClose} onClick={this.handleClickOpen}  header={""} >
+                         <CaptureMoments />
+                      </FullScreenDialog>
 
-            {
-              this.props.participants &&
-                this.props.participants.map((item, index) => {
+                        {pmarkers}
 
-                    const isClose = this.closeIndicator(item.coords);
-
-                    const icon = divIcon({ className: 'marker ' + (!isClose ? 'bus' : 'bus mark'), html: isClose ? '<div class="tinycamera3"><span></span></div>' : `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})
-
-                    return (
-                      <Marker key={`participant-${index}`}
-                       icon={icon}
-                        name={item}
-                        position={item.coords}
-                           ref="marker">
-                          <Popup>
-                            <span>
-                            {isClose &&
-                              <div style={{fontSize: '15px'}}>
-                                Take a Qik Pic&nbsp;
-                                 <Button mini onClick={this.handleCamera}  variant="fab" color="primary" aria-label="camera" >
-                                  <Icon>camera_enhance</Icon>
-                                </Button>
-                              </div>
-                            }
-                            <div>
-                            {item.account.firstname} {item.account.lastname}
-                            </div>
-                            <div>
-                              {item.coords}
-                            </div>
-                            {item.markers && item.markers.map((item, idx) => (<div key={idx}><div>...</div>{item.marker.name} {item.details.range}m {item.details.coords && <div> {item.details.coords.join(', ')}   </div>} <div>{moment(item.details.timeStamp).format(moment.HTML5_FMT.DATETIME_LOCAL)} </div> </div>)) }
-                            </span>
-                          </Popup>
-                      >
-
-                    </Marker>
-                    )
-                }
-              )
-            }
-            {/*
-            this.props.currLocation && this.props.currLocation.coords &&
-                <Marker key="marker-you-1"
-                    position={this.props.currLocation.coords}
-                    icon={divIcon({ className: 'youmarker ', html: `<div>YOU</div>`})}
-                       ref="marker">
-                       <Popup>
-                          <div>
-                          {this.props.currLocation.coords}
-                          </div>
-                      </Popup>
-                  >
-                </Marker>
-            */}
              {
               this.props.routeMarkers &&
                 this.props.routeMarkers.map((item, index) => {
@@ -236,68 +247,68 @@ class MapIt extends Component {
                   {item.participant.event.name} --
                   {moment(item.participant.event.startdate).format('llll')} --
                   range: {item.range}m --
-                  coords: {item.participant.coords} --
-                  timeStamp: {moment(item.timeStamp).format('llll')}
+                  coords: {item.participant.coords}
                  </Typography>
                  <img src={item.photoURLFirebase} />
                  </li>)
 
                 const bounceInfinite = ((index === this.props.routeMarkers.length - 1) ? ' bounce infinite ' : '')
+
+                  {/*
                 const icon =
                   (inRangePhotos.length > 0) ?
-                  divIcon({html:'<div class="icon marker-tooltip toolbar-background ' + bounceInfinite  + '"><div className="marker-label toolbar-background">' + item.name + '</div><div class="camera3"><span></span></div>',     })
+                  divIcon({html:'<div class="icon marker-tooltip ' + bounceInfinite  + '"><div className="marker-label toolbar-background">' + item.name + '</div><div class="camera3"><span></span></div>',     })
                   :  divIcon({html:'<div class="marker-tooltip marker-label toolbar-background ' + bounceInfinite  + '">' + item.name + '</div>' + '<img src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png" id="image">',     })
-
+                  */}
 
                 return (
                   <Marker key={`marker-${index}`}
                     name={item}
-                    icon={icon}
-                    position={item.coords}
+                    position={{lat: item.coords[0], lng:item.coords[1] }}
                     draggable={this.props.draggable}
                       onDragend={this.updatePosition}
                        ref="marker">
+
+                       {/*
                           <Popup>
                           <span>
                             <div><b>{item.name}</b> range: {item.range}m</div>
-                            <div>{item.coords.join(' ')} </div>
+                            <div>{item.coords} </div>
                             <div>
 
                             <Grid container spacing={40}>
-                            <Grid item>
-                            </Grid>
                            {this.props.removeMarker  &&  this.props.updatePosition &&
                             <Grid item>
-                                <Button variant="fab" mini color="primary" onClick={(e) => this.editMarker(item,e)}>
-                                    <div className='action-button'>EDIT</div>
-                                </Button>
+                                <button onClick={(e) => this.editMarker(item,e)}>
+                                    <i className="material-icons">edit_location</i>
+                                </button>
                             </Grid>}
                             <Grid item>
 
                               {inRangePhotos.length > 0 &&
-                                <Button variant="fab" mini color="secondary"  onClick={(e) => this.viewPhotos(photoGallery,e)}>
+                                <button onClick={(e) => this.viewPhotos(photoGallery,e)}>
                                     <i className="material-icons">photo_album</i>
-                                </Button>
+                                </button>
                               }
                               </Grid>
 
                              {this.props.removeMarker  &&  this.props.updatePosition &&
                               <Grid item>
-                                <Button variant="fab" color="primary" mini onClick={(e) => this.removeMarker(item,e)}>
-                                    <div className='action-button'>REMOVE</div>
-                                </Button>
+                                <button onClick={(e) => this.removeMarker(item,e)}>
+                                    <i className="material-icons">delete</i>
+                                </button>
                             </Grid>}
                         </Grid>
                               </div>
                           </span>
                         </Popup>
-                  >
+                      */}
+
                 </Marker>
 
                 )
               })
             }
-            </Map>
           </div>
         )
     }
@@ -319,4 +330,4 @@ const mapDispatchToProps = (dispatch, props) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapIt)
+export default connect(mapStateToProps, mapDispatchToProps)(MapMarkers)

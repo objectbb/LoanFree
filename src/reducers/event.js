@@ -11,8 +11,8 @@ export const event = (
         return {
             ...state,
             payload: action.payload,
-            error: action.message,
-            isFetching: true
+            isFetching: true,
+            error: ""
         }
     case REQUEST_GEOCODE_SUCCEEDED:
     case EVENT_FETCH_SUCCEEDED:
@@ -20,8 +20,14 @@ export const event = (
         return {
             ...state,
             item: action.payload,
-            isFetching: false
+            isFetching: false,
+            error: ""
         };
+    case REQUEST_GEOCODE_FAILED:
+        return {
+            item: { ...state.item, coords: undefined },
+            isFetching: false
+        }
     case EVENT_UPSERT_FAILED:
     case EVENT_FETCH_FAILED:
         return {

@@ -23,10 +23,10 @@ class PopOverIt extends React.Component {
         anchorOriginVertical: 'center',
         anchorOriginHorizontal: 'center',
         transformOriginVertical: 'bottom',
-        transformOriginHorizontal: 'bottom',
+        transformOriginHorizontal: 'vertical',
         positionTop: 200, // Just so the popover can be spotted more easily
         positionLeft: 50, // Same as above
-        anchorReference: 'anchorPosition'
+        anchorReference: this.props.anchorReference
     };
 
     handleClickButton = () => {

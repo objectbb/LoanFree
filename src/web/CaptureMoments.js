@@ -3,40 +3,37 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux";
 import * as actions from "../actions"
 import firebase from 'firebase'
+import BlockUi from 'react-block-ui'
+import 'react-block-ui/style.css'
 import Grid from 'material-ui/Grid';
 import Camera from 'react-camera';
 import Button from "material-ui/Button"
 import Icon from 'material-ui/Icon'
 import camera from "./styles/app.css"
+import Webcam from "./webcam"
 
 class CaptureMoments extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = { photo: '' }
+        this.state = { photo: '', firebase: false }
 
         this.takePicture = this.takePicture.bind(this)
         this.uploadImagetoFirebase = this.uploadImagetoFirebase.bind(this)
     }
 
-
     takePicture() {
-        this.camera.capture()
-            .then(blob => {
+        this.camera.captureBlob((blob) => {
 
-                this.img.src = URL.createObjectURL(blob);
+            this.img.src = URL.createObjectURL(blob);
 
-                this.img.onload = () => {
-                    URL.revokeObjectURL(this.src);
+            this.setState((state) => {
+                state.photo = blob
+                return state;
+            });
 
-                    this.setState((state) => {
-                        state.photo = blob
-                        return state;
-                    });
-
-                }
-            })
+        })
     }
 
     uploadImagetoFirebase() {
@@ -44,46 +41,51 @@ class CaptureMoments extends Component {
         this.props.actions.uploadImagetoFirebase(this.props.participant,
             this.state.photo)
 
+        this.setState({ firebase: true })
     }
 
     render() {
+        const { photo } = this.props
 
         return (
-                <div>
+            <BlockUi tag="div" blocking={photo.isFetching}>
+
                 <br />
-            <Grid container spacing={8}>
+                <Grid container spacing={8}>
                     <Grid item xs={1} md={1} lg={1}>
                     </Grid>
                     <Grid item xs={5} md={4} lg={4}>
-                        <Camera
-                        style={style.preview}
-                        ref={(cam) => {
-                        this.camera = cam;
-                        }}
-                        >
 
-                        </Camera>
-                            <Button mini onClick={this.takePicture}  variant="fab" color="primary" aria-label="camera" >
-                            <Icon>camera</Icon>
-                            </Button>
-                    </Grid>
-                    <Grid item xs={5} md={4} lg={4}>
                         <div>
-                        <img
-                            style={style.captureImage}
+                        <Webcam width={240} height={180} ref={(ref) => this.camera = ref} audio={false} />
+                        </div>
+                        <Button mini onClick={this.takePicture}  variant="fab" color="primary" aria-label="camera" >
+                        <Icon>camera_enhance</Icon>
+                        </Button>
+                        <br />  <br />
+                        <div>
+                            <img
                             ref={(img) => {
                             this.img = img;
                             }}
                             />
-
                         </div>
 
-                      <Button mini disabled={!this.state.photo} onClick={this.uploadImagetoFirebase}  variant="fab" color="secondary" aria-label="save" >
-                    <Icon>add_a_photo</Icon>
-                    </Button>
+                        <Button mini disabled={!this.state.photo} onClick={this.uploadImagetoFirebase}  variant="fab" color="secondary" aria-label="save" >
+                            <Icon>backup</Icon>
+                        </Button>
                     </Grid>
                 </Grid>
-                </div>
+                {photo.error &&
+                  <p style={{ color: "red" }}>
+                    {photo.error}
+                  </p>}
+                  {this.state.firebase && photo.firebase &&
+                    <p style={{ color: "red" }}>
+                        Yeaaahh!!! You did it, photo is saved
+                  </p>
+                }
+             </BlockUi>
         );
     }
 }
@@ -123,10 +125,11 @@ const mapDispatchToProps = (dispatch, props) => {
 
 function mapStateToProps(state) {
 
-    const { participant } = state
+    const { participant, photo } = state
 
     return {
-        participant
+        participant,
+        photo
     }
 }
 

@@ -16,6 +16,7 @@ import { eventparticipant } from "./eventparticipant"
 import { profile } from "./profile"
 import { photo } from "./photo"
 import { interval } from "./interval"
+import { activity } from "./activity"
 
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
@@ -47,7 +48,8 @@ const rootReducer = combineReducers({
     events,
     profile,
     photo,
-    interval
+    interval,
+    activity
 })
 
 /*
