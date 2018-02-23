@@ -11,7 +11,16 @@ import geolib from "geolib"
 
 import * as actions from "../actions"
 
-import { Map, Marker, TileLayer, Popup, Tooltip } from 'react-leaflet'
+import { Map, Marker, TileLayer, Popup, Tooltip,LayersControl } from 'react-leaflet'
+
+import GoogleLayer from './GoogleLayer'
+const { BaseLayer} = LayersControl;
+const key = 'AIzaSyBqK4f8zbMrK4K5cxWb8_10Zkbk7LHMrKE';
+const terrain = 'TERRAIN';
+const road = 'ROADMAP';
+const satellite = 'SATELLITE';
+const hydrid = 'HYBRID';
+
 import Grid from 'material-ui/Grid'
 import { divIcon, point } from "leaflet"
 import CaptureMoments from "./CaptureMoments"
@@ -155,17 +164,24 @@ class MapIt extends Component {
 
     render() {
 
-            return (
-                    <div>
-               <FullScreenDialog  open={this.state.isCamera} onHandleClose={this.handleClose} onClick={this.handleClickOpen}  header={""} >
-                 <CaptureMoments />
-              </FullScreenDialog>
-              <Map center={this.props.region} zoom={17} className="map">
-              <TileLayer
-                url='https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}'
-                attribution='Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              />
+      return (
+              <div>
+         <FullScreenDialog  open={this.state.isCamera} onHandleClose={this.handleClose} onClick={this.handleClickOpen}  header={""} >
+           <CaptureMoments />
+        </FullScreenDialog>
+        <Map center={this.props.region} zoom={17} className="map">
 
+            <LayersControl position='topright'>
+               <BaseLayer checked name='Google Maps Roads'>
+                  <GoogleLayer googlekey={key}  maptype={road} />
+                </BaseLayer>
+               <BaseLayer  name='Google Maps Terrain'>
+                  <GoogleLayer googlekey={key}  maptype={terrain} />
+                </BaseLayer>
+                  <BaseLayer  name='Google Maps Hydrid'>
+                  <GoogleLayer googlekey={key}  maptype={hydrid}  libraries={['geometry', 'places']} />
+                </BaseLayer>
+            </LayersControl>
             {
               this.props.participants &&
                 this.props.participants.map((item, index) => {
@@ -245,7 +261,7 @@ class MapIt extends Component {
                 const bounceInfinite = ((index === this.props.routeMarkers.length - 1) ? ' bounce infinite ' : '')
                 const icon =
                   (inRangePhotos.length > 0) ?
-                  divIcon({html:'<div class="icon marker-tooltip toolbar-background ' + bounceInfinite  + '"><div className="marker-label toolbar-background">' + item.name + '</div><div class="camera3"><span></span></div>',     })
+                  divIcon({html:'<div class="marker-tooltip marker-label toolbar-background ' + bounceInfinite  + '"><div className="marker-label toolbar-background">' + item.name + '</div><div class="tinyicon"> <div class="tinycamera3"><span></span></div></div>',     })
                   :  divIcon({html:'<div class="marker-tooltip marker-label toolbar-background ' + bounceInfinite  + '">' + item.name + '</div>' + '<img src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png" id="image">',     })
 
 

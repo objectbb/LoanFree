@@ -85,30 +85,53 @@ class Webcam extends Component {
         );
 
         const constraints = {
-            video: true,
+            video: { facingMode: "user" },
             audio: false,
         };
 
-        navigator.getUserMedia(
-            constraints,
-            (stream) => {
-                const video = this._video;
+        /*
+                navigator.getUserMedia(
+                    constraints,
+                    (stream) => {
+                        const video = this._video;
+
+                        video.srcObject = stream;
+
+                        this._mediaStream = stream;
+
+                        this.setState({
+                            hasUserMedia: true,
+                            userMediaRequested: true
+                        });
+
+                        this.props.onSuccess();
+                    },
+                    (error) => {
+                        this.props.onFailure(error);
+                    }
+                );
+        */
+
+        (function(wtf) {
+            navigator.mediaDevices.
+            getUserMedia(constraints).
+            then(function (stream) {
+
+                const video = wtf._video
 
                 video.srcObject = stream;
-
-                this._mediaStream = stream;
-
-                this.setState({
+                wtf._mediaStream = stream;
+                wtf.setState({
                     hasUserMedia: true,
                     userMediaRequested: true
                 });
 
-                this.props.onSuccess();
-            },
-            (error) => {
-                this.props.onFailure(error);
-            }
-        );
+                wtf.props.onSuccess();
+            }).
+            catch(function (err) {
+                wtf.props.onFailure(err);
+            })
+        })(this)
 
     }
 
@@ -167,11 +190,12 @@ class Webcam extends Component {
 
         return (
             <video
-        width={width}
-        height={height}
-        ref={(component) => this._video = component}
-        autoPlay
-      />
+                width={width}
+                height={height}
+                ref={(component) => this._video = component}
+                autoPlay
+                playsInline
+              />
         )
     }
 

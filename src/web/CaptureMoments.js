@@ -6,7 +6,6 @@ import firebase from 'firebase'
 import BlockUi from 'react-block-ui'
 import 'react-block-ui/style.css'
 import Grid from 'material-ui/Grid';
-import Camera from 'react-camera';
 import Button from "material-ui/Button"
 import Icon from 'material-ui/Icon'
 import camera from "./styles/app.css"
@@ -17,8 +16,10 @@ class CaptureMoments extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { photo: '', firebase: false }
+        this.state = { photo: '', firebase: false, error: undefined }
 
+        this.handleFailure = this.handleFailure.bind(this)
+        this.handleSuccess = this.handleSuccess.bind(this)
         this.takePicture = this.takePicture.bind(this)
         this.uploadImagetoFirebase = this.uploadImagetoFirebase.bind(this)
     }
@@ -26,7 +27,11 @@ class CaptureMoments extends Component {
     takePicture() {
         this.camera.captureBlob((blob) => {
 
-            this.img.src = URL.createObjectURL(blob);
+            try {
+                this.img.src = (window.URL || window.webkitURL).createObjectURL(blob)
+            } catch (e) {
+                this.img.srcObject = blob
+            }
 
             this.setState((state) => {
                 state.photo = blob
@@ -36,12 +41,20 @@ class CaptureMoments extends Component {
         })
     }
 
+    handleFailure(error) {
+        this.setState({ error: error })
+    }
+
+    handleSuccess() {
+        this.setState({ error: undefined })
+    }
+
     uploadImagetoFirebase() {
 
         this.props.actions.uploadImagetoFirebase(this.props.participant,
             this.state.photo)
 
-        this.setState({ firebase: true })
+        this.setState({ firebase: true, error: undefined })
     }
 
     render() {
@@ -57,12 +70,18 @@ class CaptureMoments extends Component {
                     <Grid item xs={5} md={4} lg={4}>
 
                         <div>
-                        <Webcam width={240} height={180} ref={(ref) => this.camera = ref} audio={false} />
+                        <Webcam
+                        width={240}
+                        height={180}
+                        ref={(ref) => this.camera = ref}
+                        audio={false}
+                        onFailure={this.handleFailure}
+                        />
                         </div>
                         <Button mini onClick={this.takePicture}  variant="fab" color="primary" aria-label="camera" >
                         <Icon>camera_enhance</Icon>
                         </Button>
-                        <br />  <br />
+                        <br /><br />
                         <div>
                             <img
                             ref={(img) => {
@@ -74,17 +93,18 @@ class CaptureMoments extends Component {
                         <Button mini disabled={!this.state.photo} onClick={this.uploadImagetoFirebase}  variant="fab" color="secondary" aria-label="save" >
                             <Icon>backup</Icon>
                         </Button>
+
+                        <p style={{ color: "red" }}>
+                        {photo.error && <span>{photo.error}</span>}
+                        {this.state.error && <span>{this.state.error}</span>}
+                        {!this.state.error && this.state.firebase && photo.firebase &&
+                            <span>Yeaaahh!!! You did it, photo is saved</span>
+                        }
+                        </p>
                     </Grid>
                 </Grid>
-                {photo.error &&
-                  <p style={{ color: "red" }}>
-                    {photo.error}
-                  </p>}
-                  {this.state.firebase && photo.firebase &&
-                    <p style={{ color: "red" }}>
-                        Yeaaahh!!! You did it, photo is saved
-                  </p>
-                }
+
+
              </BlockUi>
         );
     }

@@ -56,7 +56,7 @@ class RouteMaker extends Component {
         let lastcoords = this.props.region;
 
         let item = { coords: [lastcoords[0] + offset, lastcoords[1] + offset] };
-        item.name = "Marker #" + length + 1
+        item.name = "MRKR #" + length + 1
         item.guid = uuid.v1();
         item.range = 50;
 
@@ -202,31 +202,36 @@ class RouteMaker extends Component {
 
                 {Object.getOwnPropertyNames(event.item).length > 0 &&
                 <div className="toolbar bottom toolbar-background">
-                    <ul className="topbar-list">
-                        <li style={{width: '50%'}}>
-                             <AddressGeocode />
-                        </li>
-                        <li style={{width: '10px'}}>&nbsp;</li>
 
-                        {event.item._id &&
+                    <Grid container spacing={0}>
+                         <Grid item xs={6} sm={6} md={6} lg={6}>
+                             <AddressGeocode />
+                        </Grid>
+                        <Grid item  sm={2} md={2} lg={2}>
+                        </Grid>
+                        <Grid item xs={6} sm={4} md={3} lg={3}>
+                            <ul className="topbar-list">
+                            {event.item._id &&
+                                <li style={{width: '50px'}}>
+                                    <Badge style={{ float: 'right'}}  badgeContent={event && event.item.markers.length} color="primary">
+                                        <Button mini onClick={this.addMarker}  variant="fab" color="secondary" aria-label="add">
+                                           <div className='action-button'>+ MRKR</div>
+                                        </Button>
+                                    </Badge>
+                                </li>
+                            }
+                             <li style={{width: '10px'}}>&nbsp;</li>
                             <li style={{width: '50px'}}>
-                                <Badge style={{ float: 'right'}}  badgeContent={event && event.item.markers.length} color="primary">
-                                    <Button mini onClick={this.addMarker}  variant="fab" color="secondary" aria-label="add">
-                                       <div className='action-button'>+ MRKR</div>
-                                    </Button>
-                                </Badge>
+                               <RefreshProcess />
                             </li>
-                        }
-                         <li style={{width: '10px'}}>&nbsp;</li>
-                        <li style={{width: '50px'}}>
-                           <RefreshProcess />
-                        </li>
-                        <li style={{width: '50px'}}>
-                           <PopOverIt anchorReference='anchorEl' icon={<Icon>account_circle</Icon>}>
-                                <Profile />
-                            </PopOverIt>
-                        </li>
-                    </ul>
+                            <li style={{width: '50px'}}>
+                               <PopOverIt anchorReference='anchorEl' icon={<Icon>account_circle</Icon>}>
+                                    <Profile />
+                                </PopOverIt>
+                            </li>
+                            </ul>
+                         </Grid>
+                    </Grid>
                 </div>
             }
             </span>

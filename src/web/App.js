@@ -5,6 +5,7 @@ import RouteMakerContainer from "./RouteMakerContainer"
 import ParticipantContainer from "./ParticipantContainer"
 import Typography from 'material-ui/Typography';
 import Login from "./Login"
+import Grid from 'material-ui/Grid'
 import Profile from "./Profile"
 import "./styles/animate.css"
 import "./styles/app.css"
@@ -12,9 +13,9 @@ import "./styles/app.css"
 class App extends Component {
 
     constructor(props) {
-      super(props);
+        super(props);
 
-      this.state = {shouldRegister: false};
+        this.state = { shouldRegister: false };
     }
 
     componentWillReceiveProps(nextProps) {
@@ -39,28 +40,32 @@ class App extends Component {
         const { account } = this.props
         return (
             <div>
-
-            {!account.authenticated &&
+                {!account.authenticated &&
                 <div className="infinite fadeIn fadeIn-selection">
-                    <Login />
-                    <br/>
-                   <Typography>...or just register to create...</Typography>
-                    <Profile authorization='ROUTEMAKER' />
+                    <Grid container spacing={0}>
+                        <Grid item xs={1} sm={1} md={3} lg={3}>
+                        </Grid>
+                        <Grid item xs={10} sm={10} md={6} lg={6}>
+                            <Login />
+                            <br/>
+                            <Typography>...or be an <i>Event Creator</i>...</Typography>
+                            <Profile authorization='ROUTEMAKER' />
+                        </Grid>
+                        <Grid item xs={1} sm={1} md={3} lg={3}>
+                        </Grid>
+                    </Grid>
                 </div>
-
-            }
-             {account.authenticated &&  account.item.authorization === "ROUTEMAKER"  &&
+                }
+                {account.authenticated &&  account.item.authorization === "ROUTEMAKER"  &&
                 <div className="infinite fadeIn fadeIn-selection">
-                    <RouteMakerContainer />
+                <RouteMakerContainer />
                 </div>
-
-          }
-            {account.authenticated &&  account.item.authorization === "PARTICIPANT"  &&
-             <div className="infinite fadeIn fadeIn-selection">
+                }
+                {account.authenticated &&  account.item.authorization === "PARTICIPANT"  &&
+                <div className="infinite fadeIn fadeIn-selection">
                 <ParticipantContainer />
-             </div>
-         }
-
+                </div>
+                }
             </div>
         );
     }
