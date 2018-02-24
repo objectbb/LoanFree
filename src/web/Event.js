@@ -14,15 +14,15 @@ import Select from "material-ui/Select"
 import MenuItem from "material-ui/Menu"
 import { withStyles } from 'material-ui/styles'
 import TextField from 'material-ui/TextField'
-import Grid from 'material-ui/Grid';
+import Grid from 'material-ui/Grid'
 import Icon from 'material-ui/Icon'
 
 import BlockUi from 'react-block-ui'
 import 'react-block-ui/style.css'
 
-import AddIcon from 'material-ui-icons/Add';
-import DeleteIcon from 'material-ui-icons/Delete';
-import Tooltip from 'material-ui/Tooltip';
+import AddIcon from 'material-ui-icons/Add'
+import DeleteIcon from 'material-ui-icons/Delete'
+import Tooltip from 'material-ui/Tooltip'
 
 const initialState = {
     _id: '',
@@ -279,7 +279,8 @@ class Event extends Component {
                 emptyMessage="Description is required"
                 minMessage="Minimum characters"
               />
-                 <TextInput
+
+            <TextInput
                 uniquename="address"
                 text="Address"
                 minCharacters={5}
@@ -292,8 +293,10 @@ class Event extends Component {
                 emptyMessage="Address is required"
                  minMessage="Minimum characters"
               />
-              {<div className="coords">{coords}</div>}
-                 <TextInput
+              {<div className="coords">{coords.join(' ')}</div>}
+               {isFetching && <CircularProgress size={25} />}
+
+            <TextInput
                 uniquename="city"
                 text="City"
                 minCharacters={4}

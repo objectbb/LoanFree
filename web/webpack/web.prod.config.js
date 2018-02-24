@@ -1,6 +1,7 @@
 const path = require('path');
 const BomPlugin = require('webpack-utf8-bom')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const webpack = require('webpack')
 
 module.exports = {
     entry: [
@@ -18,7 +19,12 @@ module.exports = {
                 mangle: true,
                 compress: true
             }
-        })
+        }),
+        new webpack.DefinePlugin({
+        'process.env': {
+          'NODE_ENV': JSON.stringify('production')
+        }
+      })
     ],
     module: {
         loaders: [

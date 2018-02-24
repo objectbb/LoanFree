@@ -11,6 +11,7 @@ import geolib from "geolib"
 
 import * as actions from "../actions"
 
+
 import { Map, Marker, TileLayer, Popup, Tooltip,LayersControl } from 'react-leaflet'
 
 import GoogleLayer from './GoogleLayer'
@@ -172,13 +173,16 @@ class MapIt extends Component {
         <Map center={this.props.region} zoom={17} className="map">
 
             <LayersControl position='topright'>
-               <BaseLayer checked name='Google Maps Roads'>
+               <BaseLayer  name='OpenStreetMap.Mapnik'>
+                  <TileLayer  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"/>
+              </BaseLayer>
+               <BaseLayer name='Google Maps Roads'>
                   <GoogleLayer googlekey={key}  maptype={road} />
                 </BaseLayer>
                <BaseLayer  name='Google Maps Terrain'>
                   <GoogleLayer googlekey={key}  maptype={terrain} />
                 </BaseLayer>
-                  <BaseLayer  name='Google Maps Hydrid'>
+                  <BaseLayer checked name='Google Maps Hydrid'>
                   <GoogleLayer googlekey={key}  maptype={hydrid}  libraries={['geometry', 'places']} />
                 </BaseLayer>
             </LayersControl>

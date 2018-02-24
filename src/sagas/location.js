@@ -2,6 +2,45 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import * as api from "../api/restful"
 import * as config from "../config/config";
 
+function googleAutoComplete(address) {
+    return call(api.callget, config.GOOGLE_AUTOCOMPLETE, `input=${address}&types=geocode&language=fr&key=AIzaSyCnwNNjhla4bLrLmuF7KryB2HBhhj8t_Cc`)
+}
+
+function googlePlaceId(placeId) {
+    return call(api.callget, config.GOOGLE_PLACEID, `placeid=${placeId}&types=geocode&language=fr&key=AIzaSyCnwNNjhla4bLrLmuF7KryB2HBhhj8t_Cc`)
+}
+
+function* googleGeocode(fulladdress) {
+    let loc
+
+    try {
+
+        let geocoderesults = yield call(api.callget, config.GEOCODE_URL, `address=${fulladdress}`)
+
+        if (geocoderesults.data.results[0].geometry)
+            return geocoderesults.data.results[0].geometry.location
+
+        const results = yield googleAutoComplete(fulladdress)
+        const predictions = results.data.predictions
+
+        if (predictions.length > 0) {
+
+            const placeId = predictions[0].place_id
+            geocoderesults = yield googlePlaceId(placeId)
+
+            return geocoderesults.data.result.geometry.location
+
+        } else {
+            yield put({ type: 'REQUEST_GEOCODE_FAILED', payload: fulladdress });
+            yield put({ type: 'APP_ERROR', message: "Geocoding Failed" });
+        }
+
+    } catch (err) {
+        yield put({ type: 'REQUEST_GEOCODE_FAILED', payload: fulladdress });
+        yield put({ type: 'APP_ERROR', message: String(err) });
+    }
+}
+
 function currLocation() {
 
     navigator.geolocation.watchPosition(position => {
@@ -17,17 +56,13 @@ function currLocation() {
 function* setCurrentRegionAddress(action) {
     try {
 
-        console.log("index --> setCurrentRegionAddress --> action ", action)
-        const geocoderesults =
-            yield call(api.callget, config.GEOCODE_URL, `address=${action.address}`);
-
-        console.log("index --> setCurrentRegionAddress --> geocoderesults ", geocoderesults)
-        const loc = geocoderesults.data.results[0].geometry.location
+        const loc = yield* googleGeocode(action.address)
 
         yield put({ type: 'SET_CURRENT_REGION', coords: [loc.lat, loc.lng] });
     } catch (err) {
         yield put({ type: 'APP_ERROR', message: String(err) });
     }
+
 }
 
 function* requestGeocode(action) {
@@ -36,19 +71,15 @@ function* requestGeocode(action) {
         console.log(action)
         const { address, city, state, zipcode, nextAction } = action.payload
         const fulladdress = `${address}, ${city}, ${state}, ${zipcode}`
-        const geocoderesults = yield call(api.callget, config.GEOCODE_URL, `address=${fulladdress}`)
 
-        const loc = geocoderesults.data.results[0].geometry.location
-
+        let loc = yield* googleGeocode(fulladdress)
         yield put({ type: 'REQUEST_GEOCODE_SUCCEEDED', payload: { ...action.payload, coords: [loc.lat, loc.lng] } });
+
     } catch (err) {
         yield put({ type: 'REQUEST_GEOCODE_FAILED', payload: action.payload });
-
         yield put({ type: 'APP_ERROR', message: String(err) });
     }
 }
-
-
 
 function* locationSaga() {
     yield takeLatest('SET_START_ADDRESS', setCurrentRegionAddress);

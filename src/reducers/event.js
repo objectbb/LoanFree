@@ -5,6 +5,7 @@ export const event = (
     action
 ) => {
     switch (action.type) {
+    case 'REQUEST_GEOCODE':
     case EVENT_FETCH_REQUESTED:
     case EVENT_UPSERT_REQUESTED:
     case EVENT_PARTICIPANT_UPSERT_REQUESTED:
