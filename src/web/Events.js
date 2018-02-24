@@ -57,8 +57,6 @@ class Events extends Component {
 
         console.log("Events --> render --> ", events.item)
 
-        //if (Object.getOwnPropertyNames(events.item).length === 0) return (<div/>)
-
         let menuitems = (account.item.authorization === "ROUTEMAKER") ? [{
             label: "[Start New Event]",
             value: 0

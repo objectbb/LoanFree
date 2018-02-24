@@ -25,21 +25,21 @@ class Option extends React.Component {
 
         return (
             <MenuItem
-        onFocus={onFocus}
-        selected={isFocused}
-        onClick={this.handleClick}
-        component="div"
-        style={{
-          fontWeight: isSelected ? 500 : 400,
-          fontSize: '12px',
-          whiteSpace: '-moz-pre-wrap', /* Firefox */
-            whiteSpace: '-o-pre-wrap', /* Opera */
-            whiteSpace: 'pre-wrap', /* Chrome */
-            wordWrap: 'break-word'
-        }}
-      >
-        {children}
-      </MenuItem>
+                onFocus={onFocus}
+                selected={isFocused}
+                onClick={this.handleClick}
+                component="div"
+                style={{
+                  fontWeight: isSelected ? 500 : 400,
+                  fontSize: '15px',
+                  whiteSpace: '-moz-pre-wrap', /* Firefox */
+                    whiteSpace: '-o-pre-wrap', /* Opera */
+                    whiteSpace: 'pre-wrap', /* Chrome */
+                    wordWrap: 'break-word'
+                }}
+              >
+                {children}
+              </MenuItem>
         );
     }
 }

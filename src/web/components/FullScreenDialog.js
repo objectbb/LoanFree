@@ -45,22 +45,20 @@ class FullScreenDialog extends React.Component {
         const { classes, open } = this.props;
         return (
             <div>
-        <Dialog
-          fullScreen
-          open={this.state.open}
-          onClose={this.handleClose}
-          transition={Transition}
-        >
-          <AppBar className={classes.appBar}>
-            <Toolbar>
-              <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton>
-            </Toolbar>
-          </AppBar>
-            {this.props.children}
-        </Dialog>
-      </div>
+              <Dialog
+                fullScreen
+                open={this.state.open}
+                onClose={this.handleClose}
+                transition={Transition}
+              >
+                  <Toolbar style={{backgroundColor: '#757575', minHeight: '7px'}}>
+                    <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+                      <div className='action-button'>CLOSE</div>
+                    </IconButton>
+                  </Toolbar>
+                  {this.props.children}
+              </Dialog>
+            </div>
         );
     }
 }

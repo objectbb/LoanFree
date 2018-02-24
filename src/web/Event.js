@@ -261,7 +261,7 @@ class Event extends Component {
                  fullWidth={true}
                 onChange={this.handleChange}
                 type="datetime-local"
-                    value={moment(startdate,"yyyy-MM-DDThh:mmZ").format("YYYY-MM-DDTkk:mm")}
+                    value={moment.utc(startdate,"yyyy-MM-DDThh:mmZ").format("YYYY-MM-DDTkk:mm")}
                 InputLabelProps={{
                   shrink: true,
                 }}

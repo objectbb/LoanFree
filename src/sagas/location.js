@@ -32,12 +32,12 @@ function* googleGeocode(fulladdress) {
 
         } else {
             yield put({ type: 'REQUEST_GEOCODE_FAILED', payload: fulladdress });
-            yield put({ type: 'APP_ERROR', message: "Geocoding Failed" });
+            yield put({ type: 'APP_ERROR', message: `Geocoding Failed ${fulladdress}` });
         }
 
     } catch (err) {
         yield put({ type: 'REQUEST_GEOCODE_FAILED', payload: fulladdress });
-        yield put({ type: 'APP_ERROR', message: String(err) });
+        yield put({ type: 'APP_ERROR', message: `${String(err)} ${fulladdress}` });
     }
 }
 
