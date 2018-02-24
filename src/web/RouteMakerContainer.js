@@ -75,21 +75,43 @@ class RouteMakerContainer extends Component {
                                         </Button>
                                     </Badge>
 
-                                    <FullScreenDialog  open={this.state.isEventOpen} onHandleClose={this.handleClose} onClick={this.handleClickOpen}  header={""} >
-                                        {events.item.length > 0 && <EventsContainer />}
-                                        <FullWidthTabs>
-                                            <Event header= "Event"/>
-                                            <div header={`Participants ${eventparticipants.item.length}`}
-                                                disable={participant.item._id ? false : true}>
-                                                <br />
-                                                {eventparticipants.item.length > 1 &&  <EventParticipants />}
-                                                <br />
-                                                <EventParticipant />
-                                            </div>
-                                            <div header='Import' disable={participant.item._id ? false : true}>
-                                                <ImportEventParticipants />
-                                            </div>
-                                        </FullWidthTabs>
+                                    <FullScreenDialog  open={(eventparticipants && eventparticipants.item.length < 2) || (events && events.item.length === 0) || this.state.isEventOpen} onHandleClose={this.handleClose} onClick={this.handleClickOpen}  header={""} >
+
+                                        <Grid container spacing={0}>
+                                            <Grid item xs={0} sm={1} md={3} lg={3}>
+                                            </Grid>
+                                            <Grid item xs={12} sm={10} md={6} lg={6}>
+                                                {events.item.length > 0 && <EventsContainer />}
+
+                                       {
+                                            eventparticipants && eventparticipants.item.length === 1 &&
+                                          <Typography type="title" >
+                                            Okay, you need to add pariticipants. Click 'Import' to start
+                                            </Typography>
+                                        }
+                                        {
+                                            events && events.item.length === 0 &&
+                                          <Typography type="title" >
+                                            You need an Event to get started...
+                                            </Typography>
+                                        }
+                                                <FullWidthTabs>
+                                                    <Event header= "Event"/>
+                                                    <div header={`Participants ${eventparticipants.item.length}`}
+                                                        disable={participant.item._id ? false : true}>
+                                                        <br />
+                                                        {eventparticipants.item.length > 1 &&  <EventParticipants />}
+                                                        <br />
+                                                        <EventParticipant />
+                                                    </div>
+                                                    <div header='Import' disable={participant.item._id ? false : true}>
+                                                        <ImportEventParticipants />
+                                                    </div>
+                                                </FullWidthTabs>
+                                            </Grid>
+                                            <Grid item xs={0} sm={1} md={3} lg={3}>
+                                            </Grid>
+                                        </Grid>
                                     </FullScreenDialog>
                                 </li>
                                 <li style={{width: '50px'}}>

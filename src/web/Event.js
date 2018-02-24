@@ -293,7 +293,7 @@ class Event extends Component {
                 emptyMessage="Address is required"
                  minMessage="Minimum characters"
               />
-              {<div className="coords">{coords.join(' ')}</div>}
+              {<div className="coords">{coords && coords.join(' ')}</div>}
                {isFetching && <CircularProgress size={25} />}
 
             <TextInput

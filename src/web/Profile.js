@@ -108,7 +108,7 @@ class Profile extends Component {
                 text="Email"
                 minCharacters={6}
                 onChange={this.handleChange}
-                content={email}
+                content={email && email.toLowerCase()}
                 validate={this.validateEmail}
                 required={true}
                 errorMessage="Email is invalid"
