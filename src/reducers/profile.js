@@ -12,15 +12,25 @@ export const profile = (
             payload: action.payload,
             authenticated: true,
             isFetching: true,
+            message: '',
             error: ""
         };
     case PROFILE_FETCH_SUCCEEDED:
+        return {
+            ...state,
+            item: action.payload,
+            authenticated: true,
+            isFetching: false,
+            message: '',
+            error: ""
+        };
     case PROFILE_UPSERT_SUCCEEDED:
         return {
             ...state,
             item: action.payload,
             authenticated: true,
             isFetching: false,
+            message: "Saved",
             error: ""
         };
     case PROFILE_UPSERT_FAILED:
@@ -28,6 +38,7 @@ export const profile = (
         return {
             ...state,
             error: action.message,
+            message: '',
             isFetching: false
         };
     default:

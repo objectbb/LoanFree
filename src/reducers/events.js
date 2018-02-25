@@ -11,6 +11,7 @@ export const events = (
             payload: action.payload,
             error: action.message,
             isFetching: true,
+            message: '',
             error: ""
         }
     case EVENTS_UPSERT:
@@ -22,18 +23,21 @@ export const events = (
                 return item
             }) : [...state.item, action.payload],
             isFetching: false,
+            message: 'Saved',
             error: ""
         };
     case EVENTS_FETCH_SUCCEEDED:
         return {
             item: action.payload,
             isFetching: false,
+            message: '',
             error: ""
         };
     case EVENTS_FETCH_FAILED:
         return {
             ...state,
             error: action.message,
+            message: '',
             isFetching: false
         }
     default:

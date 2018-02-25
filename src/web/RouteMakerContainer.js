@@ -27,6 +27,7 @@ import Badge from "material-ui/Badge"
 
 import * as actions from "../actions"
 
+import "./styles/animate.css"
 import "./styles/app.css"
 
 class RouteMakerContainer extends Component {
@@ -82,19 +83,24 @@ class RouteMakerContainer extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={10} md={6} lg={6}>
                                                 {events.item.length > 0 && <EventsContainer />}
-
-                                       {
-                                            eventparticipants && eventparticipants.item.length === 1 &&
-                                          <Typography type="title" >
-                                            Okay, you need to add pariticipants. Click 'Import' to start
-                                            </Typography>
-                                        }
-                                        {
-                                            events && events.item.length === 0 &&
-                                          <Typography type="title" >
-                                            You need an Event to get started...
-                                            </Typography>
-                                        }
+                                                {
+                                                    !event.item._id &&
+                                                        <Typography type="title" >
+                                                            Please select an event or create one before attempting to close...
+                                                        </Typography>
+                                                }
+                                                {
+                                                   event.item._id && eventparticipants && eventparticipants.item.length < 2 &&
+                                                    <Typography type="title" >
+                                                        Okay, you need to add pariticipants. Click <strong>'Import'</strong> to start...
+                                                    </Typography>
+                                                }
+                                                {
+                                                    events && events.item.length === 0 &&
+                                                    <Typography type="title" >
+                                                        You need an Event to get <strong>started</strong>...
+                                                    </Typography>
+                                                }
                                                 <FullWidthTabs>
                                                     <Event header= "Event"/>
                                                     <div header={`Participants ${eventparticipants.item.length}`}

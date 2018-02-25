@@ -13,16 +13,34 @@ export const account = (
             payload: action.payload,
             authenticated: false,
             isFetching: true,
+            message: '',
             error: ""
         };
     case ACCOUNT_FETCH_SUCCEEDED:
+        return {
+            ...state,
+            item: action.payload,
+            authenticated: true,
+            isFetching: false,
+            message: '',
+            error: ""
+        }
     case ACCOUNT_UPSERT_SUCCEEDED:
+        return {
+            ...state,
+            item: action.payload,
+            authenticated: true,
+            isFetching: false,
+            message: "Saved",
+            error: ""
+        }
     case ACCOUNT_AUTHENTICATE_SUCCEEDED:
         return {
             ...state,
             item: action.payload,
             authenticated: true,
             isFetching: false,
+            message: '',
             error: ""
         }
     case ACCOUNT_AUTHENTICATE_FAILED:
@@ -30,6 +48,7 @@ export const account = (
             ...state,
             authenticated: false,
             error: action.message,
+            message: '',
             isFetching: false
         };
     case ACCOUNT_UPSERT_FAILED:
@@ -37,6 +56,7 @@ export const account = (
         return {
             ...state,
             error: action.message,
+            message: '',
             isFetching: false
         }
     case ACCOUNT_LOGOFF:
@@ -45,6 +65,7 @@ export const account = (
             ...state,
             item: {},
             authenticated: false,
+            message: '',
             error: ""
         };
     default:

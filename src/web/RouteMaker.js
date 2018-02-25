@@ -174,6 +174,8 @@ class RouteMaker extends Component {
 
         const { event } = this.props
 
+        console.log("RouteMaker --> render --> markers ", event.item.markers)
+
         return (
             <span>
 

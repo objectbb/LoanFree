@@ -50,8 +50,10 @@ class CaptureMoments extends Component {
     }
 
     uploadImagetoFirebase() {
+        let photoInfo = { ...this.props.participant }
+        photoInfo.item.account = { ...this.props.account.item }
 
-        this.props.actions.uploadImagetoFirebase(this.props.participant,
+        this.props.actions.uploadImagetoFirebase(photoInfo,
             this.state.photo)
 
         this.setState({ firebase: true, error: undefined })
@@ -145,9 +147,10 @@ const mapDispatchToProps = (dispatch, props) => {
 
 function mapStateToProps(state) {
 
-    const { participant, photo } = state
+    const { participant, photo, account } = state
 
     return {
+        account,
         participant,
         photo
     }

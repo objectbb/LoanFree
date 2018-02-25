@@ -38,7 +38,7 @@ class Events extends Component {
         }
 
         dispatch({ type: 'EVENT_PARTICIPANT_CLEAR' })
-        dispatch({ type: 'EVENT_FETCH_SUCCEEDED', payload: value })
+        dispatch({ type: 'EVENT_FETCH_REQUESTED', payload: { _id: value._id } })
         dispatch({ type: 'PARTICIPANT_FETCH_REQUESTED', payload: { _eventId: value._id, _accountId: account.item._id } })
 
         if (value._id) {
@@ -74,7 +74,7 @@ class Events extends Component {
                 <IntegrationReactSelect
                  options={menuitems}
                   value={event.item}
-                  placeholder={`${account.item.firstname}'s Events (${menuitems.length - ((account.item.authorization === "ROUTEMAKER") && 1)})`}
+                  placeholder={`${account.item.firstname} choose from ${menuitems.length - ((account.item.authorization === "ROUTEMAKER") && 1)} event(s)`}
                 onChange={this.handleUpdateInput}
                  />
             </Typography>

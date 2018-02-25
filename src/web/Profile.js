@@ -89,7 +89,7 @@ class Profile extends Component {
 
     render() {
 
-        const { message, isFetching, account } = this.props
+        const { message, isFetching, account, error } = this.props
 
         const {
             firstname,
@@ -143,10 +143,18 @@ class Profile extends Component {
                 minMessage="Minimum characters"
               />
 
-        {message &&
-          <p style={{ color: "red" }}>
-            {message}
-          </p>}
+                {
+                    error &&
+                    <p style={{ color: "red" }}>
+                    {error}
+                    </p>
+                }
+                {
+                    message &&
+                    <p style={{ color: "red" }}>
+                    {message}
+                    </p>
+                }
         <br />
 
         <Button mini disabled={!isEnabled} onClick={item => this.handleSubmit(item)} variant="fab" color="primary" aria-label="add">

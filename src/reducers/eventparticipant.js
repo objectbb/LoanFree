@@ -11,6 +11,7 @@ export const eventparticipant = (
             ...state,
             payload: action.payload,
             isFetching: false,
+            message: '',
             error: ""
         };
     case EVENT_PARTICIPANT_FETCH_REQUESTED:
@@ -19,15 +20,25 @@ export const eventparticipant = (
             ...state,
             payload: action.payload,
             isFetching: true,
+            message: '',
             error: ""
         };
     case EVENT_PARTICIPANT_FETCH_SUCCEEDED:
+        return {
+            ...state,
+            item: action.payload,
+            authenticated: true,
+            isFetching: false,
+            message: '',
+            error: ""
+        };
     case EVENT_PARTICIPANT_UPSERT_SUCCEEDED:
         return {
             ...state,
             item: action.payload,
             authenticated: true,
             isFetching: false,
+            message: "Saved",
             error: ""
         };
     case EVENT_PARTICIPANT_UPSERT_FAILED:
@@ -35,6 +46,7 @@ export const eventparticipant = (
         return {
             ...state,
             error: action.message,
+            message: '',
             isFetching: false
         }
     case EVENT_PARTICIPANT_CLEAR:
@@ -42,6 +54,7 @@ export const eventparticipant = (
             ...state,
             item: {},
             isFetching: false,
+            message: '',
             error: ""
         }
     default:

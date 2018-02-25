@@ -94,7 +94,7 @@ class Login extends Component {
                 </Button>
                 { error &&
                   <p style={{ color: "red" }}>
-                    {(error === "No data") && "Email not found...Please register or contact your local administrator."}
+                    {(error === "No data") ? "Email not found...Please register or contact your local administrator." : error}
                   </p> }
             </div>
         )

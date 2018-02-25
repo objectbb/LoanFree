@@ -18,7 +18,8 @@ function* fetchParticipant(action) {
         yield api.resultHandler(item, 'EVENT_PARTICIPANTS_FETCH_')
 
     } catch (e) {
-        yield put({ type: "EVENT_PARTICIPANTS_FETCH_FAILED", message: e.message });
+        yield put({ type: "EVENT_PARTICIPANTS_FETCH_FAILED", message: e.message })
+        yield put({ type: "APP_ERROR", message: e.message })
     }
 }
 
@@ -26,9 +27,19 @@ function* fetchAccountUpsert(action) {
     let item;
     try {
         item = yield accountApi.upsert(action)
-        yield put({ type: "EVENT_PARTICIPANT_UPSERT_ACCOUNT", payload: item });
+
+        console.log("eventparticipants --> fetchAccountUpsert ---> item", item)
+
+        if (!item.data.errmsg)
+            yield put({ type: "EVENT_PARTICIPANT_UPSERT_SUCCEEDED", payload: item })
+        else {
+            yield put({ type: 'EVENT_PARTICIPANT_UPSERT_FAILED', message: item.data.errmsg })
+            yield put({ type: "APP_ERROR", message: item.data.errmsg })
+        }
+
 
     } catch (e) {
+        yield put({ type: 'EVENT_PARTICIPANT_UPSERT_FAILED', message: e.message })
         yield put({ type: "APP_ERROR", message: e.message });
     }
 
@@ -41,6 +52,7 @@ function* fetchUpsert(action) {
         item = yield participantApi.upsert(action)
 
     } catch (e) {
+        yield put({ type: 'EVENT_PARTICIPANT_UPSERT_FAILED', message: e.message })
         yield put({ type: "APP_ERROR", message: e.message });
     }
 }
@@ -52,7 +64,7 @@ function* fetchBatchUpsert(action) {
 
         const acctBatch = accounts.map((item) => {
             values = item.split(',')
-            return { email: values[0], firstname: values[1], lastname: values[2], authorization: 'PARTICIPANT' }
+            return { email: values[0].toLowerCase(), firstname: values[1], lastname: values[2], authorization: 'PARTICIPANT' }
         })
 
         const prt = yield upsert({ payload: { participant, accounts: acctBatch } })
@@ -60,7 +72,8 @@ function* fetchBatchUpsert(action) {
         yield put({ type: "EVENT_PARTICIPANTS_FETCH_REQUESTED", payload: { _eventId: participant._eventId } });
 
     } catch (e) {
-        yield put({ type: "EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED", message: e.message });
+        yield put({ type: "EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED", message: e.message })
+        yield put({ type: "APP_ERROR", message: e.message })
     }
 }
 
@@ -81,6 +94,7 @@ function* fetchEventParticipantUpsert(action) {
 
     } catch (err) {
         yield put({ type: "EVENT_UPSERT_FAILED", message: err.message });
+        yield put({ type: "APP_ERROR", message: err.message })
     }
 }
 

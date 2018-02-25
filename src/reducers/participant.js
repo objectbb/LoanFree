@@ -12,15 +12,25 @@ export const participant = (
             ...state,
             payload: action.payload,
             isFetching: true,
+            message: '',
             error: ""
         };
     case PARTICIPANT_FETCH_SUCCEEDED:
+        return {
+            ...state,
+            item: action.payload,
+            authenticated: true,
+            isFetching: false,
+            message: '',
+            error: ""
+        };
     case PARTICIPANT_UPSERT_SUCCEEDED:
         return {
             ...state,
             item: action.payload,
             authenticated: true,
             isFetching: false,
+            message: "Saved",
             error: ""
         };
     case PARTICIPANT_UPSERT_FAILED:
@@ -28,13 +38,15 @@ export const participant = (
         return {
             ...state,
             error: action.message,
+            message: '',
             isFetching: false
         }
     case PARTICIPANT_CLEAR:
         return {
             ...state,
-            item: {id: undefined},
+            item: { id: undefined },
             isFetching: false,
+            message: '',
             error: ""
         }
     default:

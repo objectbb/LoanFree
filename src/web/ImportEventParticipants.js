@@ -89,7 +89,9 @@ class ImportEventParticipants extends Component {
 
     render() {
 
-        const { error, isFetching } = this.props.event
+        //  const { error, isFetching } = this.props.event
+        const { error, isFetching } = this.props.eventparticipants
+
         let isEnabled = this.isEnabled()
 
         return (
@@ -105,8 +107,8 @@ class ImportEventParticipants extends Component {
 
                 {error &&
                     <p style={{ color: "red" }}>
-                {error}
-                </p>}
+                        {error}
+                    </p>}
                 <br />
 
                 <Button  disabled={!isEnabled} onClick={item => this.handleSubmit(item)} variant="fab" mini color="primary" aria-label="add">
@@ -122,11 +124,12 @@ class ImportEventParticipants extends Component {
 }
 
 function mapStateToProps(state) {
-    const { event } = state
+    const { event, eventparticipants } = state
 
     console.log("ImportEventParticipant --> mapStateToProps --> event ", event)
 
     return {
+        eventparticipants,
         event
     }
 }

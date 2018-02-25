@@ -18,10 +18,6 @@ class EventParticipants extends Component {
         this.clearSelectedParticipant = this.clearSelectedParticipant.bind(this)
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.props.eventparticipants.item._id !== nextProps.eventparticipants.item._id
-    }
-
     handleUpdateInput(item) {
         const { dispatch } = this.props
         console.log("EventParticipants --> handleUpdateInput ", item)

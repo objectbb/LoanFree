@@ -92,7 +92,7 @@ class EventParticipant extends Component {
 
         if (!this.props.eventparticipant.item.account) return (<div></div>);
 
-        const { error, isFetching } = this.props.eventparticipant
+        const { error, isFetching, message } = this.props.eventparticipant
         const { email, firstname, lastname } = this.state
 
         let isEnabled = this.isEnabled()
@@ -138,10 +138,18 @@ class EventParticipant extends Component {
                 emptyMessage="Last Name is required"
                 minMessage="Minimum characters"
               />
-              {error &&
-                <p style={{ color: "red" }}>
-                  {error}
-                </p>}
+                {
+                    error &&
+                    <p style={{ color: "red" }}>
+                    {error}
+                    </p>
+                }
+                {
+                    message &&
+                    <p style={{ color: "red" }}>
+                    {message}
+                    </p>
+                }
                   <Button mini disabled={!isEnabled} onClick={item => this.handleSubmit(item)} variant="fab" color="primary">
                       {isFetching && <CircularProgress size={25} />}  <div className='action-button'>SAVE</div>
                     </Button>

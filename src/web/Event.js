@@ -201,7 +201,7 @@ class Event extends Component {
 
     render() {
 
-        const { error, isFetching } = this.props.event
+        const { error, isFetching, message } = this.props.event
 
         const {
             _id,
@@ -333,10 +333,18 @@ class Event extends Component {
                 emptyMessage="Zip Code is required"
                 minMessage="Minimum characters"
               />
-              {error &&
-                  <p style={{ color: "red" }}>
+                {
+                    error &&
+                    <p style={{ color: "red" }}>
                     {error}
-                  </p>}
+                    </p>
+                }
+                {
+                    message &&
+                    <p style={{ color: "red" }}>
+                    {message}
+                    </p>
+                }
 
                     <Button
                         mini

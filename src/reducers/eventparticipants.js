@@ -1,15 +1,17 @@
-import { EVENT_PARTICIPANTS_CLEAR, EVENT_PARTICIPANTS_UPSERT, EVENT_PARTICIPANTS_FETCH_FAILED, EVENT_PARTICIPANTS_FETCH_REQUESTED, EVENT_PARTICIPANTS_FETCH_SUCCEEDED, } from "../actions";
+import { EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED, EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED, EVENT_PARTICIPANTS_CLEAR, EVENT_PARTICIPANTS_UPSERT, EVENT_PARTICIPANTS_FETCH_FAILED, EVENT_PARTICIPANTS_FETCH_REQUESTED, EVENT_PARTICIPANTS_FETCH_SUCCEEDED, } from "../actions";
 
 export const eventparticipants = (
     state = { item: [], isFetching: false, message: "", error: "" },
     action
 ) => {
     switch (action.type) {
+    case EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED:
     case EVENT_PARTICIPANTS_FETCH_REQUESTED:
         return {
             ...state,
             payload: action.payload,
             isFetching: true,
+            message: '',
             error: ""
         }
     case EVENT_PARTICIPANTS_FETCH_SUCCEEDED:
@@ -18,6 +20,7 @@ export const eventparticipants = (
             item: action.payload,
             authenticated: true,
             isFetching: false,
+            message: '',
             error: ""
         };
     case EVENT_PARTICIPANTS_UPSERT:
@@ -29,12 +32,15 @@ export const eventparticipants = (
                 return item
             }) : [...state.item, ...action.payload],
             isFetching: false,
+            message: "Saved",
             error: ""
         };
+    case EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED:
     case EVENT_PARTICIPANTS_FETCH_FAILED:
         return {
             ...state,
             error: action.message,
+            message: '',
             isFetching: false
         }
     case EVENT_PARTICIPANTS_CLEAR:
@@ -42,6 +48,7 @@ export const eventparticipants = (
             ...state,
             item: [],
             isFetching: false,
+            message: '',
             error: ""
 
         };

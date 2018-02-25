@@ -12,10 +12,10 @@ import geolib from "geolib"
 import * as actions from "../actions"
 
 
-import { Map, Marker, TileLayer, Popup, Tooltip,LayersControl } from 'react-leaflet'
+import { Map, Marker, TileLayer, Popup, Tooltip, LayersControl } from 'react-leaflet'
 
 import GoogleLayer from './GoogleLayer'
-const { BaseLayer} = LayersControl;
+const { BaseLayer } = LayersControl;
 const key = 'AIzaSyBqK4f8zbMrK4K5cxWb8_10Zkbk7LHMrKE';
 const terrain = 'TERRAIN';
 const road = 'ROADMAP';
@@ -165,8 +165,8 @@ class MapIt extends Component {
 
     render() {
 
-      return (
-              <div>
+            return (
+                    <div>
          <FullScreenDialog  open={this.state.isCamera} onHandleClose={this.handleClose} onClick={this.handleClickOpen}  header={""} >
            <CaptureMoments />
         </FullScreenDialog>

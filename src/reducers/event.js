@@ -13,20 +13,38 @@ export const event = (
             ...state,
             payload: action.payload,
             isFetching: true,
+            message: '',
             error: ""
         }
     case REQUEST_GEOCODE_SUCCEEDED:
+        return {
+            ...state,
+            item: action.payload,
+            isFetching: false,
+            message: '',
+            error: ""
+        };
     case EVENT_FETCH_SUCCEEDED:
+        return {
+            ...state,
+            item: action.payload,
+            isFetching: false,
+            message: '',
+            error: ""
+        };
     case EVENT_UPSERT_SUCCEEDED:
         return {
             ...state,
             item: action.payload,
             isFetching: false,
+            message: "Saved",
             error: ""
         };
     case REQUEST_GEOCODE_FAILED:
         return {
             item: { ...state.item, coords: undefined },
+            error: "Geocoding failed.",
+            message: '',
             isFetching: false
         }
     case EVENT_UPSERT_FAILED:
@@ -34,11 +52,13 @@ export const event = (
         return {
             ...state,
             error: action.message,
+            message: '',
             isFetching: false
         }
     case EVENT_CLEAR_VIEW:
         return {
             error: "",
+            message: '',
             isFetching: false,
             item: {
                 name: '',
@@ -57,6 +77,7 @@ export const event = (
     case EVENT_CLEAR:
         return {
             ...state,
+            message: '',
             item: {}
         }
     default:

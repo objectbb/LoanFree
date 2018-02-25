@@ -12,25 +12,37 @@ export const photo = (
             payload: action.payload,
             authenticated: true,
             isFetching: true,
+            message: '',
             error: ""
         };
     case PHOTO_FETCH_SUCCEEDED:
+        return {
+            ...state,
+            item: action.payload,
+            authenticated: true,
+            isFetching: false,
+            message: '',
+            error: ""
+        };
     case PHOTO_UPSERT_SUCCEEDED:
         return {
             ...state,
             item: action.payload,
             authenticated: true,
             isFetching: false,
+            message: "Saved",
             error: ""
         };
     case PHOTO_FIREBASE_UPSERT_SUCCEEDED:
         return {
             ...state,
+            message: 'Saved',
             firebase: true
         }
     case PHOTO_FIREBASE_UPSERT_FAILED:
         return {
             ...state,
+            message: '',
             firebase: false
         }
     case PHOTO_UPSERT:
@@ -44,6 +56,7 @@ export const photo = (
                 return item
             }) : [...state.item, action.payload],
             isFetching: false,
+            message: 'Saved',
             error: ""
         };
     case PHOTO_UPSERT_FAILED:
@@ -51,6 +64,7 @@ export const photo = (
         return {
             ...state,
             error: action.message,
+            message: '',
             isFetching: false
         };
     default:
