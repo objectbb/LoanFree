@@ -3,21 +3,26 @@ import * as api from "../api/restful"
 import * as config from "../config/config";
 
 function googleAutoComplete(address) {
-    return call(api.callget, config.GOOGLE_AUTOCOMPLETE, `input=${address}&types=geocode&language=fr&key=AIzaSyCnwNNjhla4bLrLmuF7KryB2HBhhj8t_Cc`)
+    return call(api.callget, config.GOOGLE_AUTOCOMPLETE, `?input=${address}&types=geocode&language=fr&key=AIzaSyCnwNNjhla4bLrLmuF7KryB2HBhhj8t_Cc`)
 }
 
 function googlePlaceId(placeId) {
-    return call(api.callget, config.GOOGLE_PLACEID, `placeid=${placeId}&types=geocode&language=fr&key=AIzaSyCnwNNjhla4bLrLmuF7KryB2HBhhj8t_Cc`)
+    return call(api.callget, config.GOOGLE_PLACEID, `?placeid=${placeId}&types=geocode&language=fr&key=AIzaSyCnwNNjhla4bLrLmuF7KryB2HBhhj8t_Cc`)
 }
 
-function* googleGeocode(fulladdress, action) {
+function mapboxGeocoding(address) {
+    return call(api.callget, config.MAPBOX_URL, `${address}+nw.json?access_token=
+pk.eyJ1Ijoib2JqZWN0YmIiLCJhIjoiY2pkd3FiYzVtMXhwdzJ2bXVmZDlqejFpMiJ9.rAxR9-G_wpdDBE3ZELQn2w`)
+}
+
+function* fullOnGeocode(fulladdress, action) {
     let loc
 
     try {
 
         console.log("location --> googleGeocode fulladdress ", fulladdress)
 
-        let geocoderesults = yield call(api.callget, config.GEOCODE_URL, `address=${fulladdress}`)
+        let geocoderesults = yield call(api.callget, config.GEOCODE_URL, `?address=${fulladdress}`)
 
         console.log("location --> googleGeocode fulladdress ", geocoderesults)
 
@@ -25,8 +30,8 @@ function* googleGeocode(fulladdress, action) {
             geocoderesults.data.results[0].geometry)
             return geocoderesults.data.results[0].geometry.location
 
-        const results = yield googleAutoComplete(fulladdress)
-        const predictions = yield results.data.predictions
+        geocoderesults = yield googleAutoComplete(fulladdress)
+        const predictions = yield geocoderesults.data.predictions
 
         console.log("location --> googleGeocode predictions ", predictions)
 
@@ -41,18 +46,27 @@ function* googleGeocode(fulladdress, action) {
             console.log("location --> googleGeocode geocoderesults ", geocoderesults)
             return yield geocoderesults.data.result.geometry.location
 
-        } else {
-            const errMsg = `${fulladdress} ${geocoderesults.data.error_message ?
-                                    JSON.stringify(geocoderesults.data.error_message) : ''}`
-
-            if (action)
-                yield put({
-                    type: 'REQUEST_GEOCODE_FAILED',
-                    message: errMsg,
-                    payload: { ...action.payload, coords: undefined }
-                });
-            yield put({ type: 'APP_ERROR', message: `Geocoding Failed ${errMsg}` });
         }
+
+        geocoderesults = yield mapboxGeocoding(fulladdress)
+        console.log("location --> mapboxGeocoding ",
+            geocoderesults.data.features[0].geometry.coordinates)
+
+        if (geocoderesults.data.features[0].geometry.coordinates) {
+            const coords = geocoderesults.data.features[0].geometry.coordinates
+            return { lat: coords[1], lng: coords[0] }
+        }
+
+        const errMsg = `${fulladdress} ${geocoderesults.data ? JSON.stringify(geocoderesults.data) : '' } ${geocoderesults.data.error_message ?
+                                    JSON.stringify(geocoderesults.data.error_message) : ''}`
+        if (action)
+            yield put({
+                type: 'REQUEST_GEOCODE_FAILED',
+                message: errMsg,
+                payload: { ...action.payload, coords: undefined }
+            });
+        yield put({ type: 'APP_ERROR', message: `Geocoding Failed ${errMsg}` });
+
 
     } catch (err) {
         const errMsg = `${String(err)} ${fulladdress}`
@@ -85,7 +99,10 @@ function currLocation() {
 function* setCurrentRegionAddress(action) {
     try {
 
-        const loc = yield* googleGeocode(action.address)
+        const loc = yield* fullOnGeocode(action.address)
+
+        console.log("location --> setCurrentRegionAddress loc ", loc)
+
 
         yield put({ type: 'SET_CURRENT_REGION', coords: [loc.lat, loc.lng] });
     } catch (err) {
@@ -101,7 +118,7 @@ function* requestGeocode(action) {
         const { address, city, state, zipcode, nextAction } = action.payload
         const fulladdress = `${address}, ${city}, ${state}, ${zipcode}`
 
-        let loc = yield* googleGeocode(fulladdress, action)
+        let loc = yield* fullOnGeocode(fulladdress, action)
         yield put({ type: 'REQUEST_GEOCODE_SUCCEEDED', payload: { ...action.payload, coords: [loc.lat, loc.lng] } });
 
     } catch (err) {

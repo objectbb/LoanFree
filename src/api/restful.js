@@ -10,7 +10,7 @@ export function call(path, payload) {
 }
 
 export function callget(path, payload) {
-    return axios.get(`${path}?${payload}`);
+    return axios.get(`${path}${payload}`);
 }
 
 export function* resultHandler(result, entityAction) {

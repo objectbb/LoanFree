@@ -17,6 +17,16 @@ export const WS_URL = 'localhost:5000'
 export const GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
 export const GOOGLE_AUTOCOMPLETE = 'https://maps.googleapis.com/maps/api/place/autocomplete/json'
 export const GOOGLE_PLACEID = 'https://maps.googleapis.com/maps/api/place/details/json'
+export const MAPBOX_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
+
+/*
+18W053 Apley Ln Villa Park IL 600181
+https://api.mapbox.com/geocoding/v5/mapbox.places/
+2+lincoln+memorial+circle+nw.json?access_token=
+pk.eyJ1Ijoib2JqZWN0YmIiLCJhIjoiY2pkd3FiYzVtMXhwdzJ2bXVmZDlqejFpMiJ9.rAxR9-G_wpdDBE3ZELQn2w
+
+
+*/
 
 var config = {
     apiKey: "AIzaSyAFRs_t117oJ5pG1Pyo9wwKrVvSbLnar4Y",
