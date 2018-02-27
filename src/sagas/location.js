@@ -15,20 +15,31 @@ function* googleGeocode(fulladdress) {
 
     try {
 
+        console.log("location --> googleGeocode fulladdress ", fulladdress)
+
         let geocoderesults = yield call(api.callget, config.GEOCODE_URL, `address=${fulladdress}`)
 
-        if (geocoderesults.data.results[0].geometry)
+        console.log("location --> googleGeocode fulladdress ", geocoderesults)
+
+        if (!geocoderesults.data.error_message && geocoderesults.data.results > 0 &&
+            geocoderesults.data.results[0].geometry)
             return geocoderesults.data.results[0].geometry.location
 
         const results = yield googleAutoComplete(fulladdress)
-        const predictions = results.data.predictions
+        const predictions = yield results.data.predictions
+
+        console.log("location --> googleGeocode predictions ", predictions)
 
         if (predictions.length > 0) {
 
             const placeId = predictions[0].place_id
+
+            console.log("location --> googleGeocode placeId ", placeId)
+
             geocoderesults = yield googlePlaceId(placeId)
 
-            return geocoderesults.data.result.geometry.location
+            console.log("location --> googleGeocode geocoderesults ", geocoderesults)
+            return yield geocoderesults.data.result.geometry.location
 
         } else {
             yield put({ type: 'REQUEST_GEOCODE_FAILED', payload: fulladdress });

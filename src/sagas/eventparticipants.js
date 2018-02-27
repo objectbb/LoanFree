@@ -62,14 +62,32 @@ function* fetchBatchUpsert(action) {
 
         const { accounts, participant } = action.payload
 
-        const acctBatch = accounts.map((item) => {
+        const acctBatch = accounts.filter((item) => {
+            values = item.split(',')
+            return values.length === 3
+        }).
+        map((item) => {
             values = item.split(',')
             return { email: values[0].toLowerCase(), firstname: values[1], lastname: values[2], authorization: 'PARTICIPANT' }
         })
 
         const prt = yield upsert({ payload: { participant, accounts: acctBatch } })
+        const result = prt.data
 
-        yield put({ type: "EVENT_PARTICIPANTS_FETCH_REQUESTED", payload: { _eventId: participant._eventId } });
+        console.log("Eventparticipants --> fetchBatchUpsert --> result ", result)
+
+        if (!(result.writeErrors || result.errmsg || result.errors))
+            yield put({ type: "EVENT_PARTICIPANTS_FETCH_REQUESTED", payload: { _eventId: participant._eventId } });
+        else if (result.errmsg) {
+            yield put({ type: "EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED", message: (result.code === 11000) ? `Email already in use ${result.op}` : result.errmsg })
+            yield put({ type: "APP_ERROR", message: `${result.errmsg} ${result.op}` })
+        } else if (result.errors) {
+            yield put({ type: "EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED", message: JSON.stringify(result.errors) })
+            yield put({ type: "APP_ERROR", message: JSON.stringify(result.errors) })
+        } else if (result.writeErrors) {
+            yield put({ type: "EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED", message: JSON.stringify(result.writeErrors) })
+            yield put({ type: "APP_ERROR", message: JSON.stringify(result.writeErrors) })
+        }
 
     } catch (e) {
         yield put({ type: "EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED", message: e.message })

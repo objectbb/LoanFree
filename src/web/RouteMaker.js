@@ -199,7 +199,15 @@ class RouteMaker extends Component {
                 </Dialog>
 
                 <FullScreenDialog open={this.state.isPhoto} onHandleClose={this.handleClose}   header={""}>
-                    <ul className="photogallery">{this.state.photoGallery}</ul>
+                    <Grid container spacing={0}>
+                        <Grid item xs={1} sm={3} md={3} lg={3}>
+                        </Grid>
+                        <Grid item xs={10} sm={6} md={5} lg={5}>
+                        <ul className="photogallery">{this.state.photoGallery}</ul>
+                        </Grid>
+                        <Grid item xs={1} sm={3} md={5} lg={5}>
+                        </Grid>
+                    </Grid>
                 </FullScreenDialog>
 
                 {Object.getOwnPropertyNames(event.item).length > 0 &&

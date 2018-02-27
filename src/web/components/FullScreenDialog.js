@@ -51,7 +51,7 @@ class FullScreenDialog extends React.Component {
                 onClose={this.handleClose}
                 transition={Transition}
               >
-                  <Toolbar style={{backgroundColor: '#757575', minHeight: '7px'}}>
+                  <Toolbar style={{backgroundColor: '#757575', height: '10px'}}>
                     <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
                       <div className='action-button'>CLOSE</div>
                     </IconButton>

@@ -8,7 +8,7 @@ import 'react-block-ui/style.css'
 import Grid from 'material-ui/Grid';
 import Button from "material-ui/Button"
 import Icon from 'material-ui/Icon'
-import camera from "./styles/app.css"
+import "./styles/app.css"
 import Webcam from "./webcam"
 
 class CaptureMoments extends Component {
@@ -73,8 +73,8 @@ class CaptureMoments extends Component {
 
                         <div>
                         <Webcam
-                        width={240}
-                        height={180}
+                        width={200}
+                        height={200}
                         ref={(ref) => this.camera = ref}
                         audio={false}
                         onFailure={this.handleFailure}
@@ -86,6 +86,7 @@ class CaptureMoments extends Component {
                         <br /><br />
                         <div>
                             <img
+                            className="camera-image"
                             ref={(img) => {
                             this.img = img;
                             }}
@@ -96,17 +97,15 @@ class CaptureMoments extends Component {
                             <Icon>backup</Icon>
                         </Button>
 
-                        <p style={{ color: "red" }}>
+                        <div style={{ color: "red" }}>
                         {photo.error && <span>{photo.error}</span>}
                         {this.state.error && <span>{this.state.error}</span>}
                         {!this.state.error && this.state.firebase && photo.firebase &&
                             <span>Yeaaahh!!! You did it, photo is saved</span>
                         }
-                        </p>
+                        </div>
                     </Grid>
                 </Grid>
-
-
              </BlockUi>
         );
     }

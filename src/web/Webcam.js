@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import "./styles/app.css"
 
 class Webcam extends Component {
     static propTypes = {
@@ -89,30 +90,7 @@ class Webcam extends Component {
             audio: false,
         };
 
-        /*
-                navigator.getUserMedia(
-                    constraints,
-                    (stream) => {
-                        const video = this._video;
-
-                        video.srcObject = stream;
-
-                        this._mediaStream = stream;
-
-                        this.setState({
-                            hasUserMedia: true,
-                            userMediaRequested: true
-                        });
-
-                        this.props.onSuccess();
-                    },
-                    (error) => {
-                        this.props.onFailure(error);
-                    }
-                );
-        */
-
-        (function(wtf) {
+        (function (wtf) {
             navigator.mediaDevices.
             getUserMedia(constraints).
             then(function (stream) {

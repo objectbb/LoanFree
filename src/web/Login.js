@@ -33,7 +33,7 @@ class Login extends Component {
         const username = this.state.username
         this.props.dispatch({
             type: 'ACCOUNT_AUTHENTICATE_REQUESTED',
-            payload: { 'email': username }
+            payload: { 'email': username.toLowerCase() }
         })
     }
 

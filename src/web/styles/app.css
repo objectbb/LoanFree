@@ -4,6 +4,39 @@
     height: 500px;
 }
 
+
+
+/*
+329/422 256/329
+@media (min-width: 1281px) {}
+@media (min-width: 1025px) and (max-width: 1280px) {}
+@media (min-width: 768px) and (max-width: 1024px) {}
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {}
+@media (min-width: 481px) and (max-width: 767px) {}
+@media (min-width: 320px) and (max-width: 480px) {}
+*/
+
+@media only screen and (max-width: 414px) {
+    .camera-image video {
+        width: 256.5px!important;
+        height: 200px!important;
+    }
+}
+
+@media only screen and (min-width: 415px) {
+    .camera-image video {
+        width: 240px!important;
+        height: 180px!important;
+    }
+}
+
+
+.camera-image video {
+    width: 200px!important;
+    height: 256.5px!important;
+}
+
+
 .toolbar {
     padding: 5px;
     position: fixed;

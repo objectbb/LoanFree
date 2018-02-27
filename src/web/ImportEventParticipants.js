@@ -28,6 +28,7 @@ class ImportEventParticipants extends Component {
         this.validateEmail = this.validateEmail.bind(this)
         this.isEnabled = this.isEnabled.bind(this)
         this.participantCount = this.participantCount.bind(this)
+        this.checkforDups = this.checkforDups.bind(this)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -35,6 +36,9 @@ class ImportEventParticipants extends Component {
     }
 
     participantCount() {
+
+        if (!this.state.participants) return
+
         const originalForm = this.state.participants.trim()
 
         return originalForm ? this.state.participants.trim().split("\n").length : 0
@@ -48,11 +52,33 @@ class ImportEventParticipants extends Component {
         this.setState({ participants: '' })
     }
 
+    checkforDups() {
+
+        const { participants } = this.state
+
+        const origemail = this.props.
+        eventparticipants.
+        item.map((item) => item.account.email.trim())
+
+        const copyParticipants = participants
+
+        const markDups = copyParticipants.
+        trim().
+        split("\n").
+        map((participant) => {
+            const row = participant.split(',')
+            return `\n${row.slice(0,3)}${(origemail.indexOf(row[0]) > -1) ? ',<---dup ignored' : ''}`
+        })
+
+        this.setState({ participants: markDups.join('').trim() })
+    }
+
     handleChange(e) {
         e.preventDefault()
         const target = e.target
         const value = target.type === "checkbox" ? target.checked : target.value
         const name = target.name
+
 
         this.setState({
             [name]: value
@@ -99,6 +125,7 @@ class ImportEventParticipants extends Component {
                 <div className="coords"> Copy/Paste a list of comma delimited -- email, firstname, lastname </div>
                 <textarea name="participants"
                     onChange={this.handleChange}
+                    onBlur={this.checkforDups}
                     placeholder=""
                     className="participants-list"
                 value={this.state.participants} />

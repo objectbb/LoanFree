@@ -24,7 +24,16 @@ function* fetchUpsert(action) {
     try {
 
         const item = yield upsert(action)
-        yield api.resultHandler(item, 'ACCOUNT_UPSERT_')
+
+        console.log("Account --> fetchUpsert --> item ", item)
+        const result = item.data
+
+        if (!result.errmsg)
+            yield api.resultHandler(item, 'ACCOUNT_UPSERT_')
+        else {
+            yield put({ type: 'ACCOUNT_UPSERT_FAILED', message: (result.code === 11000) ? 'Email already in use' : result.errmsg })
+            yield put({ type: "APP_ERROR", message: result.errmsg })
+        }
 
     } catch (e) {
         yield put({ type: "ACCOUNT_UPSERT_FAILED", message: e.message });

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import RouteMakerContainer from "./RouteMakerContainer"
 import ParticipantContainer from "./ParticipantContainer"
 import Typography from 'material-ui/Typography';
+import { Map } from 'react-leaflet'
 import Login from "./Login"
 import Grid from 'material-ui/Grid'
 import Profile from "./Profile"
@@ -40,18 +41,19 @@ class App extends Component {
         const { account } = this.props
         return (
             <div>
+
                 {!account.authenticated &&
                 <div className="infinite fadeIn fadeIn-selection">
-                    <Grid container spacing={0}>
-                        <Grid item xs={1} sm={1} md={3} lg={3}>
+                    <Grid container spacing={40}>
+                        <Grid item xs={1} sm={3} md={3} lg={3}>
                         </Grid>
-                        <Grid item xs={10} sm={10} md={6} lg={6}>
+                        <Grid item xs={10} sm={6} md={6} lg={6}>
                             <Login />
                             <br/>
                             <Typography>...or be an <i>Event Creator</i>...</Typography>
                             <Profile authorization='ROUTEMAKER' />
                         </Grid>
-                        <Grid item xs={1} sm={1} md={3} lg={3}>
+                        <Grid item xs={1} sm={3} md={3} lg={3}>
                         </Grid>
                     </Grid>
                 </div>
@@ -66,6 +68,7 @@ class App extends Component {
                 <ParticipantContainer />
                 </div>
                 }
+
             </div>
         );
     }

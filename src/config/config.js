@@ -2,9 +2,11 @@ import firebase from 'firebase'
 
 const API_PORT = 5000
 
+
 const API_HOST = 'https://pacific-meadow-71522.herokuapp.com'
 export const WS_URL = 'https://pacific-meadow-71522.herokuapp.com'
 export const API_URL = `${API_HOST}`
+
 
 /*
 const API_HOST = 'http://localhost'

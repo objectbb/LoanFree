@@ -8,21 +8,57 @@ ericksonluna@mondicil.com,Heidi,Short
 heidishort@mondicil.com,Rosanna,Carlson
 rosannacarlson@mondicil.com,Lois,Trevino
 loistrevino@mondicil.com,Key,Shaw
+desireewalker@minga.com,Buchanan,Rowe
+buchananrowe@minga.com,Vance,William
+vancewilliam@minga.com,Angie,Sandoval
+angiesandoval@minga.com,Gallegos,Lloyd
+gallegoslloyd@minga.com,Williamson,Fernandez
+williamsonfernandez@minga.com,Lora,Joseph
+lorajoseph@minga.com,Dorothea,Thornton
+dorotheathornton@minga.com,Tessa,Nicholson
+tessanicholson@minga.com,Dionne,Burton
+dionneburton@minga.com,Watts,Best
+talleybooker@lexicondo.com,Hunter,Bates
+hunterbates@lexicondo.com,Marjorie,Russo
+marjorierusso@lexicondo.com,Taylor,Long
+taylorlong@lexicondo.com,Jean,Mason
+jeanmason@lexicondo.com,Wagner,Cross
+wagnercross@lexicondo.com,Lois,Joyce
+loisjoyce@lexicondo.com,Rosie,Howard
+rosiehoward@lexicondo.com,Virginia,Joyner
+virginiajoyner@lexicondo.com,Hazel,Christensen
+hazelchristensen@lexicondo.com,Wiley,Hood
 
 
-anastasiaklein@bluegrain.com
+wileyhood@lexicondo.com,Hernandez,Reynolds
+hernandezreynolds@lexicondo.com,Lucinda,Barrett
+lucindabarrett@lexicondo.com,Terry,Snow
+terrysnow@lexicondo.com,Kirby,Hendrix
+kirbyhendrix@lexicondo.com,Guzman,Arnold
+guzmanarnold@lexicondo.com,Ruiz,Little
+ruizlittle@lexicondo.com,Glover,Patel
+gloverpatel@lexicondo.com,Cora,Tyson
+coratyson@lexicondo.com,Le,Carr
+lecarr@lexicondo.com,Carrillo,Moon
+johnsonflores@lexicondo.com,Witt,Rhodes
+carrillomoon@lexicondo.com,Alfreda,Houston
 
-{
-    "_id": {
-        "$oid": "5a7c92b04c5a2b5452a100ac"
-    },
-    "__v": 0,
-    "email": "fieldsortiz@xanide.com",
-    "firstname": "Imogene",
-    "lastname": "Hancock",
-    "authorization": "PARTICIPANT",
-    "timeStamp": {
-        "$date": "2018-02-08T18:10:56.109Z"
-    },
-    "authenticated": "false"
-}
+alfredahouston@lexicondo.com,Shannon,Nieves
+shannonnieves@lexicondo.com,Keller
+altakeller@lexicondo.com,Rhea,Tyson
+
+rheatyson@lexicondo.com,Briggs,Morse
+briggsmorse@lexicondo.com,Tracy,Vang
+
+tracyvang@lexicondo.com,Kendra,Roy
+
+    "email": "kendraroy@lexicondo.com",
+    "first": "Johnson",
+    "last": "Flores"
+  },
+  {
+    "email": "johnsonflores@lexicondo.com",
+    "first": "Witt",
+    "last": "Rhodes"
+  }
+]
