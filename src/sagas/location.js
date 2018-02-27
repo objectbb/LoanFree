@@ -10,7 +10,7 @@ function googlePlaceId(placeId) {
     return call(api.callget, config.GOOGLE_PLACEID, `placeid=${placeId}&types=geocode&language=fr&key=AIzaSyCnwNNjhla4bLrLmuF7KryB2HBhhj8t_Cc`)
 }
 
-function* googleGeocode(fulladdress) {
+function* googleGeocode(fulladdress, action) {
     let loc
 
     try {
@@ -42,20 +42,38 @@ function* googleGeocode(fulladdress) {
             return yield geocoderesults.data.result.geometry.location
 
         } else {
-            yield put({ type: 'REQUEST_GEOCODE_FAILED', payload: fulladdress });
-            yield put({ type: 'APP_ERROR', message: `Geocoding Failed ${fulladdress}` });
+            const errMsg = `${fulladdress} ${geocoderesults.data.error_message ?
+                                    JSON.stringify(geocoderesults.data.error_message) : ''}`
+
+            if (action)
+                yield put({
+                    type: 'REQUEST_GEOCODE_FAILED',
+                    message: errMsg,
+                    payload: { ...action.payload, coords: undefined }
+                });
+            yield put({ type: 'APP_ERROR', message: `Geocoding Failed ${errMsg}` });
         }
 
     } catch (err) {
-        yield put({ type: 'REQUEST_GEOCODE_FAILED', payload: fulladdress });
-        yield put({ type: 'APP_ERROR', message: `${String(err)} ${fulladdress}` });
+        const errMsg = `${String(err)} ${fulladdress}`
+        yield put({
+            type: 'REQUEST_GEOCODE_FAILED',
+            message: errMsg,
+            payload: { ...action.payload, coords: undefined }
+        });
+        yield put({ type: 'APP_ERROR', message: errMsg });
     }
 }
 
 function currLocation() {
 
     navigator.geolocation.watchPosition(position => {
-        put({ type: 'CURR_LOCATION', coords: [position.coords.latitude, position.coords.longitude] });
+        put({
+            type: 'CURR_LOCATION',
+            coords: [position.coords.latitude,
+                position.coords.longitude
+            ]
+        });
     }, function error(msg) {
 
         alert('Please enable your GPS position future.');
@@ -83,12 +101,12 @@ function* requestGeocode(action) {
         const { address, city, state, zipcode, nextAction } = action.payload
         const fulladdress = `${address}, ${city}, ${state}, ${zipcode}`
 
-        let loc = yield* googleGeocode(fulladdress)
+        let loc = yield* googleGeocode(fulladdress, action)
         yield put({ type: 'REQUEST_GEOCODE_SUCCEEDED', payload: { ...action.payload, coords: [loc.lat, loc.lng] } });
 
     } catch (err) {
-        yield put({ type: 'REQUEST_GEOCODE_FAILED', payload: action.payload });
-        yield put({ type: 'APP_ERROR', message: String(err) });
+        const errMsg = `${String(err)}`
+        yield put({ type: 'APP_ERROR', message: errMsg });
     }
 }
 

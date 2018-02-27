@@ -42,8 +42,9 @@ export const event = (
         };
     case REQUEST_GEOCODE_FAILED:
         return {
-            item: { ...state.item, coords: undefined },
-            error: "Geocoding failed.",
+            ...state,
+            item: action.payload,
+            error: `Geocoding failed - ${action.message}`,
             message: '',
             isFetching: false
         }

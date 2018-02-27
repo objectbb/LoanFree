@@ -16,6 +16,7 @@ class Logout extends Component {
         super(props)
 
         this.handleLogout = this.handleLogout.bind(this)
+        this.stopIntervals = this.stopIntervals.bind(this)
     }
 
     handleLogout() {
@@ -24,9 +25,27 @@ class Logout extends Component {
         const unauthenicate = { ...account }
         unauthenicate.authenticated = false;
 
+        this.stopIntervals()
         this.props.actions.logoutUser()
+
     }
 
+
+    stopIntervals() {
+        const { dispatch, interval } = this.props
+
+        console.log("Events --> stopIntervals ---> interval ", interval)
+
+        if (interval.watchPositionId)
+            this.props.actions.stopWatchPosition(interval.watchPositionId)
+
+        if (interval.timerId)
+            this.props.actions.stopInterval(interval.timerId)
+
+        if (interval.timerMarkersVisitedId)
+            this.props.actions.stopInterval(interval.timerMarkersVisitedId)
+
+    }
 
     render() {
         const { error, isFetching } = this.props.account
@@ -42,14 +61,16 @@ class Logout extends Component {
 }
 
 function mapStateToProps(state) {
-    const { account } = state
+    const { account, interval } = state
 
     return {
-        account
+        account,
+        interval
     }
 }
 const mapDispatchToProps = (dispatch, props) => {
     return {
+        dispatch,
         actions: bindActionCreators(actions, dispatch)
     }
 }

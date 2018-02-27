@@ -285,7 +285,6 @@ class Event extends Component {
                 text="Address"
                 minCharacters={5}
                 required={true}
-                  onBlur={this.handleGeocode}
                 onChange={this.handleChange}
                 content={address}
                 multiLine={true}
