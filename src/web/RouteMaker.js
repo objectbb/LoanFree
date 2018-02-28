@@ -222,7 +222,7 @@ class RouteMaker extends Component {
                         <Grid item xs={6} sm={4} md={3} lg={3}>
                             <ul className="topbar-list">
                             {event.item._id &&
-                                <li style={{width: '50px'}}>
+                                <li style={{width: '60px'}}>
                                     <Badge style={{ float: 'right'}}  badgeContent={event && event.item.markers.length} color="primary">
                                         <Button mini onClick={this.addMarker}  variant="fab" color="secondary" aria-label="add">
                                            <div className='action-button'>+ MRKR</div>
@@ -230,11 +230,11 @@ class RouteMaker extends Component {
                                     </Badge>
                                 </li>
                             }
-                             <li style={{width: '10px'}}>&nbsp;</li>
-                            <li style={{width: '50px'}}>
+                             <li style={{width: '20px'}}>&nbsp;</li>
+                            <li style={{width: '60px'}}>
                                <RefreshProcess />
                             </li>
-                            <li style={{width: '50px'}}>
+                            <li style={{width: '60px'}}>
                                <PopOverIt anchorReference='anchorEl' icon={<Icon>account_circle</Icon>}>
                                     <Profile />
                                 </PopOverIt>

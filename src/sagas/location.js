@@ -15,14 +15,25 @@ function mapboxGeocoding(address) {
 pk.eyJ1Ijoib2JqZWN0YmIiLCJhIjoiY2pkd3FiYzVtMXhwdzJ2bXVmZDlqejFpMiJ9.rAxR9-G_wpdDBE3ZELQn2w`)
 }
 
+function geocodioGeocoding(address) {
+    return call(api.callget, config.GEOCODIO_URL, `?q=${address}&api_key=87bbb9b55565f538b9b5b859b2525b52f5f00c5`)
+}
+
 function* fullOnGeocode(fulladdress, action) {
     let loc
+    let geocoderesults
 
     try {
 
         console.log("location --> googleGeocode fulladdress ", fulladdress)
 
-        let geocoderesults = yield call(api.callget, config.GEOCODE_URL, `?address=${fulladdress}`)
+        geocoderesults = yield geocodioGeocoding(fulladdress)
+        console.log("location --> geocodioGeocoding ", geocoderesults.data)
+
+        if (geocoderesults.data.results && geocoderesults.data.results.length > 0)
+            return geocoderesults.data.results[0].location
+
+        geocoderesults = yield call(api.callget, config.GEOCODE_URL, `?address=${fulladdress}`)
 
         console.log("location --> googleGeocode fulladdress ", geocoderesults)
 
@@ -49,16 +60,15 @@ function* fullOnGeocode(fulladdress, action) {
         }
 
         geocoderesults = yield mapboxGeocoding(fulladdress)
-        console.log("location --> mapboxGeocoding ",
-            geocoderesults.data.features[0].geometry.coordinates)
+        console.log("location --> mapboxGeocoding ", geocoderesults.data)
 
-        if (geocoderesults.data.features[0].geometry.coordinates) {
+        if (geocoderesults.data.features && geocoderesults.data.features.length > 0) {
             const coords = geocoderesults.data.features[0].geometry.coordinates
             return { lat: coords[1], lng: coords[0] }
         }
 
-        const errMsg = `${fulladdress} ${geocoderesults.data ? JSON.stringify(geocoderesults.data) : '' } ${geocoderesults.data.error_message ?
-                                    JSON.stringify(geocoderesults.data.error_message) : ''}`
+        const errMsg = `${fulladdress} ${geocoderesults.data}`
+
         if (action)
             yield put({
                 type: 'REQUEST_GEOCODE_FAILED',
@@ -69,12 +79,14 @@ function* fullOnGeocode(fulladdress, action) {
 
 
     } catch (err) {
-        const errMsg = `${String(err)} ${fulladdress}`
-        yield put({
-            type: 'REQUEST_GEOCODE_FAILED',
-            message: errMsg,
-            payload: { ...action.payload, coords: undefined }
-        });
+        const errMsg = `${String(err)} ${geocoderesults.data}`
+
+        if (action)
+            yield put({
+                type: 'REQUEST_GEOCODE_FAILED',
+                message: errMsg,
+                payload: { ...action.payload, coords: undefined }
+            });
         yield put({ type: 'APP_ERROR', message: errMsg });
     }
 }
