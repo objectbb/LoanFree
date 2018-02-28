@@ -3,10 +3,11 @@ import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux'
 import RouteMakerContainer from "./RouteMakerContainer"
 import ParticipantContainer from "./ParticipantContainer"
-import Typography from 'material-ui/Typography';
+import Typography from 'material-ui/Typography'
 import { Map } from 'react-leaflet'
 import Login from "./Login"
 import Grid from 'material-ui/Grid'
+import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
 import Profile from "./Profile"
 import "./styles/animate.css"
 import "./styles/app.css"
@@ -44,16 +45,29 @@ class App extends Component {
 
                 {!account.authenticated &&
                 <div className="infinite fadeIn fadeIn-selection">
-                    <Grid container spacing={40}>
-                        <Grid item xs={1} sm={3} md={3} lg={3}>
+                    <Grid container spacing={0}>
+                        <Grid item xs sm md={2} lg={2}>
                         </Grid>
-                        <Grid item xs={10} sm={6} md={6} lg={6}>
-                            <Login />
+                        <Grid item xs={12} sm={12} md={8} lg={8}>
+                               {!account.error &&
+                                <div className="infinite fadeIn fadeIn-selection backgroundimg-login promo-card">
+                                <Login />
+                           </div>
+                            }
                             <br/>
-                            <Typography>...or be an <i>Event Creator</i>...</Typography>
-                            <Profile authorization='ROUTEMAKER' />
+                            {account.error &&
+                                <div className="infinite fadeIn fadeIn-selection backgroundimg-register promo-card">
+                                  <Typography>
+                                      <div style={{ color: "red" }}>
+                                        {(account.error === "No data") ? "Login not found, please reachout to your contact for this event." : error}
+                                      </div>
+                                        If you are here to setup an event, create an account or <i>Refresh</i> and try a different login.
+                                    </Typography>
+                                    <Profile authorization='ROUTEMAKER' />
+                                </div>
+                            }
                         </Grid>
-                        <Grid item xs={1} sm={3} md={3} lg={3}>
+                        <Grid item xs sm md={3} lg={3}>
                         </Grid>
                     </Grid>
                 </div>

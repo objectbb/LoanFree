@@ -27,12 +27,6 @@ function* fullOnGeocode(fulladdress, action) {
 
         console.log("location --> googleGeocode fulladdress ", fulladdress)
 
-        geocoderesults = yield geocodioGeocoding(fulladdress)
-        console.log("location --> geocodioGeocoding ", geocoderesults.data)
-
-        if (geocoderesults.data.results && geocoderesults.data.results.length > 0)
-            return geocoderesults.data.results[0].location
-
         geocoderesults = yield call(api.callget, config.GEOCODE_URL, `?address=${fulladdress}`)
 
         console.log("location --> googleGeocode fulladdress ", geocoderesults)
@@ -66,6 +60,13 @@ function* fullOnGeocode(fulladdress, action) {
             const coords = geocoderesults.data.features[0].geometry.coordinates
             return { lat: coords[1], lng: coords[0] }
         }
+
+
+        geocoderesults = yield geocodioGeocoding(fulladdress)
+        console.log("location --> geocodioGeocoding ", geocoderesults.data)
+
+        if (geocoderesults.data.results && geocoderesults.data.results.length > 0)
+            return geocoderesults.data.results[0].location
 
         const errMsg = `${fulladdress} ${geocoderesults.data}`
 

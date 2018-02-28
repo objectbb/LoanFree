@@ -409,6 +409,18 @@
 
 .top-right {}
 
+.backgroundimg-login {
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%), url('http://ak3.picdn.net/shutterstock/videos/10179983/thumb/1.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.backgroundimg-register {
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%), url('http://tong.visitkorea.or.kr/cms/resource_etc/89/2478889_image_1.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 .map {
     position: absolute;
     top: 0;
@@ -419,6 +431,16 @@
     height: 100%;
 }
 
+.promo-image {
+    padding: 1px;
+    border: 1px solid #BDBDBD;
+    width: 100%;
+}
+
+.promo-card {
+    padding: 5px 5px 5px 2px;
+    width: 100%;
+}
 
 .dialog {
     position: 'absolute';

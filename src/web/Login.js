@@ -6,6 +6,7 @@ import Button from "material-ui/Button"
 import TextInput from "./components/TextInput"
 import { CircularProgress } from "material-ui/Progress"
 import { Card, CardHeader, CardText } from "material-ui/Card"
+import Typography from 'material-ui/Typography'
 import BlockUi from 'react-block-ui'
 import 'react-block-ui/style.css'
 import "./styles/app.css"
@@ -71,6 +72,9 @@ class Login extends Component {
 
         return (
             <div>
+               <Typography>
+                  Let's check on your status, please enter the following...
+               </Typography>
                 <TextInput
                   uniquename="username"
                   text="Email Address"
@@ -83,18 +87,18 @@ class Login extends Component {
                   emptyMessage="Email is required"
                   minMessage="Minimum characters"
                 />
-
+                <br />
                 <Button
                   variant="raised"
                   disabled={(!isEnabled || isFetching) ? true : false}
                   fullWidth={true}
                   onClick={event => this.handleSubmit(event)}
                 >
-                  {isFetching && <CircularProgress  size={30} />} Login
+                  {isFetching && <CircularProgress  size={30} />} Let's Start
                 </Button>
                 { error &&
                   <p style={{ color: "red" }}>
-                    {(error === "No data") ? "Email not found...Please register or contact your local administrator." : error}
+                    {(error === "No data") ? "Email not found...email your contact for this event." : error}
                   </p> }
             </div>
         )

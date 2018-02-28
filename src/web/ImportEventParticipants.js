@@ -126,7 +126,9 @@ class ImportEventParticipants extends Component {
                 <textarea name="participants"
                     onChange={this.handleChange}
                     onBlur={this.checkforDups}
-                    placeholder=""
+                    placeholder="imogenehancock@xanide.com,Queen,Crane
+vancewilliam@minga.com,Angie,Sandoval
+taylorlong@lexicondo.com,Jean,Mason"
                     className="participants-list"
                 value={this.state.participants} />
                 <br />
