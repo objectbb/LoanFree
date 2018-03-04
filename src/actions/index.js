@@ -58,9 +58,11 @@ export const EVENT_PARTICIPANT_UPSERT_FAILED = "EVENT_PARTICIPANT_UPSERT_FAILED"
 export const EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_ACCOUNT_UPSERT_REQUESTED"
 export const EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED = "EVENT_PARTICIPANT_EVENT_UPSERT_REQUESTED"
 
+
 export const EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED = "EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED"
 export const EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED = "EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED"
 export const EVENT_PARTICIPANTS_CLEAR = "EVENT_PARTICIPANTS_CLEAR"
+export const EVENT_PARTICIPANT_UPDATE_COORDS = "EVENT_PARTICIPANT_UPDATE_COORDS"
 
 export const EVENT_PARTICIPANTS_FETCH_REQUESTED = "EVENT_PARTICIPANTS_FETCH_REQUESTED"
 export const EVENT_PARTICIPANTS_FETCH_SUCCEEDED = "EVENT_PARTICIPANTS_FETCH_SUCCEEDED"
@@ -172,11 +174,23 @@ export const watchPosition = (participant) => dispatch => {
         const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
         socket.on('connect', function () {
+            socket.emit('room', _eventId);
             socket.emit('eventparticipant_upsert', { _id, markers, _accountId, _eventId, coords }, (data) =>
                 api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
         });
 
+        socket.on('eventparticipant_update_coords', (participant) => {
+            console.log("watchPosition --> eventparticipant_update_coords --> participant ", participant, participant.coords)
+
+            if (participant.coords && participant.coords.length === 2)
+                dispatch({
+                    type: EVENT_PARTICIPANT_UPDATE_COORDS,
+                    payload: participant
+                })
+        })
+
     }, function error(msg) {}, { maximumAge: 600000000, timeout: 5000, enableHighAccuracy: true });
+
 }
 
 export const stopInterval = (id) => dispatch => {
@@ -350,14 +364,17 @@ export const updateParticipantCurrLocation = (payload) => dispatch => {
 
     const { _id, markers, _accountId, _eventId, coords } = payload
 
-    console.log("index --> updateParticipantCurrLocation--> payload", payload)
+    console.log("updateParticipantCurrLocation --> updateParticipantCurrLocation--> payload", payload)
 
     const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
     socket.on('connect', function () {
         socket.emit('eventparticipant_upsert', { _id, markers, _accountId, _eventId, coords }, (data) =>
             api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
+
     });
+
+
 
     /*
         dispatch({

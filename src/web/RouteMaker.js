@@ -235,7 +235,7 @@ class RouteMaker extends Component {
                                <RefreshProcess />
                             </li>
                             <li style={{width: '60px'}}>
-                               <PopOverIt anchorReference='anchorEl' icon={<Icon>account_circle</Icon>}>
+                               <PopOverIt  anchorReference='anchorEl' icon={<Icon>account_circle</Icon>}>
                                     <Profile />
                                 </PopOverIt>
                             </li>

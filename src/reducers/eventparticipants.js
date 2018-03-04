@@ -1,4 +1,4 @@
-import { EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED, EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED, EVENT_PARTICIPANTS_CLEAR, EVENT_PARTICIPANTS_UPSERT, EVENT_PARTICIPANTS_FETCH_FAILED, EVENT_PARTICIPANTS_FETCH_REQUESTED, EVENT_PARTICIPANTS_FETCH_SUCCEEDED, } from "../actions";
+import { EVENT_PARTICIPANT_UPDATE_COORDS, EVENT_PARTICIPANTS_BATCH_UPSERT_REQUESTED, EVENT_PARTICIPANTS_BATCH_UPSERT_FAILED, EVENT_PARTICIPANTS_CLEAR, EVENT_PARTICIPANTS_UPSERT, EVENT_PARTICIPANTS_FETCH_FAILED, EVENT_PARTICIPANTS_FETCH_REQUESTED, EVENT_PARTICIPANTS_FETCH_SUCCEEDED, } from "../actions";
 
 export const eventparticipants = (
     state = { item: [], isFetching: false, message: "", error: "" },
@@ -31,6 +31,19 @@ export const eventparticipants = (
                 }
                 return item
             }) : [...state.item, ...action.payload],
+            isFetching: false,
+            message: "Saved",
+            error: ""
+        };
+
+    case EVENT_PARTICIPANT_UPDATE_COORDS:
+        return {
+            item: state.item.map(item => {
+                if (item._id === action.payload._id) {
+                    item.coords = [...action.payload.coords]
+                }
+                return item
+            }),
             isFetching: false,
             message: "Saved",
             error: ""

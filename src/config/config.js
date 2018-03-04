@@ -20,6 +20,13 @@ export const GOOGLE_PLACEID = 'https://maps.googleapis.com/maps/api/place/detail
 export const MAPBOX_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
 export const GEOCODIO_URL = 'https://api.geocod.io/v1.2/geocode'
 
+
+/*
+921 S. Ninth Avenue, Maywood, IL. 60153
+2069 lower saint dennis rd saint paul 55116
+*/
+
+
 var config = {
     apiKey: "AIzaSyAFRs_t117oJ5pG1Pyo9wwKrVvSbLnar4Y",
     authDomain: "photos-and-me.firebaseapp.com",

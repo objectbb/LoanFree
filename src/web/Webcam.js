@@ -171,8 +171,10 @@ class Webcam extends Component {
                 width={width}
                 height={height}
                 ref={(component) => this._video = component}
-                autoPlay
-                playsInline
+                autoplay
+                loop
+                muted
+                playsinline
               />
         )
     }

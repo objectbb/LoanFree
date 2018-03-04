@@ -44,6 +44,7 @@ class MapIt extends Component {
         this.closeIndicator = this.closeIndicator.bind(this);
         this.handleCamera = this.handleCamera.bind(this)
         this.handleClose = this.handleClose.bind(this)
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -155,11 +156,13 @@ class MapIt extends Component {
         this.props.viewPhotos(photogallery, e)
     }
 
-    handleCamera() {
+    handleCamera(e) {
+        e.preventDefault()
         this.setState({ isCamera: true })
     }
 
-    handleClose() {
+    handleClose(e) {
+        e.preventDefault()
         this.setState({ isCamera: false });
     }
 
@@ -167,158 +170,158 @@ class MapIt extends Component {
 
             return (
                     <div>
-         <FullScreenDialog  open={this.state.isCamera} onHandleClose={this.handleClose} onClick={this.handleClickOpen}  header={""} >
-           <CaptureMoments />
-        </FullScreenDialog>
-        <Map center={this.props.region} zoom={17} className="map">
+                <FullScreenDialog  open={this.state.isCamera} onHandleClose={this.handleClose}  header={""} >
+                <CaptureMoments />
+                </FullScreenDialog>
+                <Map center={this.props.region} zoom={17} className="map">
 
-            <LayersControl position='topright'>
-               <BaseLayer  name='OpenStreetMap.Mapnik'>
-                  <TileLayer  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"/>
-              </BaseLayer>
-               <BaseLayer name='Google Maps Roads'>
-                  <GoogleLayer googlekey={key}  maptype={road} />
-                </BaseLayer>
-               <BaseLayer  name='Google Maps Terrain'>
-                  <GoogleLayer googlekey={key}  maptype={terrain} />
-                </BaseLayer>
-                  <BaseLayer checked name='Google Maps Hydrid'>
-                  <GoogleLayer googlekey={key}  maptype={hydrid}  libraries={['geometry', 'places']} />
-                </BaseLayer>
-            </LayersControl>
-            {
-              this.props.participants &&
-                this.props.participants.map((item, index) => {
+                  <LayersControl position='topright'>
+                     <BaseLayer  name='OpenStreetMap.Mapnik'>
+                        <TileLayer  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"/>
+                    </BaseLayer>
+                     <BaseLayer name='Google Maps Roads'>
+                        <GoogleLayer googlekey={key}  maptype={road} />
+                      </BaseLayer>
+                     <BaseLayer  name='Google Maps Terrain'>
+                        <GoogleLayer googlekey={key}  maptype={terrain} />
+                      </BaseLayer>
+                        <BaseLayer checked name='Google Maps Hydrid'>
+                        <GoogleLayer googlekey={key}  maptype={hydrid}  libraries={['geometry', 'places']} />
+                      </BaseLayer>
+                  </LayersControl>
+                  {
+                    this.props.participants &&
+                      this.props.participants.map((item, index) => {
 
-                    const isClose = this.closeIndicator(item.coords);
+                          const isClose = this.closeIndicator(item.coords);
 
-                    const icon = divIcon({ className: 'marker ' + (!isClose ? 'bus' : 'bus mark'), html: isClose ? '<div class="tinycamera3"><span></span></div>' : `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})
+                          const icon = divIcon({ className: 'marker ' + (!isClose ? 'bus' : 'bus mark'), html: isClose ? '<div class="tinycamera3"><span></span></div>' : `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})
 
-                    return (
-                      <Marker key={`participant-${index}`}
-                       icon={icon}
-                        name={item}
-                        position={item.coords}
-                           ref="marker">
-                          <Popup>
-                            <span>
-                            {isClose &&
-                              <div style={{fontSize: '15px'}}>
-                                Take a Qik Pic&nbsp;
-                                 <Button mini onClick={this.handleCamera}  variant="fab" color="primary" aria-label="camera" >
-                                  <Icon>camera_enhance</Icon>
-                                </Button>
-                              </div>
-                            }
-                            <div>
-                            {item.account.firstname} {item.account.lastname}
-                            </div>
-                            <div>
-                              {item.coords}
-                            </div>
-                            {item.markers && item.markers.map((item, idx) => (<div key={idx}><div>...</div>{item.marker.name} {item.details.range}m {item.details.coords && <div> {item.details.coords.join(', ')}   </div>} <div>{moment(item.details.timeStamp).format(moment.HTML5_FMT.DATETIME_LOCAL)} </div> </div>)) }
-                            </span>
-                          </Popup>
-                      >
+                          return (
+                            <Marker key={`participant-${index}`}
+                             icon={icon}
+                              name={item}
+                              position={item.coords}
+                                 ref="marker">
+                                <Popup>
+                                  <span>
+                                  {isClose &&
+                                    <div style={{fontSize: '15px'}}>
+                                      Take a Qik Pic&nbsp;
+                                       <Button mini onClick={this.handleCamera}  variant="fab" color="primary" aria-label="camera" >
+                                        <Icon>camera_enhance</Icon>
+                                      </Button>
+                                    </div>
+                                  }
+                                  <div>
+                                  {item.account.firstname} {item.account.lastname}
+                                  </div>
+                                  <div>
+                                    {item.coords}
+                                  </div>
+                                  {item.markers && item.markers.map((item, idx) => (<div key={idx}><div>...</div>{item.marker.name} {item.details.range}m {item.details.coords && <div> {item.details.coords.join(', ')}   </div>} <div>{moment(item.details.timeStamp).format(moment.HTML5_FMT.DATETIME_LOCAL)} </div> </div>)) }
+                                  </span>
+                                </Popup>
+                            >
 
-                    </Marker>
+                          </Marker>
+                          )
+                      }
                     )
-                }
-              )
-            }
-            {/*
-            this.props.currLocation && this.props.currLocation.coords &&
-                <Marker key="marker-you-1"
-                    position={this.props.currLocation.coords}
-                    icon={divIcon({ className: 'youmarker ', html: `<div>YOU</div>`})}
-                       ref="marker">
-                       <Popup>
-                          <div>
-                          {this.props.currLocation.coords}
-                          </div>
-                      </Popup>
-                  >
-                </Marker>
-            */}
-             {
-              this.props.routeMarkers &&
-                this.props.routeMarkers.map((item, index) => {
+                  }
+                  {/*
+                  this.props.currLocation && this.props.currLocation.coords &&
+                      <Marker key="marker-you-1"
+                          position={this.props.currLocation.coords}
+                          icon={divIcon({ className: 'youmarker ', html: `<div>YOU</div>`})}
+                             ref="marker">
+                             <Popup>
+                                <div>
+                                {this.props.currLocation.coords}
+                                </div>
+                            </Popup>
+                        >
+                      </Marker>
+                  */}
+                   {
+                    this.props.routeMarkers &&
+                      this.props.routeMarkers.map((item, index) => {
 
-                let circlerange = "border: 1px solid #000;border-radius: 50%;height:" + item.range + "px;width:" + item.range + "px;";
-                let center = "display:table-cell;vertical-align:middle;height:" + item.range + "px;width:" + item.range + "px;text-align:right;";
+                      let circlerange = "border: 1px solid #000;border-radius: 50%;height:" + item.range + "px;width:" + item.range + "px;";
+                      let center = "display:table-cell;vertical-align:middle;height:" + item.range + "px;width:" + item.range + "px;text-align:right;";
 
-                const inRangePhotos = this.photoCloseIndicator(item)
-                const photoGallery = inRangePhotos.map((item,idx) =>
-                 <li key={`photo-${idx}`} className="photogallery-item">
-                  <Typography type="caption" color="inherit">
-                  #{idx + 1} --
-                  {item.participant.account.email} --
-                  {item.participant.event.name} --
-                  {moment(item.participant.event.startdate).format('llll')} --
-                  range: {item.range}m --
-                  coords: {item.participant.coords} --
-                  timeStamp: {moment(item.timeStamp).format('llll')}
-                 </Typography>
-                 <img src={item.photoURLFirebase} />
-                 </li>)
+                      const inRangePhotos = this.photoCloseIndicator(item)
+                      const photoGallery = inRangePhotos.map((item,idx) =>
+                       <li key={`photo-${idx}`} className="photogallery-item">
+                        <Typography type="caption" color="inherit">
+                        #{idx + 1} --
+                        {item.participant.account.email} --
+                        {item.participant.event.name} --
+                        {moment(item.participant.event.startdate).format('llll')} --
+                        range: {item.range}m --
+                        coords: {item.participant.coords} --
+                        timeStamp: {moment(item.timeStamp).format('llll')}
+                       </Typography>
+                       <img src={item.photoURLFirebase} />
+                       </li>)
 
-                const bounceInfinite = ((index === this.props.routeMarkers.length - 1) ? ' bounce infinite ' : '')
-                const icon =
-                  (inRangePhotos.length > 0) ?
-                  divIcon({html:'<div class="marker-tooltip marker-label toolbar-background ' + bounceInfinite  + '"><div className="marker-label toolbar-background">' + item.name + '</div><div class="tinyicon"> <div class="tinycamera3"><span></span></div></div>',     })
-                  :  divIcon({html:'<div class="marker-tooltip marker-label toolbar-background ' + bounceInfinite  + '">' + item.name + '</div>' + '<img src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png" id="image">',     })
+                      const bounceInfinite = ((index === this.props.routeMarkers.length - 1) ? ' bounce infinite ' : '')
+                      const icon =
+                        (inRangePhotos.length > 0) ?
+                        divIcon({html:'<div class="marker-tooltip marker-label toolbar-background ' + bounceInfinite  + '"><div className="marker-label toolbar-background">' + item.name + '</div><div class="tinyicon"> <div class="tinycamera3"><span></span></div></div>',     })
+                        :  divIcon({html:'<div class="marker-tooltip marker-label toolbar-background ' + bounceInfinite  + '">' + item.name + '</div>' + '<img src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png" id="image">',     })
 
 
-                return (
-                  <Marker key={`marker-${index}`}
-                    name={item}
-                    icon={icon}
-                    position={item.coords}
-                    draggable={this.props.draggable}
-                      onDragend={this.updatePosition}
-                       ref="marker">
-                          <Popup>
-                          <span>
-                            <div><b>{item.name}</b> range: {item.range}m</div>
-                            <div>{item.coords.join(' ')} </div>
-                            <div>
+                      return (
+                        <Marker key={`marker-${index}`}
+                          name={item}
+                          icon={icon}
+                          position={item.coords}
+                          draggable={this.props.draggable}
+                            onDragend={this.updatePosition}
+                             ref="marker">
+                                <Popup>
+                                <span>
+                                  <div><b>{item.name}</b> range: {item.range}m</div>
+                                  <div>{item.coords.join(' ')} </div>
+                                  <div>
 
-                            <Grid container spacing={40}>
-                            <Grid item>
-                            </Grid>
-                           {this.props.removeMarker  &&  this.props.updatePosition &&
-                            <Grid item>
-                                <Button variant="fab" mini color="primary" onClick={(e) => this.editMarker(item,e)}>
-                                    <div className='action-button'>EDIT</div>
-                                </Button>
-                            </Grid>}
-                            <Grid item>
+                                  <Grid container spacing={40}>
+                                  <Grid item>
+                                  </Grid>
+                                 {this.props.removeMarker  &&  this.props.updatePosition &&
+                                  <Grid item>
+                                      <Button variant="fab" mini color="primary" onClick={(e) => this.editMarker(item,e)}>
+                                          <div className='action-button'>EDIT</div>
+                                      </Button>
+                                  </Grid>}
+                                  <Grid item>
 
-                              {inRangePhotos.length > 0 &&
-                                <Button variant="fab" mini color="secondary"  onClick={(e) => this.viewPhotos(photoGallery,e)}>
-                                    <i className="material-icons">photo_album</i>
-                                </Button>
-                              }
+                                    {inRangePhotos.length > 0 &&
+                                      <Button variant="fab" mini color="secondary"  onClick={(e) => this.viewPhotos(photoGallery,e)}>
+                                          <i className="material-icons">photo_album</i>
+                                      </Button>
+                                    }
+                                    </Grid>
+
+                                   {this.props.removeMarker  &&  this.props.updatePosition &&
+                                    <Grid item>
+                                      <Button variant="fab" color="primary" mini onClick={(e) => this.removeMarker(item,e)}>
+                                          <div className='action-button'>REMOVE</div>
+                                      </Button>
+                                  </Grid>}
                               </Grid>
+                                    </div>
+                                </span>
+                              </Popup>
+                        >
+                      </Marker>
 
-                             {this.props.removeMarker  &&  this.props.updatePosition &&
-                              <Grid item>
-                                <Button variant="fab" color="primary" mini onClick={(e) => this.removeMarker(item,e)}>
-                                    <div className='action-button'>REMOVE</div>
-                                </Button>
-                            </Grid>}
-                        </Grid>
-                              </div>
-                          </span>
-                        </Popup>
-                  >
-                </Marker>
-
-                )
-              })
-            }
-            </Map>
-          </div>
+                      )
+                    })
+                  }
+                </Map>
+              </div>
         )
     }
 }

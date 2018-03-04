@@ -9,8 +9,16 @@ export function call(path, payload) {
     );
 }
 
+const axiosConfig = {
+    headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+    }
+};
+
 export function callget(path, payload) {
-    return axios.get(`${path}${payload}`);
+
+    return axios.get(`${path}${payload}`, axiosConfig);
 }
 
 export function* resultHandler(result, entityAction) {

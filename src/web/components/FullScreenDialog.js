@@ -36,9 +36,10 @@ class FullScreenDialog extends React.Component {
         });
     }
 
-    handleClose = () => {
+    handleClose = (e) => {
+        e.preventDefault()
         this.setState({ open: false });
-        this.props.onHandleClose()
+        this.props.onHandleClose(e)
     };
 
     render() {

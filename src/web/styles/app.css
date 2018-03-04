@@ -431,6 +431,14 @@
     height: 100%;
 }
 
+.centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
 .promo-image {
     padding: 1px;
     border: 1px solid #BDBDBD;
@@ -439,7 +447,8 @@
 
 .promo-card {
     padding: 5px 5px 5px 2px;
-    width: 100%;
+    maxwidth: 50%;
+    min-width: 90%;
 }
 
 .dialog {

@@ -44,43 +44,43 @@ class App extends Component {
             <div>
 
                 {!account.authenticated &&
-                <div className="infinite fadeIn fadeIn-selection">
-                    <Grid container spacing={0}>
-                        <Grid item xs sm md={2} lg={2}>
+                    <div className="infinite fadeIn fadeIn-selection">
+                        <Grid container spacing={0}>
+                            <Grid item xs sm md={2} lg={2}>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={8} lg={8}>
+                                {!account.error &&
+                                    <div className="infinite fadeIn fadeIn-selection backgroundimg-login promo-card centered">
+                                        <Login />
+                                    </div>
+                                }
+                                <br/>
+                                {account.error &&
+                                    <div className="infinite fadeIn fadeIn-selection backgroundimg-register promo-card centered">
+                                      <Typography>
+                                          <div style={{ color: "red" }}>
+                                            {(account.error === "No data") ? "Login not found, please reachout to your contact for this event." : error}
+                                          </div>
+                                            If you are here to setup an event, create an account or <i>Refresh</i> and try a different login.
+                                        </Typography>
+                                        <Profile authorization='ROUTEMAKER' />
+                                    </div>
+                                }
+                            </Grid>
+                            <Grid item xs sm md={3} lg={3}>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12} sm={12} md={8} lg={8}>
-                               {!account.error &&
-                                <div className="infinite fadeIn fadeIn-selection backgroundimg-login promo-card">
-                                <Login />
-                           </div>
-                            }
-                            <br/>
-                            {account.error &&
-                                <div className="infinite fadeIn fadeIn-selection backgroundimg-register promo-card">
-                                  <Typography>
-                                      <div style={{ color: "red" }}>
-                                        {(account.error === "No data") ? "Login not found, please reachout to your contact for this event." : error}
-                                      </div>
-                                        If you are here to setup an event, create an account or <i>Refresh</i> and try a different login.
-                                    </Typography>
-                                    <Profile authorization='ROUTEMAKER' />
-                                </div>
-                            }
-                        </Grid>
-                        <Grid item xs sm md={3} lg={3}>
-                        </Grid>
-                    </Grid>
-                </div>
+                    </div>
                 }
                 {account.authenticated &&  account.item.authorization === "ROUTEMAKER"  &&
-                <div className="infinite fadeIn fadeIn-selection">
-                <RouteMakerContainer />
-                </div>
+                    <div className="infinite fadeIn fadeIn-selection">
+                        <RouteMakerContainer />
+                    </div>
                 }
                 {account.authenticated &&  account.item.authorization === "PARTICIPANT"  &&
-                <div className="infinite fadeIn fadeIn-selection">
-                <ParticipantContainer />
-                </div>
+                    <div className="infinite fadeIn fadeIn-selection">
+                        <ParticipantContainer />
+                    </div>
                 }
 
             </div>

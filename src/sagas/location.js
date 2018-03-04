@@ -2,6 +2,7 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import * as api from "../api/restful"
 import * as config from "../config/config";
 
+/*
 function googleAutoComplete(address) {
     return call(api.callget, config.GOOGLE_AUTOCOMPLETE, `?input=${address}&types=geocode&language=fr&key=AIzaSyCnwNNjhla4bLrLmuF7KryB2HBhhj8t_Cc`)
 }
@@ -18,8 +19,28 @@ pk.eyJ1Ijoib2JqZWN0YmIiLCJhIjoiY2pkd3FiYzVtMXhwdzJ2bXVmZDlqejFpMiJ9.rAxR9-G_wpdD
 function geocodioGeocoding(address) {
     return call(api.callget, config.GEOCODIO_URL, `?q=${address}&api_key=87bbb9b55565f538b9b5b859b2525b52f5f00c5`)
 }
+*/
 
 function* fullOnGeocode(fulladdress, action) {
+
+    let coords
+
+    try {
+        coords = yield call(api.call, '/geocode', { address: fulladdress })
+        return coords
+
+    } catch (err) {
+        const errMsg = `Exception - ${String(err)}`
+
+        if (action)
+            yield put({
+                type: 'REQUEST_GEOCODE_FAILED',
+                message: errMsg,
+                payload: { ...action.payload, coords: undefined }
+            });
+        yield put({ type: 'APP_ERROR', message: `Geocoding Failed ${errMsg}` });
+    }
+    /*
     let loc
     let geocoderesults
 
@@ -68,28 +89,16 @@ function* fullOnGeocode(fulladdress, action) {
         if (geocoderesults.data.results && geocoderesults.data.results.length > 0)
             return geocoderesults.data.results[0].location
 
-        const errMsg = `${fulladdress} ${geocoderesults.data}`
+        const errMsg = `${fulladdress} ${JSON.stringify(geocoderesults.data)}`
 
-        if (action)
-            yield put({
-                type: 'REQUEST_GEOCODE_FAILED',
-                message: errMsg,
-                payload: { ...action.payload, coords: undefined }
-            });
         yield put({ type: 'APP_ERROR', message: `Geocoding Failed ${errMsg}` });
 
-
     } catch (err) {
-        const errMsg = `${String(err)} ${geocoderesults.data}`
+        const errMsg = `Exception - ${String(err)} ${JSON.stringify(geocoderesults.data)}`
 
-        if (action)
-            yield put({
-                type: 'REQUEST_GEOCODE_FAILED',
-                message: errMsg,
-                payload: { ...action.payload, coords: undefined }
-            });
         yield put({ type: 'APP_ERROR', message: errMsg });
     }
+    */
 }
 
 function currLocation() {
@@ -112,12 +121,15 @@ function currLocation() {
 function* setCurrentRegionAddress(action) {
     try {
 
-        const loc = yield* fullOnGeocode(action.address)
+        const coords = yield* fullOnGeocode(action.address)
 
-        console.log("location --> setCurrentRegionAddress loc ", loc)
-
-
-        yield put({ type: 'SET_CURRENT_REGION', coords: [loc.lat, loc.lng] });
+        if (!(coords.data && coords.data.lng && coords.data.lat)) {
+            const errMsg = `${action.address} ${JSON.stringify(coords)}`
+            yield put({ type: 'APP_ERROR', message: `Geocoding Failed ${errMsg}` });
+        } else {
+            console.log("location --> setCurrentRegionAddress loc ", coords.data)
+            yield put({ type: 'SET_CURRENT_REGION', coords: [coords.data.lat, coords.data.lng] });
+        }
     } catch (err) {
         yield put({ type: 'APP_ERROR', message: String(err) });
     }
@@ -131,8 +143,20 @@ function* requestGeocode(action) {
         const { address, city, state, zipcode, nextAction } = action.payload
         const fulladdress = `${address}, ${city}, ${state}, ${zipcode}`
 
-        let loc = yield* fullOnGeocode(fulladdress, action)
-        yield put({ type: 'REQUEST_GEOCODE_SUCCEEDED', payload: { ...action.payload, coords: [loc.lat, loc.lng] } });
+        let coords = yield* fullOnGeocode(fulladdress, action)
+
+        if (!(coords.data && coords.data.lng && coords.data.lat)) {
+            const errMsg = `${fulladdress} ${JSON.stringify(coords)}`
+
+            if (action)
+                yield put({
+                    type: 'REQUEST_GEOCODE_FAILED',
+                    message: errMsg,
+                    payload: { ...action.payload, coords: undefined }
+                });
+            yield put({ type: 'APP_ERROR', message: `Geocoding Failed ${errMsg}` });
+        } else
+            yield put({ type: 'REQUEST_GEOCODE_SUCCEEDED', payload: { ...action.payload, coords: [coords.data.lat, coords.data.lng] } });
 
     } catch (err) {
         const errMsg = `${String(err)}`

@@ -29,12 +29,12 @@ class BackgroundProcess extends Component {
 
         console.log("Events --> startIntervals --> participant ", participant)
 
-        timerId = this.props.actions.intervalLoadParticipants({ _eventId: participant.item._eventId })
+        //timerId = this.props.actions.intervalLoadParticipants({ _eventId: participant.item._eventId })
         watchPositionId = this.props.actions.watchPosition(participant)
 
         dispatch({
             type: 'UPDATE_INTERVAL_IDS',
-            timerId: timerId,
+            // timerId: timerId,
             watchPositionId: watchPositionId,
             onOff: true
         })
@@ -50,8 +50,8 @@ class BackgroundProcess extends Component {
         if (interval.watchPositionId)
             this.props.actions.stopWatchPosition(interval.watchPositionId)
 
-        if (interval.timerId)
-            this.props.actions.stopInterval(interval.timerId)
+        //if (interval.timerId)
+        //  this.props.actions.stopInterval(interval.timerId)
 
         if (interval.timerMarkersVisitedId)
             this.props.actions.stopInterval(interval.timerMarkersVisitedId)
