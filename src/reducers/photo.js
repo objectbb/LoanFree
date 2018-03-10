@@ -1,4 +1,4 @@
-import { PHOTO_FIREBASE_UPSERT_FAILED, PHOTO_FIREBASE_UPSERT_SUCCEEDED, PHOTO_UPSERT, PHOTO_UPSERT_FAILED, PHOTO_FETCH_FAILED, PHOTO_FETCH_REQUESTED, PHOTO_UPSERT_REQUESTED, PHOTO_FETCH_SUCCEEDED, PHOTO_UPSERT_SUCCEEDED } from "../actions";
+import { PHOTO_INSERT, PHOTO_FIREBASE_UPSERT_FAILED, PHOTO_FIREBASE_UPSERT_SUCCEEDED, PHOTO_UPSERT, PHOTO_UPSERT_FAILED, PHOTO_FETCH_FAILED, PHOTO_FETCH_REQUESTED, PHOTO_UPSERT_REQUESTED, PHOTO_FETCH_SUCCEEDED, PHOTO_UPSERT_SUCCEEDED } from "../actions";
 
 export const photo = (
     state = { item: [], authenticated: false, isFetching: false, error: "", firebase: false },
@@ -45,16 +45,10 @@ export const photo = (
             message: '',
             firebase: false
         }
-    case PHOTO_UPSERT:
+    case PHOTO_INSERT:
         return {
             ...state,
-            item: state.item.
-            find((item) => (item._id === action.payload._id)) ? state.item.map(item => {
-                if (item._id === action.payload._id) {
-                    return { ...item, ...action.payload }
-                }
-                return item
-            }) : [...state.item, action.payload],
+            item: [...state.item, action.payload],
             isFetching: false,
             message: 'Saved',
             error: ""

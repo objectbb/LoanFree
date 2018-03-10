@@ -25,25 +25,12 @@ export const eventparticipants = (
         };
     case EVENT_PARTICIPANTS_UPSERT:
         return {
-            item: state.item.find((item) => (item.id === action.payload.id)) ? state.item.map(item => {
-                if (item.id === action.payload.id) {
+            item: state.item.find((item) => (item._id === action.payload._id)) ? state.item.map(item => {
+                if (item._id === action.payload._id) {
                     return { ...item, ...action.payload }
                 }
                 return item
             }) : [...state.item, ...action.payload],
-            isFetching: false,
-            message: "Saved",
-            error: ""
-        };
-
-    case EVENT_PARTICIPANT_UPDATE_COORDS:
-        return {
-            item: state.item.map(item => {
-                if (item._id === action.payload._id) {
-                    item.coords = [...action.payload.coords]
-                }
-                return item
-            }),
             isFetching: false,
             message: "Saved",
             error: ""

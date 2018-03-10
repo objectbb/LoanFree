@@ -2,24 +2,6 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import * as api from "../api/restful"
 import * as config from "../config/config";
 
-/*
-function googleAutoComplete(address) {
-    return call(api.callget, config.GOOGLE_AUTOCOMPLETE, `?input=${address}&types=geocode&language=fr&key=AIzaSyCnwNNjhla4bLrLmuF7KryB2HBhhj8t_Cc`)
-}
-
-function googlePlaceId(placeId) {
-    return call(api.callget, config.GOOGLE_PLACEID, `?placeid=${placeId}&types=geocode&language=fr&key=AIzaSyCnwNNjhla4bLrLmuF7KryB2HBhhj8t_Cc`)
-}
-
-function mapboxGeocoding(address) {
-    return call(api.callget, config.MAPBOX_URL, `${address}+nw.json?access_token=
-pk.eyJ1Ijoib2JqZWN0YmIiLCJhIjoiY2pkd3FiYzVtMXhwdzJ2bXVmZDlqejFpMiJ9.rAxR9-G_wpdDBE3ZELQn2w`)
-}
-
-function geocodioGeocoding(address) {
-    return call(api.callget, config.GEOCODIO_URL, `?q=${address}&api_key=87bbb9b55565f538b9b5b859b2525b52f5f00c5`)
-}
-*/
 
 function* fullOnGeocode(fulladdress, action) {
 
@@ -40,65 +22,7 @@ function* fullOnGeocode(fulladdress, action) {
             });
         yield put({ type: 'APP_ERROR', message: `Geocoding Failed ${errMsg}` });
     }
-    /*
-    let loc
-    let geocoderesults
 
-    try {
-
-        console.log("location --> googleGeocode fulladdress ", fulladdress)
-
-        geocoderesults = yield call(api.callget, config.GEOCODE_URL, `?address=${fulladdress}`)
-
-        console.log("location --> googleGeocode fulladdress ", geocoderesults)
-
-        if (!geocoderesults.data.error_message && geocoderesults.data.results > 0 &&
-            geocoderesults.data.results[0].geometry)
-            return geocoderesults.data.results[0].geometry.location
-
-        geocoderesults = yield googleAutoComplete(fulladdress)
-        const predictions = yield geocoderesults.data.predictions
-
-        console.log("location --> googleGeocode predictions ", predictions)
-
-        if (predictions.length > 0) {
-
-            const placeId = predictions[0].place_id
-
-            console.log("location --> googleGeocode placeId ", placeId)
-
-            geocoderesults = yield googlePlaceId(placeId)
-
-            console.log("location --> googleGeocode geocoderesults ", geocoderesults)
-            return yield geocoderesults.data.result.geometry.location
-
-        }
-
-        geocoderesults = yield mapboxGeocoding(fulladdress)
-        console.log("location --> mapboxGeocoding ", geocoderesults.data)
-
-        if (geocoderesults.data.features && geocoderesults.data.features.length > 0) {
-            const coords = geocoderesults.data.features[0].geometry.coordinates
-            return { lat: coords[1], lng: coords[0] }
-        }
-
-
-        geocoderesults = yield geocodioGeocoding(fulladdress)
-        console.log("location --> geocodioGeocoding ", geocoderesults.data)
-
-        if (geocoderesults.data.results && geocoderesults.data.results.length > 0)
-            return geocoderesults.data.results[0].location
-
-        const errMsg = `${fulladdress} ${JSON.stringify(geocoderesults.data)}`
-
-        yield put({ type: 'APP_ERROR', message: `Geocoding Failed ${errMsg}` });
-
-    } catch (err) {
-        const errMsg = `Exception - ${String(err)} ${JSON.stringify(geocoderesults.data)}`
-
-        yield put({ type: 'APP_ERROR', message: errMsg });
-    }
-    */
 }
 
 function currLocation() {

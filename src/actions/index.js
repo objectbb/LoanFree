@@ -84,6 +84,7 @@ export const PROFILE_UPSERT_REQUESTED = "PROFILE_UPSERT_REQUESTED"
 export const PROFILE_UPSERT_FAILED = "PROFILE_UPSERT_FAILED"
 export const PROFILE_UPSERT_SUCCEEDED = "PROFILE_UPSERT_SUCCEEDED"
 
+export const PHOTO_INSERT = "PHOTO_INSERT"
 export const PHOTO_UPSERT_FAILED = "PHOTO_UPSERT_FAILED"
 export const PHOTO_UPSERT_SUCCEEDED = "PHOTO_UPSERT_SUCCEEDED"
 export const PHOTO_UPSERT_REQUESTED = "PHOTO_UPSERT_REQUESTED"
@@ -171,8 +172,8 @@ export const watchPosition = (participant) => dispatch => {
 
         const { _id, markers, _accountId, _eventId, coords } = prtCoords
 
-        const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
 
+        const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
         socket.on('connect', function () {
             socket.emit('room', _eventId);
             socket.emit('eventparticipant_upsert', { _id, markers, _accountId, _eventId, coords }, (data) =>
@@ -184,10 +185,34 @@ export const watchPosition = (participant) => dispatch => {
 
             if (participant.coords && participant.coords.length === 2)
                 dispatch({
-                    type: EVENT_PARTICIPANT_UPDATE_COORDS,
+                    type: EVENT_PARTICIPANTS_UPSERT,
                     payload: participant
                 })
         })
+
+
+        socket.on('photo_broadcast', (photo) => {
+            console.log("watchPosition --> photo_broadcast --> participant ", photo)
+            dispatch({
+                type: PHOTO_INSERT,
+                payload: photo
+            })
+        })
+
+        socket.on('event_broadcast', (event) => {
+            console.log("watchPosition --> event_broadcast --> participant ", event)
+            dispatch({
+                type: EVENTS_UPSERT,
+                payload: event
+            })
+
+            dispatch({
+                type: EVENT_FETCH_SUCCEEDED,
+                payload: event
+            })
+
+        })
+
 
     }, function error(msg) {}, { maximumAge: 600000000, timeout: 5000, enableHighAccuracy: true });
 
@@ -205,7 +230,7 @@ export const intervalLoadParticipants = (payload) => dispatch => {
     console.log("index loadParticipants -->", payload)
 
     return setInterval(() => {
-        dispatch(retrieveParticipants(payload))
+        // dispatch(retrieveParticipants(payload))
         dispatch({
             type: PHOTO_FETCH_REQUESTED,
             payload: payload
@@ -234,16 +259,13 @@ export const setCurrentRegionAddress = (address) => dispatch => {
 
 export const setRouteMarkers = (payload) => dispatch => {
     dispatch({ type: 'EVENT_UPSERT_REQUESTED', payload: payload });
+
+    const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
+    socket.emit('event_broadcast', payload)
 }
 
 export const setParticipantMarkers = (payload) => dispatch => {
 
-    /*
-        dispatch({
-            type: 'EVENT_PARTICIPANTS_UPSERT',
-            payload: payload
-        })
-    */
     dispatch({
         type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED',
         payload: payload
@@ -258,7 +280,7 @@ export const uploadImagetoFirebase = (participant, payload) => dispatch => {
     const { name, startdate } = participant.item.event
     const { coords } = participant.item
 
-    const fileName = `${email}_${name}_${startdate}_${coords}.jpg`
+    const fileName = `${email}_${name}_${startdate}_${coords}_${Date.now()}.jpg`
     const storageRef = firebase.storage().ref(fileName);
 
     const metadata = {
@@ -284,19 +306,27 @@ export const uploadImagetoFirebase = (participant, payload) => dispatch => {
 
         },
         () => {
+
+            const payload = {
+                _eventId: participant.item._eventId,
+                participant: participant.item,
+                photoURLFirebase: task.snapshot.downloadURL
+            }
+
             dispatch({ type: PHOTO_FIREBASE_UPSERT_SUCCEEDED, payload: task.snapshot.downloadURL });
             dispatch({
                 type: PHOTO_UPSERT_REQUESTED,
-                payload: {
-                    _eventId: participant.item._eventId,
-                    participant: participant.item,
-                    photoURLFirebase: task.snapshot.downloadURL
-                }
+                payload
             });
+
             dispatch({
-                type: 'PHOTO_FETCH_REQUESTED',
-                payload: { _eventId: participant.item._eventId }
-            });
+                type: PHOTO_INSERT,
+                payload
+            })
+
+            const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
+            socket.emit('photo_broadcast', payload)
+
             console.log('index -->  uploadImagetoFirebase --> succeed', task.snapshot.downloadURL);
         })
 
@@ -321,20 +351,6 @@ export const refreshHardEvent = (participant) => dispatch => {
     dispatch({ type: EVENT_PARTICIPANT_CLEAR })
     dispatch({ type: PARTICIPANT_CLEAR })
     dispatch({ type: UPDATE_INTERVAL_IDS, action: { onOff: false } })
-    /*
-        dispatch({
-            type: 'EVENTS_FETCH_REQUESTED',
-            payload: { _accountId: participant.item._accountId }
-        })
-
-        dispatch({
-            type: 'EVENTS_PARTICIPANT_FETCH_REQUESTED',
-            payload: { _accountId: participant.item._accountId }
-        })
-
-        dispatch({ type: 'EVENT_PARTICIPANTS_FETCH_REQUESTED', payload: { _eventId: participant.item._eventId  } })
-        dispatch({ type: 'PHOTO_FETCH_REQUESTED', payload: { _eventId: participant.item._eventId } })
-    */
 }
 
 export const refreshEvent = (participant) => dispatch => {

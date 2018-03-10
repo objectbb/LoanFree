@@ -51,7 +51,7 @@ class BackgroundProcess extends Component {
             this.props.actions.stopWatchPosition(interval.watchPositionId)
 
         //if (interval.timerId)
-        //  this.props.actions.stopInterval(interval.timerId)
+        //   this.props.actions.stopInterval(interval.timerId)
 
         if (interval.timerMarkersVisitedId)
             this.props.actions.stopInterval(interval.timerMarkersVisitedId)
