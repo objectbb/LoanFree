@@ -87,7 +87,7 @@ class MapIt extends Component {
                 this.props.addParticipantMarker(you, newmarkers)
             }
 
-        }, 15000)
+        }, 5000)
 
         dispatch({
             type: 'UPDATE_INTERVAL_ADDMARKER_ID',
