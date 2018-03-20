@@ -66,13 +66,23 @@ function* fetchBatchUpsert(action) {
             values = item.split(',')
             return values.length === 3
         }).
+        filter((item) => {
+            values = item.split(',')
+            return (values[0] && values[0].length > 4 && values[1] && values[1].length > 1 && values[2] && values[2].length > 1)
+        }).
         map((item) => {
             values = item.split(',')
             return { email: values[0].toLowerCase(), firstname: values[1], lastname: values[2], authorization: 'PARTICIPANT' }
         })
 
-        const prt = yield upsert({ payload: { participant, accounts: acctBatch } })
-        const result = prt.data
+        let result = {}
+        if (acctBatch && acctBatch.length > 0) {
+            const prt = yield upsert({ payload: { participant, accounts: acctBatch } })
+            const result = prt.data
+        } else {
+            result.errmsg = "Nothing was imported. Please follow instructions when importing - email, firstname, lastname"
+            result.code = -1
+        }
 
         console.log("Eventparticipants --> fetchBatchUpsert --> result ", result)
 
