@@ -154,6 +154,7 @@ export const stopWatchPosition = (id) => dispatch => {
 
 export const initWebSocketReceive = (participant) => dispatch => {
 
+    if (Object.getOwnPropertyNames(participant.item).length === 0) return
 
     const _eventId = participant.item._eventId
 
