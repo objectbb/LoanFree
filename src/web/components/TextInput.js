@@ -107,7 +107,9 @@ class TextInput extends Component {
     render() {
         return (
             <div className={this.props.uniqueName}>
-
+                <InputError
+                    visible={this.state.errorVisible}
+                    errorMessage={this.state.errorMessage} />
                 <TextField
                     name={this.props.uniquename}
                     value={this.props.content}
@@ -122,9 +124,7 @@ class TextInput extends Component {
                     emptymessage={this.props.emptyMessage}
                     minmessage={this.props.minMessage}
                 />
-                <InputError
-                    visible={this.state.errorVisible}
-                    errorMessage={this.state.errorMessage} />
+
 
             </div>
         )

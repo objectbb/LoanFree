@@ -28,7 +28,7 @@ import CaptureMoments from "./CaptureMoments"
 import FullScreenDialog from "./components/FullScreenDialog"
 import Button from "material-ui/Button"
 import Icon from 'material-ui/Icon'
-import { isEqual, debounce } from 'lodash'
+import { isEqual, debounce, find } from 'lodash'
 import "./styles/animate.css"
 import "./styles/app.css"
 
@@ -134,8 +134,7 @@ class MapIt extends Component {
 
     }
 
-    updatePosition(e) {
-        let item = e.target.options.name;
+    updatePosition(item, e) {
 
         item.coords = [e.target._latlng.lat, e.target._latlng.lng]
         this.props.updatePosition(item);
@@ -173,7 +172,7 @@ class MapIt extends Component {
                 <FullScreenDialog  open={this.state.isCamera} onHandleClose={this.handleClose}  header={""} >
                 <CaptureMoments />
                 </FullScreenDialog>
-                <Map center={this.props.region} zoom={17} className="map">
+                <Map center={this.props.region} zoom={17} className="map" ref="map">
 
                   <LayersControl position='topright'>
                      <BaseLayer  name='OpenStreetMap.Mapnik'>
@@ -229,20 +228,6 @@ class MapIt extends Component {
                       }
                     )
                   }
-                  {/*
-                  this.props.currLocation && this.props.currLocation.coords &&
-                      <Marker key="marker-you-1"
-                          position={this.props.currLocation.coords}
-                          icon={divIcon({ className: 'youmarker ', html: `<div>YOU</div>`})}
-                             ref="marker">
-                             <Popup>
-                                <div>
-                                {this.props.currLocation.coords}
-                                </div>
-                            </Popup>
-                        >
-                      </Marker>
-                  */}
                    {
                     this.props.routeMarkers &&
                       this.props.routeMarkers.map((item, index) => {
@@ -278,7 +263,7 @@ class MapIt extends Component {
                           icon={icon}
                           position={item.coords}
                           draggable={this.props.draggable}
-                            onDragend={this.updatePosition}
+                            onDragend={(e) => this.updatePosition(item,e)}
                              ref="marker">
                                 <Popup>
                                 <span>

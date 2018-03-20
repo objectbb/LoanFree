@@ -151,9 +151,57 @@ export const stopWatchPosition = (id) => dispatch => {
     navigator.geolocation.clearWatch(id)
 }
 
+
+export const initWebSocketReceive = (participant) => dispatch => {
+
+
+    const _eventId = participant.item._eventId
+
+    const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
+    socket.on('connect', function () {
+        socket.emit('room', _eventId);
+    });
+
+    socket.on('eventparticipant_update_coords', (participant) => {
+        console.log("watchPosition --> eventparticipant_update_coords --> participant ", participant, participant.coords)
+
+        if (participant.coords && participant.coords.length === 2)
+            dispatch({
+                type: EVENT_PARTICIPANTS_UPSERT,
+                payload: participant
+            })
+    })
+
+
+    socket.on('photo_broadcast', (photo) => {
+        console.log("watchPosition --> photo_broadcast --> participant ", photo)
+        dispatch({
+            type: PHOTO_INSERT,
+            payload: photo
+        })
+    })
+
+    socket.on('event_broadcast', (event) => {
+        console.log("watchPosition --> event_broadcast --> participant ", event)
+        dispatch({
+            type: EVENTS_UPSERT,
+            payload: event
+        })
+
+        dispatch({
+            type: EVENT_FETCH_SUCCEEDED,
+            payload: event
+        })
+
+    })
+
+}
+
 export const watchPosition = (participant) => dispatch => {
 
     console.log("index --> watchPosition --> participant ", participant)
+
+    dispatch(this.initWebSocketReceive(participant))
 
     return navigator.geolocation.watchPosition(position => {
 
@@ -179,40 +227,6 @@ export const watchPosition = (participant) => dispatch => {
             socket.emit('eventparticipant_upsert', { _id, markers, _accountId, _eventId, coords }, (data) =>
                 api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
         });
-
-        socket.on('eventparticipant_update_coords', (participant) => {
-            console.log("watchPosition --> eventparticipant_update_coords --> participant ", participant, participant.coords)
-
-            if (participant.coords && participant.coords.length === 2)
-                dispatch({
-                    type: EVENT_PARTICIPANTS_UPSERT,
-                    payload: participant
-                })
-        })
-
-
-        socket.on('photo_broadcast', (photo) => {
-            console.log("watchPosition --> photo_broadcast --> participant ", photo)
-            dispatch({
-                type: PHOTO_INSERT,
-                payload: photo
-            })
-        })
-
-        socket.on('event_broadcast', (event) => {
-            console.log("watchPosition --> event_broadcast --> participant ", event)
-            dispatch({
-                type: EVENTS_UPSERT,
-                payload: event
-            })
-
-            dispatch({
-                type: EVENT_FETCH_SUCCEEDED,
-                payload: event
-            })
-
-        })
-
 
     }, function error(msg) {}, { maximumAge: 600000000, timeout: 5000, enableHighAccuracy: true });
 

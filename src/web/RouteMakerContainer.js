@@ -77,7 +77,9 @@ class RouteMakerContainer extends Component {
                                     </Badge>
 
                                     <FullScreenDialog  open={(eventparticipants && eventparticipants.item.length < 2) || (events && events.item.length === 0) || this.state.isEventOpen} onHandleClose={this.handleClose} onClick={this.handleClickOpen}  header={""} >
-
+                                        <div className="top-right">
+                                            <Logout />
+                                        </div>
                                         <Grid container spacing={0}>
                                             <Grid item xs={0} sm={1} md={3} lg={3}>
                                             </Grid>

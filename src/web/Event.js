@@ -11,6 +11,8 @@ import { Paper } from "material-ui/Paper"
 import { Card, CardHeader, CardText } from "material-ui/Card"
 import Checkbox from "material-ui/Checkbox"
 import Select from "material-ui/Select"
+import Input, { InputLabel } from 'material-ui/Input'
+import { FormControl, FormHelperText } from 'material-ui/Form'
 import MenuItem from "material-ui/Menu"
 import { withStyles } from 'material-ui/styles'
 import TextField from 'material-ui/TextField'
@@ -309,16 +311,24 @@ class Event extends Component {
                 minMessage="Minimum characters"
               />
 
-          <Select
-          native
-            name="state"
-            onBlur={this.handleGeocode}
-             fullWidth={true}
-            value={state}
-            onChange={this.handleChange}
-          >
-            {states}
-          </Select>
+
+                <FormControl style={{width:'100%'}}>
+                  <InputLabel htmlFor="select-state">State</InputLabel>
+
+                  <Select
+                    native
+                    name="state"
+                    onBlur={this.handleGeocode}
+                     fullWidth={true}
+                    value={state}
+                    onChange={this.handleChange}
+                    inputProps={{
+                      id: 'select-state',
+                    }}
+                  >
+                    {states}
+                  </Select>
+               </FormControl>
 
             <TextInput
                 uniquename="zipcode"
