@@ -105,7 +105,7 @@ class RouteMakerContainer extends Component {
                                                 }
                                                 <FullWidthTabs>
                                                     <Event header= "Event"/>
-                                                    <div header={`Participants ${eventparticipants.item.length}`}
+                                                    <div header={`Participants ${eventparticipants.item.filter((item) => item.account.authorization === 'PARTICIPANT').length}`}
                                                         disable={participant.item._id ? false : true}>
                                                         <br />
                                                         {eventparticipants.item.length > 1 &&  <EventParticipants />}
