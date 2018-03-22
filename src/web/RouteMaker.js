@@ -40,7 +40,7 @@ class RouteMaker extends Component {
         this.updatePosition = this.updatePosition.bind(this)
         this.removeMarker = this.removeMarker.bind(this)
         this.setCurrentRegionAddress = this.setCurrentRegionAddress.bind(this)
-        this.addParticipantMarker = this.addParticipantMarker.bind(this)
+        //this.addParticipantMarker = this.addParticipantMarker.bind(this)
         this.handleClose = this.handleClose.bind(this)
         this.handleCancel = this.handleCancel.bind(this)
     }
@@ -92,29 +92,39 @@ class RouteMaker extends Component {
         //this.props.actions.refreshEvent(this.props.participant)
     }
 
-    addParticipantMarker(participant, newmarkers) {
+    /*
 
-        const prtmarkers = { ...participant }
-        const origmarkers = [...participant.markers]
+        addParticipantMarker() {
 
-        const { _id, markers, _accountId, _eventId, coords } = participant
+                    const prtmarkers = { ...participant }
+                    const origmarkers = [...participant.markers]
 
-        const mergemarkers = origmarkers.concat(newmarkers)
+                    const { _id, markers, _accountId, _eventId, coords } = participant
 
-        unqMarkers = uniqWith(mergemarkers, function (item1, item2) {
-            return item1.marker.name === item2.marker.name
-        })
+                    const mergemarkers = origmarkers.concat(newmarkers)
 
-        console.log("RouteMaker --> addParticipantMarker unqMarkers", unqMarkers)
+                    unqMarkers = uniqWith(mergemarkers, function (item1, item2) {
+                        return item1.marker.name === item2.marker.name
+                    })
 
-        this.props.actions.setParticipantMarkers({
-            _id,
-            markers: unqMarkers,
-            _accountId,
-            _eventId,
-            coords
-        })
-    }
+                    console.log("RouteMaker --> addParticipantMarker unqMarkers", unqMarkers)
+
+                    this.props.actions.setParticipantMarkers({
+                        _id,
+                        markers: unqMarkers,
+                        _accountId,
+                        _eventId,
+                        coords
+                    })
+
+
+
+
+            const { participant, event } = this.props
+            this.props.actions.addMarkersVisited(participant.item, event.item.markers)
+        }
+
+           */
 
     openEditMarker(item) {
         this.setState({ isEditMarker: true, marker: item })
@@ -189,7 +199,7 @@ class RouteMaker extends Component {
                     currLocation={this.props.location}
                     draggable={true}
                     updatePosition={this.updatePosition}
-                    addParticipantMarker= {this.addParticipantMarker}
+                    //addParticipantMarker= {this.addParticipantMarker}
                     viewPhotos = {this.viewPhotos}
                     photos={this.props.photo}
                 />

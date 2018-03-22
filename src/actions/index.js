@@ -3,6 +3,8 @@ import * as api from "../api/restful"
 import * as localForage from "localforage"
 import firebase from 'firebase'
 import io from 'socket.io-client'
+import geolib from "geolib"
+import { uniqWith } from 'lodash'
 
 export const REQUEST_GEOCODE_FAILED = "REQUEST_GEOCODE_FAILED"
 export const REQUEST_GEOCODE_SUCCEEDED = "REQUEST_GEOCODE_SUCCEEDED"
@@ -198,7 +200,7 @@ export const initWebSocketReceive = (participant) => dispatch => {
 
 }
 
-export const watchPosition = (participant) => dispatch => {
+export const watchPosition = (participant, event) => dispatch => {
 
     console.log("index --> watchPosition --> participant ", participant)
 
@@ -225,8 +227,17 @@ export const watchPosition = (participant) => dispatch => {
         const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
         socket.on('connect', function () {
             socket.emit('room', _eventId);
-            socket.emit('eventparticipant_upsert', { _id, markers, _accountId, _eventId, coords }, (data) =>
+
+            let newmarkers = dispatch(addMarkersVisited(prtCoords, event))
+
+            console.log("index --> geolocation.watchPosition --> newmarkers ", newmarkers)
+
+            socket.emit('eventparticipant_upsert', { _id, markers: newmarkers, _accountId, _eventId, coords }, (data) =>
                 api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
+
+            console.log("index --> geolocation.watchPosition --> participant ", participant.item, event)
+
+
         });
 
     }, function error(msg) {}, { maximumAge: 600000000, timeout: 5000, enableHighAccuracy: true });
@@ -251,6 +262,74 @@ export const intervalLoadParticipants = (payload) => dispatch => {
             payload: payload
         });
     }, 10 * SECOND)
+}
+
+export const withinRangeMarkerIndicator = (markers, participant) => {
+
+    return markers &&
+        markers.map((marker) => {
+            let distance = geolib.getDistance({
+                latitude: participant.coords[0],
+                longitude: participant.coords[1]
+            }, { latitude: marker.coords[0], longitude: marker.coords[1] })
+            if (distance < marker.range) {
+                return Object.assign({}, { details: { range: distance, coords: participant.coords } }, { marker })
+            }
+        }).filter((item) => item);
+
+}
+
+export const addMarkersVisited = (participant, event) => dispatch => {
+
+
+    console.log("index addMarkersVisited --> ", participant, event.item.markers)
+
+    const markers = event.item.markers
+    const closemarker = this.withinRangeMarkerIndicator(markers, participant)
+
+    console.log("index addMarkersVisited closemarker --> ", closemarker)
+
+
+    let newmarkers = []
+    if (participant.markers && participant.markers.length === 0)
+        newmarkers = closemarker
+    else
+        newmarkers = closemarker ?
+        closemarker.filter(
+            (marker) =>
+            participant.markers.find((item) => {
+                return marker.marker.guid && item.marker.guid &&
+                    marker.marker.guid !== item.marker.guid
+            })
+        )
+        : []
+
+    if (newmarkers && newmarkers.length > 0) {
+
+        const { _id, markers, _accountId, _eventId, coords } = participant
+
+        const mergemarkers = [...participant.markers].concat(newmarkers)
+
+        unqMarkers = uniqWith(mergemarkers, function (item1, item2) {
+            return item1.marker.name === item2.marker.name
+        })
+
+
+        console.log("index addMarkersVisited unqMarkers --> ", unqMarkers)
+
+
+        dispatch(setParticipantMarkers({
+            _id,
+            markers: unqMarkers,
+            _accountId,
+            _eventId,
+            coords
+        }))
+
+        return unqMarkers
+    }
+
+    return [...participant.markers]
 }
 
 export const logoutUser = () => dispatch => {
@@ -282,7 +361,7 @@ export const setRouteMarkers = (payload) => dispatch => {
 export const setParticipantMarkers = (payload) => dispatch => {
 
     dispatch({
-        type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED',
+        type: EVENT_PARTICIPANT_UPSERT_REQUESTED,
         payload: payload
     })
 
@@ -389,30 +468,6 @@ export const refreshEvent = (participant) => dispatch => {
         payload: { _eventId: participant.item._eventId }
     })
 
-}
-
-export const updateParticipantCurrLocation = (payload) => dispatch => {
-
-    const { _id, markers, _accountId, _eventId, coords } = payload
-
-    console.log("updateParticipantCurrLocation --> updateParticipantCurrLocation--> payload", payload)
-
-    const socket = io(config.WS_URL, { transports: ['websocket', 'polling'] });
-
-    socket.on('connect', function () {
-        socket.emit('eventparticipant_upsert', { _id, markers, _accountId, _eventId, coords }, (data) =>
-            api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
-
-    });
-
-
-
-    /*
-        dispatch({
-            type: 'EVENT_PARTICIPANT_UPSERT_REQUESTED',
-            payload: { _id, markers, _accountId, _eventId, coords },
-        })
-    */
 }
 
 export const registerUser = (payload) => dispatch => {

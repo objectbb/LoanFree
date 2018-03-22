@@ -23,14 +23,14 @@ class BackgroundProcess extends Component {
     }
 
     startIntervals() {
-        const { dispatch, interval, participant } = this.props
+        const { dispatch, interval, participant, event } = this.props
         let timerId;
         let watchPositionId;
 
         console.log("Events --> startIntervals --> participant ", participant)
 
         //timerId = this.props.actions.intervalLoadParticipants({ _eventId: participant.item._eventId })
-        watchPositionId = this.props.actions.watchPosition(participant)
+        watchPositionId = this.props.actions.watchPosition(participant, event)
 
         dispatch({
             type: 'UPDATE_INTERVAL_IDS',
@@ -53,12 +53,12 @@ class BackgroundProcess extends Component {
         //if (interval.timerId)
         //   this.props.actions.stopInterval(interval.timerId)
 
-        if (interval.timerMarkersVisitedId)
-            this.props.actions.stopInterval(interval.timerMarkersVisitedId)
+        // if (interval.timerMarkersVisitedId)
+        //     this.props.actions.stopInterval(interval.timerMarkersVisitedId)
 
         dispatch({
             type: 'UPDATE_INTERVAL_IDS',
-            timerId: interval.timerId,
+            //  timerId: interval.timerId,
             watchPositionId: interval.watchPositionId,
             onOff: false
         })
@@ -106,12 +106,13 @@ class BackgroundProcess extends Component {
 
 function mapStateToProps(state) {
 
-    const { eventparticipants, participant, interval } = state
+    const { eventparticipants, participant, interval, event } = state
 
     return {
         eventparticipants,
         participant,
-        interval
+        interval,
+        event
     }
 }
 
