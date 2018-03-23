@@ -211,8 +211,7 @@ export const watchPosition = (participant, event) => dispatch => {
         const newcoords = [position.coords.latitude, position.coords.longitude]
         this.setCurrLocation(coords)
 
-        console.log("index --> geolocation.watchPosition --> coords ", newcoords)
-        console.log("index --> geolocation.watchPosition --> participant ", participant)
+        console.log("index --> geolocation.watchPosition --> coords ", newcoords, " participant ", participant)
 
         if (Object.getOwnPropertyNames(participant.item).length === 0) return
 
@@ -234,10 +233,6 @@ export const watchPosition = (participant, event) => dispatch => {
 
             socket.emit('eventparticipant_upsert', { _id, markers: newmarkers, _accountId, _eventId, coords }, (data) =>
                 api.resultHandler(data, 'EVENT_PARTICIPANT_UPSERT_'))
-
-            console.log("index --> geolocation.watchPosition --> participant ", participant.item, event)
-
-
         });
 
     }, function error(msg) {}, { maximumAge: 600000000, timeout: 5000, enableHighAccuracy: true });
@@ -314,17 +309,7 @@ export const addMarkersVisited = (participant, event) => dispatch => {
             return item1.marker.name === item2.marker.name
         })
 
-
         console.log("index addMarkersVisited unqMarkers --> ", unqMarkers)
-
-
-        dispatch(setParticipantMarkers({
-            _id,
-            markers: unqMarkers,
-            _accountId,
-            _eventId,
-            coords
-        }))
 
         return unqMarkers
     }

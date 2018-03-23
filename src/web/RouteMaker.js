@@ -40,7 +40,6 @@ class RouteMaker extends Component {
         this.updatePosition = this.updatePosition.bind(this)
         this.removeMarker = this.removeMarker.bind(this)
         this.setCurrentRegionAddress = this.setCurrentRegionAddress.bind(this)
-        //this.addParticipantMarker = this.addParticipantMarker.bind(this)
         this.handleClose = this.handleClose.bind(this)
         this.handleCancel = this.handleCancel.bind(this)
     }
@@ -89,42 +88,8 @@ class RouteMaker extends Component {
 
         event.__v = undefined
         this.props.actions.setRouteMarkers(event)
-        //this.props.actions.refreshEvent(this.props.participant)
+
     }
-
-    /*
-
-        addParticipantMarker() {
-
-                    const prtmarkers = { ...participant }
-                    const origmarkers = [...participant.markers]
-
-                    const { _id, markers, _accountId, _eventId, coords } = participant
-
-                    const mergemarkers = origmarkers.concat(newmarkers)
-
-                    unqMarkers = uniqWith(mergemarkers, function (item1, item2) {
-                        return item1.marker.name === item2.marker.name
-                    })
-
-                    console.log("RouteMaker --> addParticipantMarker unqMarkers", unqMarkers)
-
-                    this.props.actions.setParticipantMarkers({
-                        _id,
-                        markers: unqMarkers,
-                        _accountId,
-                        _eventId,
-                        coords
-                    })
-
-
-
-
-            const { participant, event } = this.props
-            this.props.actions.addMarkersVisited(participant.item, event.item.markers)
-        }
-
-           */
 
     openEditMarker(item) {
         this.setState({ isEditMarker: true, marker: item })
@@ -199,7 +164,6 @@ class RouteMaker extends Component {
                     currLocation={this.props.location}
                     draggable={true}
                     updatePosition={this.updatePosition}
-                    //addParticipantMarker= {this.addParticipantMarker}
                     viewPhotos = {this.viewPhotos}
                     photos={this.props.photo}
                 />
