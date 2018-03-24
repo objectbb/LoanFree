@@ -111,7 +111,7 @@ class RouteMaker extends Component {
 
     updateMarker(item) {
 
-        let { markers, _id, _accountId, _eventId, coords, name } = this.props.event.item
+        let { markers } = this.props.event.item
 
         const newmarkers = markers.map(
             (marker) => {
@@ -123,13 +123,24 @@ class RouteMaker extends Component {
             }
         );
 
-        this.props.actions.setRouteMarkers({ _id, markers: newmarkers, _accountId, coords, name })
+        let event = { ...this.props.event.item }
+        event.markers = newmarkers
+
+        event.__v = undefined
+
+        console.log("RouteMaker --> updateMarker --> event ", event)
+
+        this.props.actions.setRouteMarkers(event)
+
+
+
+        // this.props.actions.setRouteMarkers({ _id, markers: newmarkers, _accountId, coords, name })
     }
 
 
     updatePosition(item) {
 
-        let { markers, _id, _accountId, _eventId, coords, name } = this.props.event.item
+        let { markers } = this.props.event.item
 
         const newmarkers = markers.map(
             (marker) => {
@@ -141,7 +152,17 @@ class RouteMaker extends Component {
             }
         );
 
-        this.props.actions.setRouteMarkers({ _id, markers: newmarkers, _accountId, coords, name })
+        let event = { ...this.props.event.item }
+        event.markers = newmarkers
+
+        event.__v = undefined
+
+        console.log("RouteMaker --> updateMarker --> event ", event)
+
+        this.props.actions.setRouteMarkers(event)
+
+
+        // this.props.actions.setRouteMarkers({ _id, markers: newmarkers, _accountId, coords, name })
     }
 
 

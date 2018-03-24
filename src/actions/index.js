@@ -156,7 +156,8 @@ export const stopWatchPosition = (id) => dispatch => {
 
 export const initWebSocketReceive = (participant) => dispatch => {
 
-    if (Object.getOwnPropertyNames(participant.item).length === 0) return
+
+    console.log("watchPosition --> initWebSocketReceive--> participant ", participant.item._eventId)
 
     const _eventId = participant.item._eventId
 
@@ -166,7 +167,7 @@ export const initWebSocketReceive = (participant) => dispatch => {
     });
 
     socket.on('eventparticipant_update_coords', (participant) => {
-        console.log("watchPosition --> eventparticipant_update_coords --> participant ", participant, participant.coords)
+        console.log("initWebSocketReceive --> eventparticipant_update_coords --> participant ", participant, participant.coords)
 
         if (participant.coords && participant.coords.length === 2)
             dispatch({
@@ -177,7 +178,7 @@ export const initWebSocketReceive = (participant) => dispatch => {
 
 
     socket.on('photo_broadcast', (photo) => {
-        console.log("watchPosition --> photo_broadcast --> participant ", photo)
+        console.log("initWebSocketReceive --> photo_broadcast --> participant ", photo)
         dispatch({
             type: PHOTO_INSERT,
             payload: photo
@@ -185,7 +186,7 @@ export const initWebSocketReceive = (participant) => dispatch => {
     })
 
     socket.on('event_broadcast', (event) => {
-        console.log("watchPosition --> event_broadcast --> participant ", event)
+        console.log("initWebSocketReceive --> event_broadcast --> participant ", event)
         dispatch({
             type: EVENTS_UPSERT,
             payload: event
@@ -275,15 +276,12 @@ export const withinRangeMarkerIndicator = (markers, participant) => {
 }
 
 export const addMarkersVisited = (participant, event) => dispatch => {
-
-
-    console.log("index addMarkersVisited --> ", participant, event.item.markers)
+    //console.log("index addMarkersVisited --> ", participant, event.item.markers)
 
     const markers = event.item.markers
     const closemarker = this.withinRangeMarkerIndicator(markers, participant)
 
-    console.log("index addMarkersVisited closemarker --> ", closemarker)
-
+    //console.log("index addMarkersVisited closemarker --> ", closemarker)
 
     let newmarkers = []
     if (participant.markers && participant.markers.length === 0)

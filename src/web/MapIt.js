@@ -47,57 +47,6 @@ class MapIt extends Component {
 
     }
 
-
-    /*
-        componentWillReceiveProps(nextProps) {
-
-            const { dispatch, interval, participant } = this.props
-
-            if (!nextProps.interval.onOff ||
-                (nextProps.interval.watchPositionId === interval.watchPositionId &&
-                    nextProps.participant.item._id === participant.item._id)) return
-
-            console.log("MapIt --> componentWillReceiveProps --> participant ", nextProps.participant.item)
-            console.log("MapIt --> componentWillReceiveProps --> interval.timerMarkersVisitedId ", interval)
-            console.log("MapIt --> componentWillReceiveProps --> nextProps.interval.timerMarkersVisitedId ", nextProps)
-
-            if (interval.timerMarkersVisitedId)
-                this.props.actions.stopInterval(interval.timerMarkersVisitedId)
-
-            const you = nextProps.participant.item
-
-            if (!you.coords) return
-
-            const addMarkersVisitedIntervalId = setInterval(() => {
-
-                const closemarker = this.withinRangeMarkerIndicator(you)
-                let newmarkers = []
-                if (you.markers && you.markers.length === 0)
-                    newmarkers = closemarker
-                else
-                    newmarkers = closemarker ?
-                    closemarker.filter(
-                        (marker) =>
-                        you.markers.find((item) => {
-                            return marker.marker.guid && item.marker.guid &&
-                                marker.marker.guid !== item.marker.guid
-                        })
-                    )
-                    : []
-
-                if (newmarkers && newmarkers.length > 0) {
-                    this.props.addParticipantMarker(you, newmarkers)
-                }
-
-            }, 5000)
-
-            dispatch({
-                type: 'UPDATE_INTERVAL_ADDMARKER_ID',
-                timerMarkersVisitedId: addMarkersVisitedIntervalId
-            })
-
-        }
-    */
     closeIndicator(coords) {
 
         return this.props.routeMarkers && this.props.routeMarkers.some((marker) => {
@@ -121,22 +70,6 @@ class MapIt extends Component {
             : []
     }
 
-    /*
-        withinRangeMarkerIndicator(prt) {
-
-            return this.props.routeMarkers &&
-                this.props.routeMarkers.map((marker) => {
-                    let distance = geolib.getDistance({
-                        latitude: prt.coords[0],
-                        longitude: prt.coords[1]
-                    }, { latitude: marker.coords[0], longitude: marker.coords[1] })
-                    if (distance < marker.range) {
-                        return Object.assign({}, { details: { range: distance, coords: prt.coords } }, { marker })
-                    }
-                }).filter((item) => item);
-
-        }
-        */
 
     updatePosition(item, e) {
 
@@ -201,8 +134,6 @@ class MapIt extends Component {
 
                           const icon = divIcon({ className: 'marker ' + (!isClose ? 'bus' : 'bus mark'), html: isClose ? '<div class="tinycamera3"><span></span></div>' : `<div>${item.account.firstname[0]}${item.account.lastname[0]}</div>`})
 
-
-                            console.log("MapIt --> participants.map --> markers ",item.markers)
                           return (
                             <Marker key={`participant-${index}`}
                              icon={icon}
