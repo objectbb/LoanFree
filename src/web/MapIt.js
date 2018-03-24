@@ -154,9 +154,9 @@ class MapIt extends Component {
                                   {item.account.firstname} {item.account.lastname}
                                   </div>
                                   <div>
-                                    {item.coords}
+                                    {item.coords.join(', ')}
                                   </div>
-                                  {item.markers && item.markers.map((item, idx) => (<div key={idx}><div>...</div>{item.marker.name} {item.details.range}m {item.details.coords && <div> {item.details.coords.join(', ')}   </div>} <div>{moment(item.details.timeStamp).format(moment.HTML5_FMT.DATETIME_LOCAL)} </div> </div>)) }
+                                  {item.markers && item.markers.map((item, idx) => (<div key={idx}><div>...</div>{item.marker.name} {item.details.range}m {item.details.coords && <div> {item.details.coords.join(', ')}   </div>} <div>{moment.utc(item.details.timeStamp).format(moment.HTML5_FMT.DATETIME_LOCAL)} </div> </div>)) }
                                   </span>
                                 </Popup>
                             >
@@ -180,10 +180,10 @@ class MapIt extends Component {
                         #{idx + 1} --
                         {item.participant.account.email} --
                         {item.participant.event.name} --
-                        {moment(item.participant.event.startdate).format('llll')} --
+                        {moment.utc(item.participant.event.startdate).format('llll')} --
                         range: {item.range}m --
                         coords: {item.participant.coords} --
-                        timeStamp: {moment(item.timeStamp).format('llll')}
+                        timeStamp: {moment.utc(item.timeStamp).format('llll')}
                        </Typography>
                        <img src={item.photoURLFirebase} />
                        </li>)
